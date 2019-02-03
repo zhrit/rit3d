@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="src\math">
+      <UniqueIdentifier>{e23989d3-cdc9-403a-8e77-faa6d2095c60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\components">
+      <UniqueIdentifier>{4d409332-4f44-4def-89c3-e68abe8c6da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\render">
+      <UniqueIdentifier>{504a8d87-10d4-4c97-a0d3-5d1fcb3fc8b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\render\opengl">
+      <UniqueIdentifier>{42b04bc1-e42b-4ec3-94f2-3f6426f45855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\systems">
+      <UniqueIdentifier>{11834f33-435f-47f0-8fee-a0d416fc2bc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core">
+      <UniqueIdentifier>{f69b2c75-f1b0-4762-8b6d-58e8d600af8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\asset">
+      <UniqueIdentifier>{b43881c2-e713-4fd2-88a2-4fe74331ba9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\asset\shader">
+      <UniqueIdentifier>{90355ca2-c525-444c-bb55-5e3f907a3e27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\asset\resource">
+      <UniqueIdentifier>{10742097-933d-4416-b959-d5ab3ea52bd4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RWindow.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RCommon.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RVector.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RMath.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RColor.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RMatrix.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="ISystem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="GLProgram.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RScene.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RGameObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="IComponent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CTransform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CLight.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CCamera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CRender.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CBehavior.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CCollider.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="rit3d.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="RWindow.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="RVector.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="RColor.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="RMatrix.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemManager.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="ISystem.cpp">
+      <Filter>src\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="StartSystem.cpp">
+      <Filter>src\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="RGameObject.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="RScene.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="IComponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CTransform.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CBehavior.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CCamera.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CCollider.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CMesh.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CRender.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>src\asset\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>src\asset\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>src\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>src\asset\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="GLProgram.cpp">
+      <Filter>src\asset\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="util.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="simple.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="simple.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="phone.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="phone.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>
