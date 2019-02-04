@@ -25,6 +25,12 @@ public:
 	void setMesh(Mesh* _mesh);
 
 	void setMaterial(Material* _mat);
-public:
+
+	RBool isCastShadow() const;
+	void castShadow(RBool _cast);
+
+	RBool isRecieveShadow() const;
+	void recieveShadow(RBool _recieve);
+
 };
 

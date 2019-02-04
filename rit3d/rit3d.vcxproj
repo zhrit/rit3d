@@ -232,7 +232,9 @@
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="phone.frag" />
+    <None Include="phong.frag" />
+    <None Include="shadowMap.frag" />
+    <None Include="shadowMap.vert" />
     <None Include="simple.frag" />
   </ItemGroup>
   <ItemGroup>
@@ -241,7 +243,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="phone.vert">
+    <None Include="phong.vert">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

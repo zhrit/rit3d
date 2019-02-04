@@ -179,7 +179,7 @@ void CTransform::_setDirty() {
 //ªÒ»° ”Õºæÿ’Û
 glm::mat4 CTransform::getViewMatrrix() {
 	if (m_viewDirty) {
-		m_viewMatrix = glm::lookAt(m_localPosition, m_localPosition - m_localFrontDir, m_localUpDir);
+		m_viewMatrix = glm::lookAt(m_localPosition, m_localPosition + m_localFrontDir, m_localUpDir);
 		m_viewDirty = false;
 	}
 	return m_viewMatrix;

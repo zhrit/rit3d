@@ -473,7 +473,7 @@ void ResourceManager::createDefaultMaterial() {
 //创建默认shader
 void ResourceManager::createDefaultShader() {
 	//createShader("simple", "simple.vert", "simple.frag");
-	//createShader("phone", "phone.vert", "phone.frag");
+	createShader("shadowMap", "shadowMap.vert", "shadowMap.frag", "");
 }
 
 //根据vertices和indices计算normals

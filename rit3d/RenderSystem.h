@@ -5,6 +5,7 @@
 #include "CCamera.h"
 #include "CTransform.h"
 #include "CLight.h"
+#include "RScene.h"
 
 class RenderSystem : public ISystem {
 private:
@@ -47,6 +48,12 @@ public:
 	virtual void onDestroy();
 
 private:
+	//Ô¤äÖÈ¾
+	void _preRender(RScene* pSce);
+	//Ö÷äÖÈ¾
+	void _mainRender(CCamera* camera, RScene* pSce);
+	//ºóäÖÈ¾
+	void _postRender();
 	//ºËĞÄäÖÈ¾º¯Êı
 	void _render();
 

@@ -229,10 +229,16 @@
     <None Include="simple.frag">
       <Filter>src\asset\shader</Filter>
     </None>
-    <None Include="phone.vert">
+    <None Include="phong.frag">
       <Filter>src\asset\shader</Filter>
     </None>
-    <None Include="phone.frag">
+    <None Include="phong.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="shadowMap.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="shadowMap.frag">
       <Filter>src\asset\shader</Filter>
     </None>
   </ItemGroup>

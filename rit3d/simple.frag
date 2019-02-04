@@ -1,15 +1,14 @@
-#version 330 core
 out vec4 FragColor;
 
 in vec2 TexCoord;
 
-uniform vec3 color;
-uniform int hasTex;
-uniform sampler2D texture0;
-uniform sampler2D texture1;
+uniform vec3 uColor;
+uniform int uHasTex;
+uniform sampler2D uTexture0;
+uniform sampler2D uTexture1;
 
 void main()
 {
     //FragColor = vec4(color, 1.0f);
-	FragColor = texture(texture0, TexCoord) * hasTex + vec4(color, 1.0f) * (1 - hasTex);
+	FragColor = texture(uTexture0, TexCoord) * uHasTex + vec4(uColor, 1.0f) * (1 - uHasTex);
 }

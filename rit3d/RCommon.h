@@ -71,6 +71,10 @@ const RString DEFAULT_GAMEOBJECT_NAME = "GameObject";
 //输出
 #define COUT(a) std::cout << #a << ":" << (a) << std::endl;
 
+//shadow map size
+#define SHADOW_WIDTH 1024
+#define SHADOW_HEIGHT 1024
+
 //系统类型
 typedef enum {
 	STARTSYSTEM = 0,
