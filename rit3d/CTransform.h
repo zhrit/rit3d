@@ -21,8 +21,11 @@ private:
 	RBool m_localModelDirty{ true };              //局部几何信息标脏
 	RBool m_modelDirty{ true };                   //全局几何信息标脏
 
-	//相机暂时是考虑放在场景中，不考虑嵌套
+	//相机和灯光暂时是考虑放在场景中，不考虑嵌套
 	RBool m_viewDirty{ true };                    //视图矩阵标脏
+	//针对点光源阴影
+	RBool m_viewsDirty{ true };
+	std::vector<glm::mat4> m_viewsMatrix;
 
 public:
 	static CTransform* CreateInstance();
@@ -62,7 +65,9 @@ public:
 	//全局获取模型矩阵
 	glm::mat4 getModelMatrix();
 	//获取视图矩阵
-	glm::mat4 getViewMatrrix();
+	glm::mat4 getViewMatrix();
+	//获取六个视图矩阵，主要是为了点光源阴影
+	std::vector<glm::mat4> getViewMatrixs();
 
 private:
 	//局部模型矩阵标脏

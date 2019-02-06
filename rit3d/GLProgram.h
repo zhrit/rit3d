@@ -4,10 +4,10 @@
 
 class GLProgram {
 public:
-	static GLProgram* Create(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines);
+	static GLProgram* Create(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines, const RString& geometryPath = "");
 	static void Destroy(GLProgram* _shader);
 private:
-	GLProgram(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines);
+	GLProgram(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines, const RString& geometryPath);
 	virtual ~GLProgram();
 
 	RString m_name;

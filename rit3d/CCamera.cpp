@@ -116,5 +116,5 @@ glm::mat4 CCamera::getProjMatrix() {
 
 //»ñÈ¡ÊÓÍ¼¾ØÕó
 glm::mat4 CCamera::getViewMatrix() {
-	return gameObject->transform->getViewMatrrix();
+	return gameObject->transform->getViewMatrix();
 }

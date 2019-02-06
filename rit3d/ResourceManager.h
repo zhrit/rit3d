@@ -49,7 +49,7 @@ public:
 	Texture* getTexture(const RString& _name);
 
 	//创建新着色器
-	GLProgram* createShader(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines);
+	GLProgram* createShader(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines, const RString& geometryPath = "");
 	//根据名称移除着色器资源
 	void deleteShader(const RString& _name);
 	//根据名称获取着色器资源

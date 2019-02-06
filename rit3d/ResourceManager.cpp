@@ -129,8 +129,8 @@ Texture* ResourceManager::getTexture(const RString& _name) {
 }
 
 //创建新着色器
-GLProgram* ResourceManager::createShader(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines) {
-	GLProgram* shader = GLProgram::Create(_name, vertexPath, fragmentPath, defines);
+GLProgram* ResourceManager::createShader(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines, const RString& geometryPath) {
+	GLProgram* shader = GLProgram::Create(_name, vertexPath, fragmentPath, defines, geometryPath);
 	std::pair<std::map<RString, GLProgram*>::iterator, bool> Insert_Pair;
 	Insert_Pair = shaderPool.insert(std::pair<RString, GLProgram*>(_name, shader));
 	if (Insert_Pair.second == false) {
@@ -473,7 +473,8 @@ void ResourceManager::createDefaultMaterial() {
 //创建默认shader
 void ResourceManager::createDefaultShader() {
 	//createShader("simple", "simple.vert", "simple.frag");
-	createShader("shadowMap", "shadowMap.vert", "shadowMap.frag", "");
+	createShader("shadowMap", "shadowMap.vert", "shadowMap.frag", "", "");
+	createShader("shadowCubemap", "shadowCubemap.vert", "shadowCubemap.frag", "", "shadowCubemap.geom");
 }
 
 //根据vertices和indices计算normals

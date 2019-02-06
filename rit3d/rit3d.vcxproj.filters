@@ -241,5 +241,14 @@
     <None Include="shadowMap.frag">
       <Filter>src\asset\shader</Filter>
     </None>
+    <None Include="shadowCubemap.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="shadowCubemap.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="shadowCubemap.geom">
+      <Filter>src\asset\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

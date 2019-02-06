@@ -13,8 +13,13 @@ uniform mat4 projection;
 uniform mat4 nmodel;
 
 #ifdef DIR_LIGHT_NUM
-uniform mat4 uLightSpaceMatrix[DIR_LIGHT_NUM];
-out vec4 positionFromLight[DIR_LIGHT_NUM];
+uniform mat4 uLightSpaceMatrixDir[DIR_LIGHT_NUM];
+out vec4 positionFromLightDir[DIR_LIGHT_NUM];
+#endif
+
+#ifdef SPO_LIGHT_NUM
+uniform mat4 uLightSpaceMatrixSpo[SPO_LIGHT_NUM];
+out vec4 positionFromLightSpo[SPO_LIGHT_NUM];
 #endif
 
 void main()
@@ -26,8 +31,15 @@ void main()
 
 	#ifdef DIR_LIGHT_NUM
 	for(int i = 0; i < DIR_LIGHT_NUM; i++) {
-		vec4 a = uLightSpaceMatrix[i] * vec4(fragPos, 1.0f);
-		positionFromLight[i] = a;
+		vec4 a = uLightSpaceMatrixDir[i] * vec4(fragPos, 1.0f);
+		positionFromLightDir[i] = a;
+	}
+	#endif
+
+	#ifdef SPO_LIGHT_NUM
+	for(int i = 0; i < SPO_LIGHT_NUM; i++) {
+		vec4 a = uLightSpaceMatrixSpo[i] * vec4(fragPos, 1.0f);
+		positionFromLightSpo[i] = a;
 	}
 	#endif
 }

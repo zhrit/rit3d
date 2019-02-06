@@ -11,6 +11,7 @@ struct DirLight {
 	float ambInt;
 	float difInt;
 	float speInt;
+	bool castShadow;
 };
 
 //点光源结构体
@@ -23,6 +24,8 @@ struct PoiLight {
 	float kc;
 	float kl;
 	float kq;
+	bool castShadow;
+	float far;//计算阴影时用
 };
 
 //聚光灯结构体
@@ -35,18 +38,22 @@ struct SpoLight {
 	float speInt;
 	float inner;
 	float outer;
+	bool castShadow;
 };
 
 #ifdef DIR_LIGHT_NUM
 uniform DirLight uDirLights[DIR_LIGHT_NUM];
 uniform sampler2D uDirShadowMap[DIR_LIGHT_NUM];
-in vec4 positionFromLight[DIR_LIGHT_NUM];
+in vec4 positionFromLightDir[DIR_LIGHT_NUM];
 #endif
 #ifdef POI_LIGHT_NUM
 uniform PoiLight uPoiLights[POI_LIGHT_NUM];
+uniform samplerCube uPoiShadowMap[POI_LIGHT_NUM];
 #endif
 #ifdef SPO_LIGHT_NUM
 uniform SpoLight uSpoLights[SPO_LIGHT_NUM];
+uniform sampler2D uSpoShadowMap[SPO_LIGHT_NUM];
+in vec4 positionFromLightSpo[SPO_LIGHT_NUM];
 #endif
 
 uniform vec3 uColor;
@@ -54,10 +61,11 @@ uniform int uHasTex;
 uniform sampler2D uTexture0;
 uniform vec3 uViewPos;
 uniform float uShininess;
+uniform bool uRecieveShadow;
 
-vec3 CalcDirLight(int ind, vec3 normal, vec3 viewDir);
-vec3 CalcPoiLight(PoiLight light, vec3 normal, vec3 viewDir, vec3 fragPos);
-vec3 CalcSpoLight(SpoLight light, vec3 normal, vec3 viewDir, vec3 fragPos);
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, sampler2D shadowMap, vec4 pos4light);
+vec3 CalcPoiLight(PoiLight light, vec3 normal, vec3 viewDir, vec3 fragPos, samplerCube shadowMap);
+vec3 CalcSpoLight(SpoLight light, vec3 normal, vec3 viewDir, vec3 fragPos, sampler2D shadowMap, vec4 pos4light);
 
 void main() {
 	vec3 norm = normalize(fragNormal);
@@ -66,17 +74,17 @@ void main() {
 	vec3 result = vec3(0.0f, 0.0f, 0.0f);
 	#ifdef DIR_LIGHT_NUM
 	for(int i = 0; i < DIR_LIGHT_NUM; i++) {
-		result += CalcDirLight(i, norm, viewDir);
+		result += CalcDirLight(uDirLights[i], norm, viewDir, uDirShadowMap[i], positionFromLightDir[i]);
 	}
 	#endif
 	#ifdef POI_LIGHT_NUM
 	for(int i = 0; i < POI_LIGHT_NUM; i++) {
-		result += CalcPoiLight(uPoiLights[i], norm, viewDir, fragPos);
+		result += CalcPoiLight(uPoiLights[i], norm, viewDir, fragPos, uPoiShadowMap[i]);
 	}
 	#endif
 	#ifdef SPO_LIGHT_NUM
 	for(int i = 0; i < SPO_LIGHT_NUM; i++) {
-		result += CalcSpoLight(uSpoLights[i], norm, viewDir, fragPos);
+		result += CalcSpoLight(uSpoLights[i], norm, viewDir, fragPos, uSpoShadowMap[i], positionFromLightSpo[i]);
 	}
 	#endif
     FragColor = vec4(result, 1.0f);
@@ -84,29 +92,42 @@ void main() {
 }
 
 //平行光效果计算
-vec3 CalcDirLight(int ind, vec3 normal, vec3 viewDir) {
-	vec3 lightDir = normalize(uDirLights[ind].direction);
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, sampler2D shadowMap, vec4 pos4light) {
+	vec3 lightDir = normalize(light.direction);
 	float diff = max(dot(-lightDir, normal), 0.0f);
 	vec3 reflectDir = normalize(reflect(lightDir, normal));
 	float spec =  pow(max(dot(reflectDir, viewDir), 0.0f), uShininess);
 
 	vec3 matColor = vec3(texture(uTexture0, TexCoord) * uHasTex + vec4(uColor, 1.0f) * (1 - uHasTex));
-	vec3 ambient = uDirLights[ind].ambInt * uDirLights[ind].color * matColor;
-	vec3 diffuse = uDirLights[ind].difInt * diff * uDirLights[ind].color * matColor;
-	vec3 specular = uDirLights[ind].speInt * spec * uDirLights[ind].color * matColor;
+	vec3 ambient = light.ambInt * light.color * matColor;
+	vec3 diffuse = light.difInt * diff * light.color * matColor;
+	vec3 specular = light.speInt * spec * light.color * matColor;
 
 	//阴影
-	vec3 shadowCoord = positionFromLight[ind].xyz / positionFromLight[ind].w;
+	vec3 shadowCoord = pos4light.xyz / pos4light.w;
 	shadowCoord = shadowCoord * 0.5 + 0.5;
-	float closestDepth = texture(uDirShadowMap[ind], shadowCoord.xy).r;
+	float closestDepth = texture(shadowMap, shadowCoord.xy).r;
 	float currentDepth = shadowCoord.z;
-	float shadow = currentDepth > (closestDepth + 0.005) ? 0.0f : 1.0f;
+	//暂时没考虑阴影失真
+	//float bias = max(0.05f * (1.0f - dot(normal, -lightDir)), 0.005f);
+	//超出光源视锥体的地方需要特殊处理
+	float shadow = (currentDepth > (closestDepth) && currentDepth <= 1.0f && uRecieveShadow && light.castShadow) ? 0.0f : 1.0f;
+	//PCF柔化阴影边缘
+	//float shadow = 0.0;
+	//vec2 texelSize = 1.0 / textureSize(uDirShadowMap[ind], 0);
+	//for(int i = -1; i <= 1; ++i) {
+	//	for(int j = -1; j <= 1; ++j) {
+	//		float pcfDepth = texture(uDirShadowMap[ind], shadowCoord.xy + vec2(i, j) * texelSize).r; 
+	//		shadow += (currentDepth > (pcfDepth) && currentDepth <= 1.0f && uRecieveShadow && uDirLights[ind].castShadow) ? 0.0f : 1.0f;
+	//	}    
+	//}
+	//shadow /= 9.0f;
 
 	return (ambient + diffuse * shadow + specular * shadow);
 }
 
 //点光源效果计算
-vec3 CalcPoiLight(PoiLight light, vec3 normal, vec3 viewDir, vec3 fragPos) {
+vec3 CalcPoiLight(PoiLight light, vec3 normal, vec3 viewDir, vec3 fragPos, samplerCube shadowMap) {
 	vec3 lightDir = normalize(fragPos - light.position);
 	float distance = length(fragPos - light.position);
 	float attenuation = 1.0f / (light.kc + light.kl * distance + light.kq * distance * distance);
@@ -124,12 +145,22 @@ vec3 CalcPoiLight(PoiLight light, vec3 normal, vec3 viewDir, vec3 fragPos) {
 	diffuse *= attenuation;
 	specular *= attenuation;
 
-	return (ambient + diffuse + specular);
+	//阴影
+	vec3 lightToFrag = fragPos - light.position;
+	float closestDepth = texture(shadowMap, lightToFrag).r;
+	closestDepth *= light.far;
+	float currentDepth = length(lightToFrag);
+	//暂时没考虑阴影失真
+	//float bias = max(0.05f * (1.0f - dot(normal, -lightDir)), 0.005f);
+	//超出光源视锥体的地方需要特殊处理
+	float shadow = (currentDepth > closestDepth && currentDepth <= light.far && uRecieveShadow && light.castShadow) ? 0.0f : 1.0f;
+
+	return (ambient + diffuse * shadow + specular * shadow);
 
 }
 
 //聚光灯效果计算
-vec3 CalcSpoLight(SpoLight light, vec3 normal, vec3 viewDir, vec3 fragPos) {
+vec3 CalcSpoLight(SpoLight light, vec3 normal, vec3 viewDir, vec3 fragPos, sampler2D shadowMap, vec4 pos4light) {
 	vec3 lightDir = normalize(fragPos - light.position);
 	float theta = dot(lightDir, normalize(light.direction));
 	float epsilon = light.inner - light.outer;
@@ -145,5 +176,15 @@ vec3 CalcSpoLight(SpoLight light, vec3 normal, vec3 viewDir, vec3 fragPos) {
 	vec3 diffuse = light.difInt * diff * light.color * matColor * intensity;
 	vec3 specular = light.speInt * spec * light.color * matColor * intensity;
 
-	return (ambient + diffuse + specular);
+	//阴影
+	vec3 shadowCoord = pos4light.xyz / pos4light.w;
+	shadowCoord = shadowCoord * 0.5 + 0.5;
+	float closestDepth = texture(shadowMap, shadowCoord.xy).r;
+	float currentDepth = shadowCoord.z;
+	//暂时没考虑阴影失真
+	//float bias = max(0.05f * (1.0f - dot(normal, -lightDir)), 0.005f);
+	//超出光源视锥体的地方需要特殊处理
+	float shadow = (currentDepth > (closestDepth) && currentDepth <= 1.0f && uRecieveShadow && light.castShadow) ? 0.0f : 1.0f;
+
+	return shadow * (ambient + diffuse + specular);
 }

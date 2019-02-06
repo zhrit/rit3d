@@ -20,7 +20,7 @@ private:
 	//是否投射阴影
 	RBool m_castShadow{ false };
 	//光源类型
-	LIGHTTYPE m_lightType{ LIGHTTYPE::DIRECTION };
+	LIGHTTYPE m_lightType{ LIGHTTYPE::NONE };
 
 	//--平行光属性
 
@@ -41,9 +41,9 @@ private:
 	RUInt m_depthMap;//存放深度贴图的纹理
 
 	RFloat m_near_s{ 0.1f };
-	RFloat m_far_s{ 5.0f };
-	RFloat m_asp_s{ 800.0f / 600.0f };
-	RFloat m_fov_s{ 45.0f };
+	RFloat m_far_s{ 10.0f };
+	RFloat m_asp_s{ 1.0f };
+	RFloat m_fov_s{ 90.0f };
 	RFloat m_size_s{ 10.0f };
 
 	RBool m_projDirty{ true };
@@ -68,6 +68,9 @@ public:
 	LIGHTTYPE getLightType() const;
 	void setLightType(LIGHTTYPE _type);
 
+	//重写setEnabled
+	void setEnabled(RBool value);
+
 	//点光源相关
 
 	void setAttenuation(RFloat dis, RFloat _kc, RFloat _kl, RFloat _kq);
@@ -91,26 +94,28 @@ public:
 	void setFar(RFloat _f);
 
 	RFloat getAsp() const;
-	void setAsp(RFloat _a);
 
 	RFloat getFov() const;
-	void setFov(RFloat _f);
 
 	RFloat getSize() const;
 	void setSize(RFloat _s);
 
 	//设置视锥体
-	void setOrthoFrustum(RFloat fov, RFloat asp, RFloat near, RFloat far);
-	void setPerspFrustum(RFloat size, RFloat asp, RFloat near, RFloat far);
+	void setOrthoFrustum(RFloat size, RFloat near, RFloat far);
+	void setPerspFrustum(RFloat near, RFloat far);
 
 	//获取视图投影矩阵
 	glm::mat4 getLightSpaceMatrix();
+	//获取视图投影矩阵
+	std::vector<glm::mat4> getLightSpaceMatrixs();
 
 private:
 	//获取投影矩阵
 	glm::mat4 _getProjMatrix();
-	//获取视图矩阵
+	//获取视图矩阵(平行光)
 	glm::mat4 _getViewMatrix();
+	//获取视图矩阵(点光源)
+	std::vector<glm::mat4> _getViewMatrixs();
 
 public:
 

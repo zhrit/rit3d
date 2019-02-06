@@ -128,7 +128,8 @@ typedef enum {
 
 //π‚’’¿‡–Õ
 typedef enum {
-	DIRECTION = 0,
+	NONE = 0,
+	DIRECTION,
 	POINT,
 	SPOT,
 } LIGHTTYPE;

@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "GLProgram.h"
 
-GLProgram* GLProgram::Create(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines) {
-	return new GLProgram(_name, vertexPath, fragmentPath, defines);
+GLProgram* GLProgram::Create(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines, const RString& geometryPath) {
+	return new GLProgram(_name, vertexPath, fragmentPath, defines, geometryPath);
 }
 void GLProgram::Destroy(GLProgram* _shader) {
 	delete _shader;
@@ -13,7 +13,7 @@ void GLProgram::_destroy() {
 
 }
 
-GLProgram::GLProgram(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines) : m_name(_name) {
+GLProgram::GLProgram(const RString& _name, const RString& vertexPath, const RString& fragmentPath, const RString& defines, const RString& geometryPath) : m_name(_name) {
 	//从文件路径获取顶点、片段着色器
 	RString vertexCode;
 	RString fragmentCode;
@@ -44,7 +44,7 @@ GLProgram::GLProgram(const RString& _name, const RString& vertexPath, const RStr
 	const RChar* fShaderCode = fragmentCode.c_str();
 
 	//编译着色器
-	RUInt vertex, fragment;
+	RUInt vertex, fragment, geometry;
 	RInt success;
 	RChar infoLog[512];
 
@@ -67,9 +67,45 @@ GLProgram::GLProgram(const RString& _name, const RString& vertexPath, const RStr
 		cout << "fragment shader compilation failed\n" << infoLog << endl;
 	}
 
+	//处理几何着色器
+	if (geometryPath != "") {
+		//从文件路径获取几何着色器
+		RString geometryCode;
+		std::ifstream gShaderFile;
+		//保证ifstream对象可以抛出异常
+		gShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		try {
+			//打开文件
+			gShaderFile.open(geometryPath.c_str());
+			std::stringstream gShaderStream;
+			//读取文件的缓冲内容到数据流中
+			gShaderStream << gShaderFile.rdbuf();
+			//关闭文件处理器
+			gShaderFile.close();
+			//转换数据流到string
+			geometryCode = defines + gShaderStream.str();
+		}
+		catch (std::ifstream::failure e) {
+			cout << "shader file read failed" << endl;
+		}
+		const RChar* gShaderCode = geometryCode.c_str();
+
+		//几何着色器
+		geometry = glCreateShader(GL_GEOMETRY_SHADER);
+		glShaderSource(geometry, 1, &gShaderCode, NULL);
+		glCompileShader(geometry);
+		glGetShaderiv(geometry, GL_COMPILE_STATUS, &success);
+		if (!success) {
+			glGetShaderInfoLog(geometry, 512, NULL, infoLog);
+			cout << "geometry shader compilation failed\n" << infoLog << endl;
+		}
+	}
 	//着色器程序
 	ID = glCreateProgram();
 	glAttachShader(ID, vertex);
+	if (geometryPath != "") {
+		glAttachShader(ID, geometry);
+	}
 	glAttachShader(ID, fragment);
 	glLinkProgram(ID);
 	glGetProgramiv(ID, GL_LINK_STATUS, &success);
@@ -81,6 +117,9 @@ GLProgram::GLProgram(const RString& _name, const RString& vertexPath, const RStr
 	//删除着色器
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
+	if (geometryPath != "") {
+		glDeleteShader(geometry);
+	}
 }
 
 GLProgram::~GLProgram() {

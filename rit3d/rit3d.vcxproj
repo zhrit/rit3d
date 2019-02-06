@@ -233,6 +233,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="phong.frag" />
+    <None Include="shadowCubemap.frag" />
+    <None Include="shadowCubemap.geom" />
+    <None Include="shadowCubemap.vert" />
     <None Include="shadowMap.frag" />
     <None Include="shadowMap.vert" />
     <None Include="simple.frag" />

@@ -66,6 +66,7 @@ void CTransform::setLocalPosition(float x, float y, float z) {
 	m_localPosition.x = x, m_localPosition.y = y, m_localPosition.z = z;
 	_setLocalDirty();
 	m_viewDirty = true;
+	m_viewsDirty = true;
 }
 void CTransform::setLocalAngle(float x, float y, float z) {
 	if (m_localAngle.x == x && m_localAngle.y == y && m_localAngle.z == z) {
@@ -177,10 +178,25 @@ void CTransform::_setDirty() {
 }
 
 //获取视图矩阵
-glm::mat4 CTransform::getViewMatrrix() {
+glm::mat4 CTransform::getViewMatrix() {
 	if (m_viewDirty) {
 		m_viewMatrix = glm::lookAt(m_localPosition, m_localPosition + m_localFrontDir, m_localUpDir);
 		m_viewDirty = false;
 	}
 	return m_viewMatrix;
+}
+
+//获取六个视图矩阵，主要是为了点光源阴影
+std::vector<glm::mat4> CTransform::getViewMatrixs() {
+	if (m_viewsDirty) {
+		m_viewsMatrix.clear();
+		m_viewsMatrix.push_back(glm::lookAt(m_localPosition, m_localPosition + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+		m_viewsMatrix.push_back(glm::lookAt(m_localPosition, m_localPosition + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+		m_viewsMatrix.push_back(glm::lookAt(m_localPosition, m_localPosition + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
+		m_viewsMatrix.push_back(glm::lookAt(m_localPosition, m_localPosition + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
+		m_viewsMatrix.push_back(glm::lookAt(m_localPosition, m_localPosition + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
+		m_viewsMatrix.push_back(glm::lookAt(m_localPosition, m_localPosition + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
+		m_viewsDirty = false;
+	}
+	return m_viewsMatrix;
 }

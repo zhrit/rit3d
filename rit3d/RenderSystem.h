@@ -6,6 +6,7 @@
 #include "CTransform.h"
 #include "CLight.h"
 #include "RScene.h"
+#include "CRender.h"
 
 class RenderSystem : public ISystem {
 private:
@@ -58,8 +59,15 @@ private:
 	void _render();
 
 	//更新uniform变量
-	void _updateUniforms(Material* pMat, CCamera* camera, CTransform* tran, std::list<CLight*> lights);
+	void _updateUniforms(CRender* pRender, CCamera* camera, CTransform* tran, std::list<CLight*> lights);
 
 	//更新光源相关的uniform变量
 	void _updateLightsUniforms(Material* pMat, std::list<CLight*> lights);
+
+	//texture计数器
+	RUInt m_texCounter{ 0 };
+	//texture分配器
+	RUInt _allocTexture();
+	//texture分配器状态重置
+	void _resetTexAlloc();
 };

@@ -10,19 +10,6 @@ CLight::CLight() {
 	glGenFramebuffers(1, &m_depthMapFBO);
 	//创建纹理
 	glGenTextures(1, &m_depthMap);
-	glBindTexture(GL_TEXTURE_2D, m_depthMap);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthMap, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
@@ -63,6 +50,10 @@ LIGHTTYPE CLight::getLightType() const {
 	return m_lightType;
 }
 void CLight::setLightType(LIGHTTYPE _type) {
+	if (_type == LIGHTTYPE::NONE) {
+		cout << "光源类型不能设置为NONE" << endl;
+		return;
+	}
 	if (m_lightType == _type) {
 		return;
 	}
@@ -72,6 +63,67 @@ void CLight::setLightType(LIGHTTYPE _type) {
 	this->gameObject->getScene()->resetLightNum(m_lightType, -1);
 	m_lightType = _type;
 	this->gameObject->getScene()->resetLightNum(m_lightType, 1);
+
+	m_projDirty = true;//投影矩阵标脏
+
+	switch (m_lightType) {
+	case LIGHTTYPE::DIRECTION:
+	case LIGHTTYPE::SPOT:
+	{
+		glBindTexture(GL_TEXTURE_2D, m_depthMap);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		RFloat borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+		//上面是为了防止采样过多，阴影贴图纹理不重复，贴图外的都设置成1.0，也就是没有阴影
+
+		glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFBO);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthMap, 0);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		break;
+	}
+	case LIGHTTYPE::POINT:
+	{
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_depthMap);
+		for (RUInt i = 0; i < 6; i++) {
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+				SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		}
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, m_depthMapFBO);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_depthMap, 0);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+//重写setEnabled
+void CLight::setEnabled(RBool value) {
+	if (m_enabled == value) {
+		return;
+	}
+	m_enabled = value;
+	if (m_enabled) {
+		this->gameObject->getScene()->resetLightNum(m_lightType, 1);
+	}
+	else {
+		this->gameObject->getScene()->resetLightNum(m_lightType, -1);
+	}
 }
 
 void CLight::setAttenuation(RFloat dis, RFloat _kc, RFloat _kl, RFloat _kq) {
@@ -144,21 +196,9 @@ void CLight::setFar(RFloat _f) {
 RFloat CLight::getAsp() const {
 	return m_asp_s;
 }
-void CLight::setAsp(RFloat _a) {
-	if (m_asp_s != _a) {
-		m_asp_s = _a;
-		m_projDirty = true;
-	}
-}
 
 RFloat CLight::getFov() const {
 	return m_fov_s;
-}
-void CLight::setFov(RFloat _f) {
-	if (m_fov_s != _f) {
-		m_fov_s = _f;
-		m_projDirty = true;
-	}
 }
 
 RFloat CLight::getSize() const {
@@ -171,28 +211,36 @@ void CLight::setSize(RFloat _s) {
 	}
 }
 
-void CLight::setOrthoFrustum(RFloat fov, RFloat asp, RFloat near, RFloat far) {
-	if (m_fov_s != fov || m_asp_s != asp || m_near_s != near || m_far_s != far) {
-		m_fov_s = fov;
-		m_asp_s = asp;
+void CLight::setPerspFrustum(RFloat near, RFloat far) {
+	if (m_near_s != near || m_far_s != far) {
 		m_near_s = near;
 		m_far_s = far;
 		m_projDirty = true;
 	}
 }
-void CLight::setPerspFrustum(RFloat size, RFloat asp, RFloat near, RFloat far) {
-	if (m_size_s != size || m_asp_s != asp || m_near_s != near || m_far_s != far) {
+void CLight::setOrthoFrustum(RFloat size, RFloat near, RFloat far) {
+	if (m_size_s != size || m_near_s != near || m_far_s != far) {
 		m_size_s = size;
-		m_asp_s = asp;
 		m_near_s = near;
 		m_far_s = far;
 		m_projDirty = true;
 	}
 }
 
-//获取视图投影矩阵
+//获取视图投影矩阵（平行光）
 glm::mat4 CLight::getLightSpaceMatrix() {
 	return _getProjMatrix() * _getViewMatrix();
+}
+
+//获取视图投影矩阵（点光源）
+std::vector<glm::mat4> CLight::getLightSpaceMatrixs() {
+	std::vector<glm::mat4> lightSpaceMatrixs;
+	glm::mat4 proj = _getProjMatrix();
+	std::vector<glm::mat4> views = _getViewMatrixs();
+	for(int i = 0; i < 6; i++) {
+		lightSpaceMatrixs.push_back(proj * views[i]);
+	}
+	return lightSpaceMatrixs;
 }
 
 //获取投影矩阵
@@ -207,13 +255,19 @@ glm::mat4 CLight::_getProjMatrix() {
 			m_projMatrix = glm::perspective(glm::radians(m_fov_s), m_asp_s, m_near_s, m_far_s);
 		}
 		else {
-
+			m_projMatrix = glm::perspective(2 * acos(m_cutOuter), m_asp_s, m_near_s, m_far_s);
 		}
+		m_projDirty = false;
 	}
 	return m_projMatrix;
 }
 
 //获取视图矩阵
 glm::mat4 CLight::_getViewMatrix() {
-	return gameObject->transform->getViewMatrrix();
+	return gameObject->transform->getViewMatrix();
+}
+
+//获取视图矩阵(点光源)
+std::vector<glm::mat4> CLight::_getViewMatrixs() {
+	return gameObject->transform->getViewMatrixs();
 }

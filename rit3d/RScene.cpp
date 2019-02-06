@@ -161,20 +161,22 @@ void RScene::addLight(CLight* light) {
 		return;
 	}
 	m_lightList.push_back(light);
-	LIGHTTYPE t = light->getLightType();
-	switch (t)
-	{
-	case LIGHTTYPE::DIRECTION:
-		m_dirLightNum++;
-		break;
-	case LIGHTTYPE::POINT:
-		m_poiLightNum++;
-		break;
-	case LIGHTTYPE::SPOT:
-		m_spoLightNum++;
-		break;
-	default:
-		break;
+	if (light->isEnabled()) {
+		LIGHTTYPE t = light->getLightType();
+		switch (t)
+		{
+		case LIGHTTYPE::DIRECTION:
+			m_dirLightNum++;
+			break;
+		case LIGHTTYPE::POINT:
+			m_poiLightNum++;
+			break;
+		case LIGHTTYPE::SPOT:
+			m_spoLightNum++;
+			break;
+		default:
+			break;
+		}
 	}
 }
 //ÒÆ³ýµÆ¹â×é¼þ
