@@ -16,6 +16,13 @@ CCamera* CCamera::CreateInstance() {
 	return new CCamera();
 };
 
+RUInt CCamera::getCullMask() const {
+	return m_cullMask;
+}
+void CCamera::setCullMask(RUInt _mask) {
+	m_cullMask = _mask;
+}
+
 CAMERATYPE CCamera::getCameraType() const {
 	return m_cameraType;
 }

@@ -4,7 +4,7 @@
 
 
 RGameObject::RGameObject(RScene* s, RString n, RString t, LAYER l) :
-	m_sce(s), name(n), tag(t), layer(l) {
+	m_sce(s), name(n), tag(t), m_layer(l) {
 	IComponent* pComp = addComponent(COMPTYPE::TRANFORM);
 	transform = (CTransform*)pComp;
 }
@@ -18,6 +18,15 @@ RGameObject::~RGameObject() {
 void RGameObject::_destroy() {
 	//释放所用组件的空间
 	removeAllComponent();
+}
+
+//获取图层
+LAYER RGameObject::getLayer() const {
+	return m_layer;
+}
+//设置图层
+void RGameObject::setLayer(LAYER _layer) {
+	m_layer = _layer;
 }
 
 //添加组件

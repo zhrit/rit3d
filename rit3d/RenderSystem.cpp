@@ -69,7 +69,7 @@ void RenderSystem::onDestroy() {
 }
 
 //‘§‰÷»æ
-void RenderSystem::_preRender(RScene* pSce) {
+void RenderSystem::_preRender(CCamera* camera, RScene* pSce) {
 	//shadow map
 	glEnable(GL_DEPTH_TEST);
 	std::list<CLight*> lightList = pSce->getLightList();
@@ -88,6 +88,7 @@ void RenderSystem::_preRender(RScene* pSce) {
 				GLProgram* shader = Application::Instance()->resourceMng->getShader("shadowMap");
 				shader->use();
 				for (auto it : pSce->getGameObjectList()) {
+					if ((it->getLayer() & camera->getCullMask()) == 0) continue;
 					CTransform* trans = it->transform;
 					CRender* rend = (CRender*)it->getComponent(RENDER);
 					if (rend != nullptr && rend->isCastShadow()) {
@@ -112,6 +113,7 @@ void RenderSystem::_preRender(RScene* pSce) {
 				GLProgram* shader = Application::Instance()->resourceMng->getShader("shadowCubemap");
 				shader->use();
 				for (auto it : pSce->getGameObjectList()) {
+					if ((it->getLayer() & camera->getCullMask()) == 0) continue;
 					CTransform* trans = it->transform;
 					CRender* rend = (CRender*)it->getComponent(RENDER);
 					if (rend != nullptr && rend->isCastShadow()) {
@@ -149,6 +151,7 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 	//glm::mat4 view = camera->getViewMatrix(); // make sure to initialize matrix to identity matrix first
 	//glm::mat4 projection = camera->getProjMatrix();
 	for (auto it : pSce->getGameObjectList()) {
+		if ((it->getLayer() & camera->getCullMask()) == 0) continue;
 		CTransform* trans = it->transform;
 		CRender* rend = (CRender*)it->getComponent(RENDER);
 		if (rend != nullptr) {
@@ -183,8 +186,9 @@ void RenderSystem::_render() {
 	RScene* pSce = app->sceneMng->getAllScene().front();
 	std::list<CCamera*> cameraList = pSce->getCameraList();
 	//std::list<CLight*> lightList = pSce->getLightList();
+	//_preRender(pSce);
 	for (auto camera : cameraList) {
-		_preRender(pSce);
+		_preRender(camera, pSce);
 		_mainRender(camera, pSce);
 	}
 }

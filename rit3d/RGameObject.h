@@ -14,11 +14,10 @@ public:
 	RString name;//名称
 	RString tag;//类别
 
-	LAYER layer;//所在图层
-
 	CTransform* transform;//几何组件
 
 private:
+	LAYER m_layer{ LAYER::Default };//所在图层
 	RScene* m_sce;//所属场景
 
 	RBool m_activeSelf{ true };//自身的激活状态
@@ -28,6 +27,10 @@ private:
 	std::map<COMPTYPE, IComponent*> m_compMap;
 
 public:
+	//获取图层
+	LAYER getLayer() const;
+	//设置图层
+	void setLayer(LAYER _layer);
 
 	//添加组件
 	IComponent* addComponent(COMPTYPE type);

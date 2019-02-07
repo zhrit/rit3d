@@ -50,7 +50,7 @@ public:
 
 private:
 	//‘§‰÷»æ
-	void _preRender(RScene* pSce);
+	void _preRender(CCamera* camera, RScene* pSce);
 	//÷˜‰÷»æ
 	void _mainRender(CCamera* camera, RScene* pSce);
 	//∫Û‰÷»æ

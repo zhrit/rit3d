@@ -21,7 +21,12 @@ private:
 
 	RBool m_projDirty{ true };
 
+	RUInt m_cullMask{ LAYER::Default };
+
 public:
+	RUInt getCullMask() const;
+	void setCullMask(RUInt _mask);
+
 	RBool clearColor{ true };//清除深度缓冲
 	RBool clearDepth{ true };//清除颜色缓冲
 
