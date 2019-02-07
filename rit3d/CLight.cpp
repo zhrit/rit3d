@@ -87,7 +87,7 @@ void CLight::setLightType(LIGHTTYPE _type) {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		break;
 	}
-	case LIGHTTYPE::POINT:
+	case LIGHTTYPE::LPOINT:
 	{
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_depthMap);
 		for (RUInt i = 0; i < 6; i++) {
@@ -211,18 +211,18 @@ void CLight::setSize(RFloat _s) {
 	}
 }
 
-void CLight::setPerspFrustum(RFloat near, RFloat far) {
-	if (m_near_s != near || m_far_s != far) {
-		m_near_s = near;
-		m_far_s = far;
+void CLight::setPerspFrustum(RFloat _near, RFloat _far) {
+	if (m_near_s != _near || m_far_s != _far) {
+		m_near_s = _near;
+		m_far_s = _far;
 		m_projDirty = true;
 	}
 }
-void CLight::setOrthoFrustum(RFloat size, RFloat near, RFloat far) {
-	if (m_size_s != size || m_near_s != near || m_far_s != far) {
-		m_size_s = size;
-		m_near_s = near;
-		m_far_s = far;
+void CLight::setOrthoFrustum(RFloat _size, RFloat _near, RFloat _far) {
+	if (m_size_s != _size || m_near_s != _near || m_far_s != _far) {
+		m_size_s = _size;
+		m_near_s = _near;
+		m_far_s = _far;
 		m_projDirty = true;
 	}
 }
@@ -251,7 +251,7 @@ glm::mat4 CLight::_getProjMatrix() {
 			float hh = hw / m_asp_s;
 			m_projMatrix = glm::ortho(-hw, hw, -hh, hh, m_near_s, m_far_s);
 		}
-		else if (m_lightType == LIGHTTYPE::POINT) {
+		else if (m_lightType == LIGHTTYPE::LPOINT) {
 			m_projMatrix = glm::perspective(glm::radians(m_fov_s), m_asp_s, m_near_s, m_far_s);
 		}
 		else {

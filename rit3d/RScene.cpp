@@ -168,7 +168,7 @@ void RScene::addLight(CLight* light) {
 		case LIGHTTYPE::DIRECTION:
 			m_dirLightNum++;
 			break;
-		case LIGHTTYPE::POINT:
+		case LIGHTTYPE::LPOINT:
 			m_poiLightNum++;
 			break;
 		case LIGHTTYPE::SPOT:
@@ -193,7 +193,7 @@ void RScene::removeLight(CLight* light) {
 	case LIGHTTYPE::DIRECTION:
 		m_dirLightNum--;
 		break;
-	case LIGHTTYPE::POINT:
+	case LIGHTTYPE::LPOINT:
 		m_poiLightNum--;
 		break;
 	case LIGHTTYPE::SPOT:
@@ -213,7 +213,7 @@ RUInt RScene::getLightNum(LIGHTTYPE _type) const {
 	{
 	case LIGHTTYPE::DIRECTION:
 		return m_dirLightNum;
-	case LIGHTTYPE::POINT:
+	case LIGHTTYPE::LPOINT:
 		return m_poiLightNum;
 	case LIGHTTYPE::SPOT:
 		return m_spoLightNum;
@@ -229,7 +229,7 @@ void RScene::resetLightNum(LIGHTTYPE _type, RInt delta) {
 	case LIGHTTYPE::DIRECTION:
 		m_dirLightNum += delta;
 		break;
-	case LIGHTTYPE::POINT:
+	case LIGHTTYPE::LPOINT:
 		m_poiLightNum += delta;
 		break;
 	case LIGHTTYPE::SPOT:

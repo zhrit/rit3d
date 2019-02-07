@@ -40,6 +40,9 @@
     <Filter Include="src\asset\resource">
       <UniqueIdentifier>{10742097-933d-4416-b959-d5ab3ea52bd4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\tools">
+      <UniqueIdentifier>{3424a063-4cbc-47ff-9340-a7e0ef165a20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -132,6 +135,12 @@
     <ClInclude Include="RenderSystem.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="fps.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="RTimer.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -219,7 +228,13 @@
       <Filter>src\asset\resource</Filter>
     </ClCompile>
     <ClCompile Include="util.cpp">
-      <Filter>src\core</Filter>
+      <Filter>src\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="fps.cpp">
+      <Filter>src\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="RTimer.cpp">
+      <Filter>src\tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

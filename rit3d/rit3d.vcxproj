@@ -166,6 +166,7 @@
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CRender.h" />
     <ClInclude Include="CTransform.h" />
+    <ClInclude Include="fps.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="ISystem.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="RTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -197,6 +199,7 @@
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CRender.cpp" />
     <ClCompile Include="CTransform.cpp" />
+    <ClCompile Include="fps.cpp" />
     <ClCompile Include="glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -223,6 +226,7 @@
     <ClCompile Include="rit3d.cpp" />
     <ClCompile Include="RMatrix.cpp" />
     <ClCompile Include="RScene.cpp" />
+    <ClCompile Include="RTimer.cpp" />
     <ClCompile Include="RVector.cpp" />
     <ClCompile Include="RWindow.cpp" />
     <ClCompile Include="SceneManager.cpp" />

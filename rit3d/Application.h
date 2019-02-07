@@ -6,6 +6,7 @@
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "CRender.h"
+#include "fps.h"
 
 /*
  * 应用单例类
@@ -29,6 +30,9 @@ private:
 	//游戏入口函数，在主循环前的预编辑，游戏开发者需要实现此函数
 	std::function<void()> m_gameEntry;
 
+	//fps工具
+	FPS m_fps;
+
 public:
 	//系统管理器
 	SystemManager* systemMng{ nullptr };
@@ -40,6 +44,10 @@ public:
 	void runRit3d();
 	//设置游戏入口函数
 	void setGameEntry(std::function<void()> _gameEntry);
+	//显示fps
+	void showFPS();
+	//隐藏fps
+	void hideFPS();
 private:
 	//引擎初始化
 	void _initApp();

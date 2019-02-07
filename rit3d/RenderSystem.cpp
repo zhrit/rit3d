@@ -103,7 +103,7 @@ void RenderSystem::_preRender(RScene* pSce) {
 				glBindFramebuffer(GL_FRAMEBUFFER, 0);
 				break;
 			}
-			case LIGHTTYPE::POINT:
+			case LIGHTTYPE::LPOINT:
 			{
 				glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 				glBindFramebuffer(GL_FRAMEBUFFER, light->getFramebuffer());
@@ -156,8 +156,8 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 			if (rend->m_mat->isUseLight()) {
 				if (pSce->getLightNum(LIGHTTYPE::DIRECTION) > 0)
 					rend->m_mat->addDefine("DIR_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::DIRECTION)));
-				if (pSce->getLightNum(LIGHTTYPE::POINT) > 0)
-					rend->m_mat->addDefine("POI_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::POINT)));
+				if (pSce->getLightNum(LIGHTTYPE::LPOINT) > 0)
+					rend->m_mat->addDefine("POI_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::LPOINT)));
 				if (pSce->getLightNum(LIGHTTYPE::SPOT) > 0)
 					rend->m_mat->addDefine("SPO_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::SPOT)));
 				_updateLightsUniforms(rend->m_mat, lightList);
@@ -294,7 +294,7 @@ void RenderSystem::_updateLightsUniforms(Material* pMat, std::list<CLight*> ligh
 			i++;
 			break;
 		}
-		case LIGHTTYPE::POINT:
+		case LIGHTTYPE::LPOINT:
 		{
 			shader->setVec3("uPoiLights[" + util::num2str(j) + "].position", light->gameObject->transform->getLocalPosition());
 			shader->setVec3("uPoiLights[" + util::num2str(j) + "].color", light->getColor());

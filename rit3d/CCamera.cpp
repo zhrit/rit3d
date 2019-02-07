@@ -77,21 +77,21 @@ void CCamera::setSize(RFloat _s) {
 	}
 }
 
-void CCamera::setOrthoFrustum(RFloat fov, RFloat asp, RFloat near, RFloat far) {
-	if (m_fov != fov || m_asp != asp || m_near != near || m_far != far) {
-		m_fov = fov;
-		m_asp = asp;
-		m_near = near;
-		m_far = far;
+void CCamera::setOrthoFrustum(RFloat _fov, RFloat _asp, RFloat _near, RFloat _far) {
+	if (m_fov != _fov || m_asp != _asp || m_near != _near || m_far != _far) {
+		m_fov = _fov;
+		m_asp = _asp;
+		m_near = _near;
+		m_far = _far;
 		m_projDirty = true;
 	}
 }
-void CCamera::setPerspFrustum(RFloat size, RFloat asp, RFloat near, RFloat far) {
-	if (m_size != size || m_asp != asp || m_near != near || m_far != far) {
-		m_size = size;
-		m_asp = asp;
-		m_near = near;
-		m_far = far;
+void CCamera::setPerspFrustum(RFloat _size, RFloat _asp, RFloat _near, RFloat _far) {
+	if (m_size != _size || m_asp != _asp || m_near != _near || m_far != _far) {
+		m_size = _size;
+		m_asp = _asp;
+		m_near = _near;
+		m_far = _far;
 		m_projDirty = true;
 	}
 }

@@ -65,6 +65,15 @@ void Application::runRit3d() {
 	return;
 }
 
+//显示fps
+void Application::showFPS() {
+	m_fps.show();
+}
+//隐藏fps
+void Application::hideFPS() {
+	m_fps.hide();
+}
+
 //引擎初始化
 void Application::_initApp() {
 	//初始化系统管理类
@@ -83,6 +92,9 @@ void Application::_initApp() {
 }
 //引擎驱动
 void Application::_updateApp() {
+	if (m_fps.isShowed()) {
+		m_fps.update();
+	}
 	systemMng->update();
 }
 

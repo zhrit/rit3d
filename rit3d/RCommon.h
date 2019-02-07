@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <Windows.h>
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -130,7 +131,7 @@ typedef enum {
 typedef enum {
 	NONE = 0,
 	DIRECTION,
-	POINT,
+	LPOINT,
 	SPOT,
 } LIGHTTYPE;
 

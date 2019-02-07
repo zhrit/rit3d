@@ -48,8 +48,8 @@ public:
 	void setSize(RFloat _s);
 
 	//设置视锥体
-	void setOrthoFrustum(RFloat fov, RFloat asp, RFloat near, RFloat far);
-	void setPerspFrustum(RFloat size, RFloat asp, RFloat near, RFloat far);
+	void setOrthoFrustum(RFloat _fov, RFloat _asp, RFloat _near, RFloat _far);
+	void setPerspFrustum(RFloat _size, RFloat _asp, RFloat _near, RFloat _far);
 
 	//获取投影矩阵
 	glm::mat4 getProjMatrix();
