@@ -141,6 +141,9 @@
     <ClInclude Include="RTimer.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="CPostProcess.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -236,6 +239,9 @@
     <ClCompile Include="RTimer.cpp">
       <Filter>src\tools</Filter>
     </ClCompile>
+    <ClCompile Include="CPostProcess.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="simple.vert">
@@ -263,6 +269,27 @@
       <Filter>src\asset\shader</Filter>
     </None>
     <None Include="shadowCubemap.geom">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="postProcess.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="postProcess.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="inversion.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="grayscale.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="sharpen.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="blur.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="edgedetection.frag">
       <Filter>src\asset\shader</Filter>
     </None>
   </ItemGroup>

@@ -26,7 +26,7 @@ ISystem* ISystem::CreateSystem(SYSTEMTYPE type, RInt od) {
 
 //初始化系统
 void ISystem::initSystem() {
-
+	onAwake();
 }
 
 //卸载系统

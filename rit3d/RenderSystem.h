@@ -54,7 +54,7 @@ private:
 	//主渲染
 	void _mainRender(CCamera* camera, RScene* pSce);
 	//后渲染
-	void _postRender();
+	void _postRender(CCamera* camera);
 	//核心渲染函数
 	void _render();
 
@@ -63,6 +63,9 @@ private:
 
 	//更新光源相关的uniform变量
 	void _updateLightsUniforms(Material* pMat, std::list<CLight*> lights);
+
+	//vao对象供后处理使用
+	RUInt m_rectVAO;
 
 	//texture计数器
 	RUInt m_texCounter{ 0 };

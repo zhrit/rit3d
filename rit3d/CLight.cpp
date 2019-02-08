@@ -14,7 +14,8 @@ CLight::CLight() {
 
 
 CLight::~CLight() {
-
+	glDeleteFramebuffers(1, &m_depthMapFBO);
+	glDeleteTextures(1, &m_depthMap);
 }
 
 CLight* CLight::CreateInstance() {

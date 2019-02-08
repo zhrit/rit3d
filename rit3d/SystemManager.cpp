@@ -5,6 +5,7 @@
 #include "CRender.h"
 #include "CCamera.h"
 #include "CLight.h"
+#include "CPostProcess.h"
 
 /*
  * 系统管理单例类
@@ -42,6 +43,7 @@ void SystemManager::registCompCreateFunc() {
 	IComponent::compMap[RENDER] = CRender::CreateInstance;
 	IComponent::compMap[CAMERA] = CCamera::CreateInstance;
 	IComponent::compMap[LIGHT] = CLight::CreateInstance;
+	IComponent::compMap[POSTPROCESS] = CPostProcess::CreateInstance;
 }
 
 //为程序注册一个制定的系统

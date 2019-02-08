@@ -7,6 +7,7 @@
 #include "ResourceManager.h"
 #include "CRender.h"
 #include "fps.h"
+#include "CPostProcess.h"
 
 /*
  * 应用单例类

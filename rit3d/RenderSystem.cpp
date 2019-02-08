@@ -15,7 +15,34 @@ RenderSystem* RenderSystem::CreateInstance(RInt od) {
 
 //系统初始化时调用
 void RenderSystem::onAwake() {
+	RFloat vertices[] = {
+		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f
+	};
+	RUInt indices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+	//创建attay buffer
+	RUInt vbo, ebo;
+	glGenVertexArrays(1, &m_rectVAO);
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ebo);
 
+	glBindVertexArray(m_rectVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, 20 * sizeof(float), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+	//attribute
+	//position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	//uv
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 }
 
 //系统被激活时调用
@@ -139,9 +166,10 @@ void RenderSystem::_preRender(CCamera* camera, RScene* pSce) {
 		}
 	}
 }
-
 //主渲染
 void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
+	//绑定相机的帧缓冲
+	glBindFramebuffer(GL_FRAMEBUFFER, camera->getFramebuffer());
 	std::list<CLight*> lightList = pSce->getLightList();
 	glClearColor(camera->backgroundColor.r, camera->backgroundColor.g, camera->backgroundColor.b, camera->backgroundColor.a);
 	glViewport(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -174,9 +202,33 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 			glDrawElements(GL_TRIANGLES, rend->m_mesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
 		}
 	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 //后渲染
-void RenderSystem::_postRender() {
+void RenderSystem::_postRender(CCamera* camera) {
+	glViewport(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
+	glDisable(GL_DEPTH_TEST);
+	
+	CPostProcess* cpost = (CPostProcess*)camera->gameObject->getComponent(COMPTYPE::POSTPROCESS);
+	GLProgram* shader;
+	if (cpost == nullptr) {
+		shader = Application::Instance()->resourceMng->getShader("postProcess");
+	}
+	else {
+		shader = cpost->getShader();
+	}
+	
+	//使用后处理shader
+	shader->use();
+	//绑定主渲染得到的texture
+	RUInt ind = _allocTexture();
+	shader->setInt("uTexture", ind);
+	glActiveTexture(0x84C0 + ind);
+	glBindTexture(GL_TEXTURE_2D, camera->getColorTex());
+
+	glBindVertexArray(m_rectVAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 }
 
@@ -188,8 +240,10 @@ void RenderSystem::_render() {
 	//std::list<CLight*> lightList = pSce->getLightList();
 	//_preRender(pSce);
 	for (auto camera : cameraList) {
+		_resetTexAlloc();
 		_preRender(camera, pSce);
 		_mainRender(camera, pSce);
+		_postRender(camera);
 	}
 }
 

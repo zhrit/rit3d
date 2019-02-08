@@ -475,6 +475,7 @@ void ResourceManager::createDefaultShader() {
 	//createShader("simple", "simple.vert", "simple.frag");
 	createShader("shadowMap", "shadowMap.vert", "shadowMap.frag", "", "");
 	createShader("shadowCubemap", "shadowCubemap.vert", "shadowCubemap.frag", "", "shadowCubemap.geom");
+	createShader("postProcess", "postProcess.vert", "postProcess.frag", "", "");
 }
 
 //根据vertices和indices计算normals

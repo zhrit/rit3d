@@ -5,11 +5,44 @@
 
 CCamera::CCamera() {
 	m_type = COMPTYPE::CAMERA;
+
+	//创建framebuffer
+	glGenFramebuffers(1, &m_framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
+
+	//生成纹理
+	glGenTextures(1, &m_colorTex);
+	glBindTexture(GL_TEXTURE_2D, m_colorTex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, DEFAULT_WIDTH, DEFAULT_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//纹理附加到当前绑定的帧缓冲对象
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorTex, 0);
+
+	//创建渲染缓冲对象作为深度缓冲和模板缓冲
+	RUInt rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	//打印错误信息
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+	}
+	//恢复默认framebuffer
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
 CCamera::~CCamera() {
-
+	glDeleteFramebuffers(1, &m_framebuffer);
+	glDeleteTextures(1, &m_colorTex);
 }
 
 CCamera* CCamera::CreateInstance() {
@@ -101,6 +134,15 @@ void CCamera::setPerspFrustum(RFloat _size, RFloat _asp, RFloat _near, RFloat _f
 		m_far = _far;
 		m_projDirty = true;
 	}
+}
+
+//获取帧缓冲对象
+RUInt CCamera::getFramebuffer() {
+	return m_framebuffer;
+}
+//获取帧缓冲上的颜色纹理对象
+RUInt CCamera::getColorTex() {
+	return m_colorTex;
 }
 
 //获取投影矩阵

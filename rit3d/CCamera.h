@@ -23,6 +23,9 @@ private:
 
 	RUInt m_cullMask{ LAYER::Default };
 
+	RUInt m_framebuffer;//帧缓冲，为后处理提供接口
+	RUInt m_colorTex;//绑定在帧缓冲上的纹理
+
 public:
 	RUInt getCullMask() const;
 	void setCullMask(RUInt _mask);
@@ -60,6 +63,11 @@ public:
 	glm::mat4 getProjMatrix();
 	//获取视图矩阵
 	glm::mat4 getViewMatrix();
+
+	//获取帧缓冲对象
+	RUInt getFramebuffer();
+	//获取帧缓冲上的颜色纹理对象
+	RUInt getColorTex();
 
 	static CCamera* CreateInstance();
 };

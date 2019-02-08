@@ -164,6 +164,7 @@
     <ClInclude Include="CCollider.h" />
     <ClInclude Include="CLight.h" />
     <ClInclude Include="CMesh.h" />
+    <ClInclude Include="CPostProcess.h" />
     <ClInclude Include="CRender.h" />
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="fps.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="CCollider.cpp" />
     <ClCompile Include="CLight.cpp" />
     <ClCompile Include="CMesh.cpp" />
+    <ClCompile Include="CPostProcess.cpp" />
     <ClCompile Include="CRender.cpp" />
     <ClCompile Include="CTransform.cpp" />
     <ClCompile Include="fps.cpp" />
@@ -236,12 +238,19 @@
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="blur.frag" />
+    <None Include="edgedetection.frag" />
+    <None Include="grayscale.frag" />
+    <None Include="inversion.frag" />
     <None Include="phong.frag" />
+    <None Include="postProcess.frag" />
+    <None Include="postProcess.vert" />
     <None Include="shadowCubemap.frag" />
     <None Include="shadowCubemap.geom" />
     <None Include="shadowCubemap.vert" />
     <None Include="shadowMap.frag" />
     <None Include="shadowMap.vert" />
+    <None Include="sharpen.frag" />
     <None Include="simple.frag" />
   </ItemGroup>
   <ItemGroup>
