@@ -144,6 +144,9 @@
     <ClInclude Include="CPostProcess.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="CSkybox.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -242,6 +245,9 @@
     <ClCompile Include="CPostProcess.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
+    <ClCompile Include="CSkybox.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="simple.vert">
@@ -290,6 +296,12 @@
       <Filter>src\asset\shader</Filter>
     </None>
     <None Include="edgedetection.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="skybox.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="skybox.frag">
       <Filter>src\asset\shader</Filter>
     </None>
   </ItemGroup>

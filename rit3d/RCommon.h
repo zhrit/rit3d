@@ -93,6 +93,7 @@ typedef enum {
 	CAMERA,
 	LIGHT,
 	POSTPROCESS,
+	SKYBOX,
 } COMPTYPE;
 
 //游戏对象所在的图层

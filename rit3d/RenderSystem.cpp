@@ -202,6 +202,27 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 			glDrawElements(GL_TRIANGLES, rend->m_mesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
 		}
 	}
+	//检查是否有天空盒组件,有则渲染天空盒
+	
+	CSkybox* skybox = (CSkybox*)camera->gameObject->getComponent(COMPTYPE::SKYBOX);
+	glDepthFunc(GL_LEQUAL);
+	if (nullptr != skybox) {
+		GLProgram* shader = skybox->getShader();
+		shader->use();
+		shader->setMat4("uView", glm::mat4(glm::mat3(camera->getViewMatrix())));
+		shader->setMat4("uProjection", camera->getProjMatrix());
+
+		RUInt ind = _allocTexture();
+		shader->setInt("uSkybox", ind);
+		glActiveTexture(0x84C0 + ind);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->getBoxTexture());
+
+		glBindVertexArray(skybox->getBoxVAO());
+
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	}
+	glDepthFunc(GL_LESS);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 //后渲染

@@ -166,6 +166,7 @@
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CPostProcess.h" />
     <ClInclude Include="CRender.h" />
+    <ClInclude Include="CSkybox.h" />
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="GLProgram.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CPostProcess.cpp" />
     <ClCompile Include="CRender.cpp" />
+    <ClCompile Include="CSkybox.cpp" />
     <ClCompile Include="CTransform.cpp" />
     <ClCompile Include="fps.cpp" />
     <ClCompile Include="glad.c">
@@ -252,6 +254,8 @@
     <None Include="shadowMap.vert" />
     <None Include="sharpen.frag" />
     <None Include="simple.frag" />
+    <None Include="skybox.frag" />
+    <None Include="skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <None Include="simple.vert">

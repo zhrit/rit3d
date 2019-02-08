@@ -18,6 +18,7 @@ void Mesh::_destroy() {
 		delete[] m_indices;
 		m_indices = nullptr;
 	}
+	deleteBuffer();
 }
 
 Mesh::Mesh(RString _name, RFloat* verArray, RInt verSize, RUInt* indArray, RInt indSize) {
@@ -97,6 +98,7 @@ void Mesh::_createBuffer() {
 void Mesh::deleteBuffer() {
 	glDeleteVertexArrays(1, &m_vertexArray);
 	glDeleteBuffers(1, &m_vertexBuffer);
+	glDeleteBuffers(1, &m_elementBuffer);
 }
 
 RUInt Mesh::getVAO() const {

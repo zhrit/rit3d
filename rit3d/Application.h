@@ -8,6 +8,7 @@
 #include "CRender.h"
 #include "fps.h"
 #include "CPostProcess.h"
+#include "CSkybox.h"
 
 /*
  * 应用单例类
