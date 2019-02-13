@@ -244,6 +244,8 @@
     <None Include="edgedetection.frag" />
     <None Include="grayscale.frag" />
     <None Include="inversion.frag" />
+    <None Include="pbr.frag" />
+    <None Include="pbr.vert" />
     <None Include="phong.frag" />
     <None Include="postProcess.frag" />
     <None Include="postProcess.vert" />

@@ -108,6 +108,7 @@ void RenderSystem::_preRender(CCamera* camera, RScene* pSce) {
 			case LIGHTTYPE::SPOT:
 			case LIGHTTYPE::DIRECTION:
 			{
+				_resetTexAlloc();
 				glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 				glBindFramebuffer(GL_FRAMEBUFFER, light->getFramebuffer());
 				glClear(GL_DEPTH_BUFFER_BIT);
@@ -133,6 +134,7 @@ void RenderSystem::_preRender(CCamera* camera, RScene* pSce) {
 			}
 			case LIGHTTYPE::LPOINT:
 			{
+				_resetTexAlloc();
 				glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 				glBindFramebuffer(GL_FRAMEBUFFER, light->getFramebuffer());
 				glClear(GL_DEPTH_BUFFER_BIT);
@@ -168,6 +170,7 @@ void RenderSystem::_preRender(CCamera* camera, RScene* pSce) {
 }
 //主渲染
 void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
+	_resetTexAlloc();
 	//绑定相机的帧缓冲
 	glBindFramebuffer(GL_FRAMEBUFFER, camera->getFramebuffer());
 	std::list<CLight*> lightList = pSce->getLightList();
@@ -191,10 +194,13 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 					rend->m_mat->addDefine("POI_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::LPOINT)));
 				if (pSce->getLightNum(LIGHTTYPE::SPOT) > 0)
 					rend->m_mat->addDefine("SPO_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::SPOT)));
+				rend->m_mat->getShader()->use();
 				_updateLightsUniforms(rend->m_mat, lightList);
 			}
-			//获取shader
-			rend->m_mat->getShader()->use();
+			else {
+				//获取shader
+				rend->m_mat->getShader()->use();
+			}
 			_updateUniforms(rend, camera, trans, lightList);
 			glBindVertexArray(rend->m_mesh->getVAO());
 
@@ -227,6 +233,7 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 }
 //后渲染
 void RenderSystem::_postRender(CCamera* camera) {
+	_resetTexAlloc();
 	glViewport(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
 	glDisable(GL_DEPTH_TEST);
@@ -261,7 +268,6 @@ void RenderSystem::_render() {
 	//std::list<CLight*> lightList = pSce->getLightList();
 	//_preRender(pSce);
 	for (auto camera : cameraList) {
-		_resetTexAlloc();
 		_preRender(camera, pSce);
 		_mainRender(camera, pSce);
 		_postRender(camera);
@@ -335,6 +341,12 @@ void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform
 		}
 		else if (sName == "uRecieveShadow") {
 			shader->setBool(sName, pRender->isRecieveShadow());
+		}
+		else if (sName == "uMetallic") {
+			shader->setFloat(sName, pMat->getMetallic());
+		}
+		else if (sName == "uRoughness") {
+			shader->setFloat(sName, pMat->getRoughness());
 		}
 	}
 

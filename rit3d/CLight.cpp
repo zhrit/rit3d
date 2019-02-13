@@ -26,9 +26,7 @@ glm::vec3 CLight::getColor() const {
 	return m_color;
 }
 void CLight::setColor(RFloat r, RFloat g, RFloat b) {
-	m_color.r = r;
-	m_color.g = g;
-	m_color.b = b;
+	m_color = glm::vec3(r, g, b);
 }
 void CLight::setColor(glm::vec3 _color) {
 	m_color = _color;

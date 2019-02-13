@@ -33,6 +33,7 @@ GLProgram* Material::getShader() {
 		else {
 			m_shader = sha;
 		}
+		m_shaderDirty = false;
 	}
 	return m_shader;
 }
@@ -123,3 +124,18 @@ void Material::useLight() {
 void Material::closeLight() {
 	m_useLight = false;
 }
+
+RFloat Material::getMetallic() const {
+	return m_metallic;
+}
+void Material::setMetallic(RFloat _m) {
+	m_metallic = _m;
+}
+
+RFloat Material::getRoughness() const {
+	return m_roughness;
+}
+void Material::setRoughness(RFloat _r) {
+	m_roughness = _r;
+}
+

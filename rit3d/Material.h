@@ -19,20 +19,29 @@ private:
 	~Material();
 
 	RString m_name;//材质名称
+
+	//texture
+	std::vector<Texture*> m_texList;//纹理列表
+
+	//light and shadow
+	//phong
 	glm::vec3 m_color{ 1.0f,1.0f,1.0f };//材质主颜色
 	glm::vec3 m_ambient{ 1.0f,1.0f,1.0f };//材质环境光颜色
 	glm::vec3 m_diffuse{ 1.0f,1.0f,1.0f };//材质漫反射颜色
 	glm::vec3 m_specular{ 1.0f,1.0f,1.0f };//材质镜面反射颜色
 	RFloat m_shininess{ 32.0 };//材质镜面反射高光系数
-	std::vector<Texture*> m_texList;//纹理列表
+
 	RBool m_useLight{ true };//是否使用灯光效果
 
+	//shader
 	RString m_shaderName{ "" };//shader的名称
 	GLProgram* m_shader{ nullptr };//shader对象
-
 	std::map<RString, RString> m_defines;//shader中用到的宏定义
-
 	RBool m_shaderDirty{ true };//shader标脏
+
+	//pbr
+	RFloat m_metallic{ 0.0f };//金属度
+	RFloat m_roughness{ 0.0f };//粗糙度
 
 	void _destroy();
 
@@ -69,4 +78,10 @@ public:
 	RBool isUseLight() const;
 	void useLight();
 	void closeLight();
+
+	RFloat getMetallic() const;
+	void setMetallic(RFloat _m);
+
+	RFloat getRoughness() const;
+	void setRoughness(RFloat _r);
 };

@@ -304,5 +304,11 @@
     <None Include="skybox.frag">
       <Filter>src\asset\shader</Filter>
     </None>
+    <None Include="pbr.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="pbr.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
