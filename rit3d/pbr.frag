@@ -172,7 +172,7 @@ void main() {
 //	#endif
 
 	//HDR tonemapping
-	result = result / (result + vec3(1.0f));
+	//result = result / (result + vec3(1.0f));
 	//gamma correct,本机不需要gamma correct
 	//result = pow(result, vec3(1.0f / 2.2f));
     FragColor = vec4(result, 1.0f);
