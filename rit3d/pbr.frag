@@ -57,15 +57,18 @@ uniform SpoLight uSpoLights[SPO_LIGHT_NUM];
 #endif
 
 uniform vec3 uColor;
-//uniform int uHasTex;
-//uniform sampler2D uTexture0;
+uniform int uHasTex;
+uniform sampler2D uTexture0;
+uniform sampler2D uTexture1;
+uniform sampler2D uTexture2;
+uniform sampler2D uTexture3;
+
 uniform vec3 uViewPos;
 //uniform float uShininess;
 //uniform bool uRecieveShadow;
 uniform float uMetallic;
 uniform float uRoughness;
 //uniform float uAo;
-
 const float PI = 3.14159265359f;
 
 //分布函数
@@ -80,7 +83,7 @@ float DistributionGGX(vec3 N, vec3 H, float roughness) {
 	float denom = NdotH2 * (alpha2 - 1.0f) + 1.0f;
 	denom = PI * denom * denom;
 
-	return nom / max(denom, 0.001f);
+	return nom / max(denom, 0.0f);
 }
 
 //几何遮蔽函数
@@ -109,7 +112,7 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0) {
 //vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 
 //点光源pbr
-vec3 CalcPoiLight(PoiLight light, vec3 normal, vec3 viewDir, vec3 fragPos, float roughness, vec3 F0) {
+vec3 CalcPoiLight(PoiLight light, vec3 matColor, vec3 normal, vec3 viewDir, vec3 fragPos, float roughness, float metallic, vec3 F0) {
 	vec3 L = normalize(light.position - fragPos);
 	vec3 H = normalize(viewDir + L);
 	float dis = length(light.position - fragPos);
@@ -122,16 +125,16 @@ vec3 CalcPoiLight(PoiLight light, vec3 normal, vec3 viewDir, vec3 fragPos, float
 	vec3 F = FresnelSchlick(clamp(dot(normal, viewDir), 0.0f, 1.0f), F0);
 
 	vec3 nominator = NDF * G * F;
-	float denominator = 4 * max(dot(normal, viewDir), 0.0f) * max(dot(normal, L), 0.0f);
+	float denominator = 4 * max(dot(normal, viewDir), 0.1f) * max(dot(normal, L), 0.0f);
 	vec3 specular = nominator / max(denominator, 0.001f);
 
 	vec3 ks = F;
 	vec3 kd = vec3(1.0f) - ks;
-	kd *= 1.0 - uMetallic;
+	kd *= 1.0 - metallic;
 
 	float NdotL = max(dot(normal, L), 0.0f);
 
-	return (kd * uColor / PI + specular) * radiance * NdotL;
+	return (kd * matColor / PI + specular) * radiance * NdotL;
 	//return vec3(300.0f * attenuation, 300.0f * attenuation, 300.0f * attenuation);
 
 	//return light.color;
@@ -142,8 +145,14 @@ void main() {
 	vec3 norm = normalize(fragNormal);
 	vec3 viewDir = normalize(uViewPos - fragPos);
 
+	//从纹理中选择颜色
+	vec3 matColor = pow(vec3(texture(uTexture0, TexCoord)), vec3(2.2)) * uHasTex + uColor * (1 - uHasTex);
+	//从纹理中选择粗糙度
+	float roughness = texture(uTexture2, TexCoord).r * uHasTex + uRoughness * (1 - uHasTex);
+	//从纹理中选择金属度
+	float metallic = texture(uTexture1, TexCoord).r * uHasTex + uMetallic * (1 - uHasTex);
 	vec3 F0 = vec3(0.04f);
-	F0 = mix(F0, uColor, uMetallic);
+	F0 = mix(F0, matColor, metallic);
 
 	vec3 result = vec3(0.0f, 0.0f, 0.0f);
 //	#ifdef DIR_LIGHT_NUM
@@ -153,7 +162,7 @@ void main() {
 //	#endif
 	#ifdef POI_LIGHT_NUM
 	for(int i = 0; i < POI_LIGHT_NUM; i++) {
-		result += CalcPoiLight(uPoiLights[i], norm, viewDir, fragPos, uRoughness, F0);
+		result += CalcPoiLight(uPoiLights[i], matColor, norm, viewDir, fragPos, roughness, metallic, F0);
 	}
 	#endif
 //	#ifdef SPO_LIGHT_NUM
@@ -164,7 +173,7 @@ void main() {
 
 	//HDR tonemapping
 	result = result / (result + vec3(1.0f));
-	//gamma correct
+	//gamma correct,本机不需要gamma correct
 	//result = pow(result, vec3(1.0f / 2.2f));
     FragColor = vec4(result, 1.0f);
 }

@@ -170,7 +170,6 @@ void RenderSystem::_preRender(CCamera* camera, RScene* pSce) {
 }
 //主渲染
 void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
-	_resetTexAlloc();
 	//绑定相机的帧缓冲
 	glBindFramebuffer(GL_FRAMEBUFFER, camera->getFramebuffer());
 	std::list<CLight*> lightList = pSce->getLightList();
@@ -183,6 +182,7 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 	//glm::mat4 projection = camera->getProjMatrix();
 	for (auto it : pSce->getGameObjectList()) {
 		if ((it->getLayer() & camera->getCullMask()) == 0) continue;
+		_resetTexAlloc();
 		CTransform* trans = it->transform;
 		CRender* rend = (CRender*)it->getComponent(RENDER);
 		if (rend != nullptr) {
@@ -323,14 +323,29 @@ void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform
 				tex->use(ind);
 				shader->setInt(sName, ind);
 			}
-			//glActiveTexture(0x84C0);
-			//glBindTexture(GL_TEXTURE_2D, lights.front()->getDepthMap());
 		}
 		else if (sName == "uTexture1") {
 			Texture* tex = pMat->getTexture(1);
 			if (tex != nullptr) {
-				tex->use(1);
-				shader->setInt(sName, 1);
+				RUInt ind = _allocTexture();
+				tex->use(ind);
+				shader->setInt(sName, ind);
+			}
+		}
+		else if (sName == "uTexture2") {
+			Texture* tex = pMat->getTexture(2);
+			if (tex != nullptr) {
+				RUInt ind = _allocTexture();
+				tex->use(ind);
+				shader->setInt(sName, ind);
+			}
+		}
+		else if (sName == "uTexture3") {
+			Texture* tex = pMat->getTexture(3);
+			if (tex != nullptr) {
+				RUInt ind = _allocTexture();
+				tex->use(ind);
+				shader->setInt(sName, ind);
 			}
 		}
 		else if (sName == "uViewPos") {

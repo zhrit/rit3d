@@ -1,30 +1,35 @@
 ﻿  Application.cpp
   CCamera.cpp
   CLight.cpp
+  CPostProcess.cpp
   CRender.cpp
+  CSkybox.cpp
   CTransform.cpp
+  fps.cpp
   GLProgram.cpp
   IComponent.cpp
   ISystem.cpp
   Material.cpp
   Mesh.cpp
   RColor.cpp
+  RenderSystem.cpp
+  ResourceManager.cpp
   RGameObject.cpp
+  rit3d.cpp
   RMatrix.cpp
   RScene.cpp
 e:\code\cpp\rit3d\rit3d\rscene.cpp(126): warning C4267: “return”: 从“size_t”转换到“RUInt”，可能丢失数据
+  正在生成代码...
+  正在编译...
+  RTimer.cpp
   RVector.cpp
   RWindow.cpp
-  RenderSystem.cpp
-  ResourceManager.cpp
   SceneManager.cpp
 e:\code\cpp\rit3d\rit3d\scenemanager.cpp(51): warning C4267: “return”: 从“size_t”转换到“RUInt”，可能丢失数据
   StartSystem.cpp
-  正在生成代码...
-  正在编译...
   SystemManager.cpp
   Texture.cpp
-  rit3d.cpp
+  util.cpp
   正在生成代码...
 Application.obj : error LNK2019: 无法解析的外部符号 glfwGetProcAddress，该符号在函数 "public: void __cdecl Application::runRit3d(void)" (?runRit3d@Application@@QEAAXXZ) 中被引用
 rit3d.obj : error LNK2019: 无法解析的外部符号 glfwSetWindowShouldClose，该符号在函数 "void __cdecl processInput(struct GLFWwindow *)" (?processInput@@YAXPEAUGLFWwindow@@@Z) 中被引用
