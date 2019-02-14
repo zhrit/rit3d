@@ -26,6 +26,8 @@ private:
 	RUInt m_framebuffer;//帧缓冲，为后处理提供接口
 	RUInt m_colorTex;//绑定在帧缓冲上的纹理
 
+	RFloat m_exposure{ 1.0f };//曝光参数
+
 public:
 	RUInt getCullMask() const;
 	void setCullMask(RUInt _mask);
@@ -54,6 +56,9 @@ public:
 
 	RFloat getSize() const;
 	void setSize(RFloat _s);
+
+	RFloat getExposure() const;
+	void setExposure(RFloat _e);
 
 	//设置视锥体
 	void setOrthoFrustum(RFloat _fov, RFloat _asp, RFloat _near, RFloat _far);

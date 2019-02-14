@@ -145,6 +145,13 @@ RUInt CCamera::getColorTex() {
 	return m_colorTex;
 }
 
+RFloat CCamera::getExposure() const {
+	return m_exposure;
+}
+void CCamera::setExposure(RFloat _e) {
+	m_exposure = _e;
+}
+
 //获取投影矩阵
 glm::mat4 CCamera::getProjMatrix() {
 	if (m_projDirty) {

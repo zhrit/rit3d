@@ -252,6 +252,7 @@ void RenderSystem::_postRender(CCamera* camera) {
 	//绑定主渲染得到的texture
 	RUInt ind = _allocTexture();
 	shader->setInt("uTexture", ind);
+	shader->setFloat("uExposure", camera->getExposure());
 	glActiveTexture(0x84C0 + ind);
 	glBindTexture(GL_TEXTURE_2D, camera->getColorTex());
 

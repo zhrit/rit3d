@@ -1,2 +1,14 @@
-﻿  CCamera.cpp
+﻿  Application.cpp
+  CCamera.cpp
+  CLight.cpp
+  CPostProcess.cpp
+  CSkybox.cpp
+  Material.cpp
+  RGameObject.cpp
+  RScene.cpp
+  RenderSystem.cpp
+  SceneManager.cpp
+  SystemManager.cpp
+  rit3d.cpp
+  正在生成代码...
   rit3d.vcxproj -> E:\code\CPP\rit3d\Debug\rit3d.exe
