@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CSkybox.h"
+#include "GLProgram.h"
 #include "Application.h"
+#include "ResourceManager.h"
 
 CSkybox::CSkybox() {
 	//´´½¨cubetexµÄvao

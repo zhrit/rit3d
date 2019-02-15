@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "RGameObject.h"
 #include "RScene.h"
+#include "CTransform.h"
 
 
 RGameObject::RGameObject(RScene* s, RString n, RString t, LAYER l) :

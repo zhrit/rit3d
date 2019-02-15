@@ -1,8 +1,8 @@
 #pragma once
 #include "RCommon.h"
 #include "IComponent.h"
-#include "GLProgram.h"
 
+class GLProgram;
 class CSkybox : public IComponent {
 private:
 	CSkybox();

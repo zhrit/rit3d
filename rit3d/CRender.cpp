@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "CRender.h"
+#include "Mesh.h"
+#include "Material.h"
 
 
 CRender::CRender() {

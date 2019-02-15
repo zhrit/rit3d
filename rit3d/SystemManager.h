@@ -2,7 +2,6 @@
 
 #include "RCommon.h"
 #include "ISystem.h"
-#include "RenderSystem.h"
 
 /*
  * 系统管理单例类

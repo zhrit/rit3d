@@ -1,8 +1,8 @@
 #pragma once
 #include "RCommon.h"
 #include "IComponent.h"
-#include "GLProgram.h"
 
+class GLProgram;
 //只有加到有相机组件的对象下才有用
 //需要用户自己写shader并设置shader路径
 class CPostProcess : public IComponent {

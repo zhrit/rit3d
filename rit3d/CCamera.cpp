@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CCamera.h"
 #include "RGameObject.h"
+#include "CTransform.h"
 
 
 CCamera::CCamera() {

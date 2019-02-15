@@ -102,9 +102,6 @@
     <ClInclude Include="CCamera.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="CMesh.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="CRender.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -145,6 +142,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="CSkybox.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="declare.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -207,9 +207,6 @@
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="CLight.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="CMesh.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="CRender.cpp">

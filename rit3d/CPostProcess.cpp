@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CPostProcess.h"
 #include "Application.h"
+#include "GLProgram.h"
+#include "ResourceManager.h"
 
 CPostProcess::CPostProcess() {
 	m_shader = Application::Instance()->resourceMng->getShader("postProcess");

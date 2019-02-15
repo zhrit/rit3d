@@ -7,6 +7,7 @@
 #include "CLight.h"
 #include "CPostProcess.h"
 #include "CSkybox.h"
+#include "RenderSystem.h"
 
 /*
  * 系统管理单例类

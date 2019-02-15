@@ -1,8 +1,8 @@
 #pragma once
 
 #include "RCommon.h"
-#include "RScene.h"
 
+class RScene;
 class SceneManager
 {
 public:

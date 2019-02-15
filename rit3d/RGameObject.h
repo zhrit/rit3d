@@ -2,8 +2,8 @@
 
 #include "RCommon.h"
 #include "IComponent.h"
-#include "CTransform.h"
 
+class CTransform;
 class RScene;
 class RGameObject
 {

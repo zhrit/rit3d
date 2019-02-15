@@ -1,8 +1,8 @@
 #pragma once
 #include "RCommon.h"
-#include "GLProgram.h"
-#include "Texture.h"
 
+class GLProgram;
+class Texture;
 class RUniform {
 public:
 	GLint location;

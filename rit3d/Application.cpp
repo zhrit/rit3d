@@ -1,7 +1,12 @@
 #include "pch.h"
 #include "Application.h"
+#include "RWindow.h"
 #include "SystemManager.h"
+#include "SceneManager.h"
+#include "ResourceManager.h"
 #include "GLProgram.h"
+#include "CPostProcess.h"
+#include "CSkybox.h"
 
 Application::Application() {
 };

@@ -1,10 +1,10 @@
 #pragma once
 
 #include "RCommon.h"
-#include "RGameObject.h"
-#include "CCamera.h"
-#include "CLight.h"
 
+class RGameObject;
+class CCamera;
+class CLight;
 class RScene {
 public:
 	//´´½¨³¡¾°

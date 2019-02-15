@@ -1,13 +1,13 @@
 #pragma once
 #include "RCommon.h"
 #include "ISystem.h"
-#include "Material.h"
-#include "CCamera.h"
-#include "CTransform.h"
-#include "CLight.h"
-#include "RScene.h"
-#include "CRender.h"
 
+class CCamera;
+class CRender;
+class CLight;
+class CTransform;
+class Material;
+class RScene;
 class RFramebuffer {
 public:
 	RFramebuffer() {

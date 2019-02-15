@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "ResourceManager.h"
+#include "Mesh.h"
+#include "Material.h"
+#include "Texture.h"
+#include "GLProgram.h"
 
 ResourceManager *ResourceManager::Instance() {
 	if (m_instance == nullptr) {

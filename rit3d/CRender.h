@@ -1,9 +1,9 @@
 #pragma once
 #include "RCommon.h"
-#include "Mesh.h"
 #include "IComponent.h"
-#include "Material.h"
 
+class Mesh;
+class Material;
 class CRender : public IComponent{
 private:
 	CRender();

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SceneManager.h"
+#include "RScene.h"
 
 SceneManager* SceneManager::Instance() {
 	if (m_instance == nullptr) {

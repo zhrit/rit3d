@@ -163,11 +163,11 @@
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCollider.h" />
     <ClInclude Include="CLight.h" />
-    <ClInclude Include="CMesh.h" />
     <ClInclude Include="CPostProcess.h" />
     <ClInclude Include="CRender.h" />
     <ClInclude Include="CSkybox.h" />
     <ClInclude Include="CTransform.h" />
+    <ClInclude Include="declare.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="IComponent.h" />
@@ -198,7 +198,6 @@
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCollider.cpp" />
     <ClCompile Include="CLight.cpp" />
-    <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CPostProcess.cpp" />
     <ClCompile Include="CRender.cpp" />
     <ClCompile Include="CSkybox.cpp" />

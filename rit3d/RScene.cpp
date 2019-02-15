@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "RScene.h"
+#include "RGameObject.h"
+#include "CCamera.h"
+#include "CLight.h"
+#include "CTransform.h"
 
 //´´½¨³¡¾°
 RScene* RScene::CreateScene(RString name) {

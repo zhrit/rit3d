@@ -1,15 +1,12 @@
 #pragma once
 
 #include "RCommon.h"
-#include "RWindow.h"
-#include "SystemManager.h"
-#include "SceneManager.h"
-#include "ResourceManager.h"
-#include "CRender.h"
 #include "fps.h"
-#include "CPostProcess.h"
-#include "CSkybox.h"
 
+class SystemManager;
+class SceneManager;
+class ResourceManager;
+class RWindow;
 /*
  * 应用单例类
  */

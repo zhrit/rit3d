@@ -2,6 +2,7 @@
 #include "CLight.h"
 #include "RGameObject.h"
 #include "RScene.h"
+#include "CTransform.h"
 
 
 CLight::CLight() {

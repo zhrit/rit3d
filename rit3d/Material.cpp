@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "Material.h"
 #include "Application.h"
+#include "GLProgram.h"
+#include "Texture.h"
+#include "ResourceManager.h"
 
 Material::Material(RString _name) : m_name(_name) {
 

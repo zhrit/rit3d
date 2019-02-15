@@ -1,9 +1,10 @@
 #pragma once
 #include "RCommon.h"
-#include "Mesh.h"
-#include "Material.h"
-#include "Texture.h"
-#include "GLProgram.h"
+
+class Mesh;
+class Material;
+class Texture;
+class GLProgram;
 
 class ResourceManager
 {
