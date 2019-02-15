@@ -11,23 +11,25 @@ CCamera::CCamera() {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 
 	//生成纹理
-	glGenTextures(1, &m_colorTex);
-	glBindTexture(GL_TEXTURE_2D, m_colorTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, DEFAULT_WIDTH, DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glGenTextures(2, m_colorTexs);
+	for (RUInt i = 0; i < 2; i++) {
+		glBindTexture(GL_TEXTURE_2D, m_colorTexs[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, DEFAULT_WIDTH * 2, DEFAULT_HEIGHT * 2, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
-	//纹理附加到当前绑定的帧缓冲对象
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorTex, 0);
+		//纹理附加到当前绑定的帧缓冲对象
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, m_colorTexs[i], 0);
+	}
 
 	//创建渲染缓冲对象作为深度缓冲和模板缓冲
 	RUInt rbo;
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, DEFAULT_WIDTH * 2, DEFAULT_HEIGHT * 2);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
@@ -42,7 +44,7 @@ CCamera::CCamera() {
 
 CCamera::~CCamera() {
 	glDeleteFramebuffers(1, &m_framebuffer);
-	glDeleteTextures(1, &m_colorTex);
+	glDeleteTextures(2, m_colorTexs);
 }
 
 CCamera* CCamera::CreateInstance() {
@@ -141,8 +143,8 @@ RUInt CCamera::getFramebuffer() {
 	return m_framebuffer;
 }
 //获取帧缓冲上的颜色纹理对象
-RUInt CCamera::getColorTex() {
-	return m_colorTex;
+RUInt CCamera::getColorTex(RUInt ind) {
+	return m_colorTexs[ind];
 }
 
 RFloat CCamera::getExposure() const {
@@ -150,6 +152,13 @@ RFloat CCamera::getExposure() const {
 }
 void CCamera::setExposure(RFloat _e) {
 	m_exposure = _e;
+}
+
+RFloat CCamera::getBloom() const {
+	return m_bloom;
+}
+void CCamera::setBloom(RFloat _b) {
+	m_bloom = _b;
 }
 
 //获取投影矩阵

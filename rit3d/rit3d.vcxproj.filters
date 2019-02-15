@@ -310,5 +310,8 @@
     <None Include="pbr.frag">
       <Filter>src\asset\shader</Filter>
     </None>
+    <None Include="gaussianBlur.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

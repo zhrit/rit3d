@@ -172,14 +172,21 @@ void RenderSystem::_preRender(CCamera* camera, RScene* pSce) {
 void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 	//绑定相机的帧缓冲
 	glBindFramebuffer(GL_FRAMEBUFFER, camera->getFramebuffer());
-	std::list<CLight*> lightList = pSce->getLightList();
-	glClearColor(camera->backgroundColor.r, camera->backgroundColor.g, camera->backgroundColor.b, camera->backgroundColor.a);
-	glViewport(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
 	glEnable(GL_DEPTH_TEST);
-	// create transformations
-	//glm::mat4 view = camera->getViewMatrix(); // make sure to initialize matrix to identity matrix first
-	//glm::mat4 projection = camera->getProjMatrix();
+	glViewport(0, 0, DEFAULT_WIDTH * 2, DEFAULT_HEIGHT * 2);
+	//两个颜色附件
+	RUInt attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(1, attachments);
+	glClearColor(camera->backgroundColor.r, camera->backgroundColor.g, camera->backgroundColor.b, camera->backgroundColor.a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
+	if (camera->getBloom() >= 1.0f) {
+		glDrawBuffers(1, attachments + 1);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDrawBuffers(2, attachments);
+	}
+
+	std::list<CLight*> lightList = pSce->getLightList();
 	for (auto it : pSce->getGameObjectList()) {
 		if ((it->getLayer() & camera->getCullMask()) == 0) continue;
 		_resetTexAlloc();
@@ -194,12 +201,13 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 					rend->m_mat->addDefine("POI_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::LPOINT)));
 				if (pSce->getLightNum(LIGHTTYPE::SPOT) > 0)
 					rend->m_mat->addDefine("SPO_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::SPOT)));
-				rend->m_mat->getShader()->use();
-				_updateLightsUniforms(rend->m_mat, lightList);
 			}
-			else {
-				//获取shader
-				rend->m_mat->getShader()->use();
+			if (camera->getBloom() >= 1.0f) {
+				rend->m_mat->addDefine("BLOOM", "1");
+			}
+			rend->m_mat->getShader()->use();
+			if (rend->m_mat->isUseLight()) {
+				_updateLightsUniforms(rend->m_mat, lightList);
 			}
 			_updateUniforms(rend, camera, trans, lightList);
 			glBindVertexArray(rend->m_mesh->getVAO());
@@ -234,6 +242,38 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 //后渲染
 void RenderSystem::_postRender(CCamera* camera) {
 	_resetTexAlloc();
+	RFramebuffer* pFramebuffer[2];
+	RBool horizontal = true;
+	if (camera->getBloom() >= 1.0f) {
+		//开启bloom时，用高斯模糊器处理高光区域
+		pFramebuffer[0] = _popFramebuffer();
+		pFramebuffer[1] = _popFramebuffer();
+		RBool first_iteration = true;
+		RUInt amout = 10;
+		GLProgram* shader0 = Application::Instance()->resourceMng->getShader("gaussianBlur");
+		shader0->use();
+		for (RUInt i = 0; i < amout; i++) {
+			//交替模糊十次
+			glBindFramebuffer(GL_FRAMEBUFFER, pFramebuffer[horizontal]->fbo);
+			glViewport(0, 0, DEFAULT_WIDTH * 2, DEFAULT_HEIGHT * 2);
+			shader0->setBool("uHorizontal", horizontal);
+			RUInt ind = _allocTexture();
+			shader0->setInt("uTexture", ind);
+			glActiveTexture(0x84C0 + ind);
+			glBindTexture(GL_TEXTURE_2D, first_iteration ? camera->getColorTex(1) : pFramebuffer[!horizontal]->colorTex);
+			glBindVertexArray(m_rectVAO);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+			horizontal = !horizontal;
+			first_iteration = false;
+		}
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		_pushFramebuffer(pFramebuffer[0]);
+		_pushFramebuffer(pFramebuffer[1]);
+	}
+
+	//渲染到屏幕buffer上
+	_resetTexAlloc();
 	glViewport(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
 	glDisable(GL_DEPTH_TEST);
@@ -249,13 +289,20 @@ void RenderSystem::_postRender(CCamera* camera) {
 	
 	//使用后处理shader
 	shader->use();
+	shader->setFloat("uExposure", camera->getExposure());
+	shader->setFloat("uBloomValue", camera->getBloom());
 	//绑定主渲染得到的texture
 	RUInt ind = _allocTexture();
 	shader->setInt("uTexture", ind);
-	shader->setFloat("uExposure", camera->getExposure());
 	glActiveTexture(0x84C0 + ind);
-	glBindTexture(GL_TEXTURE_2D, camera->getColorTex());
+	glBindTexture(GL_TEXTURE_2D, camera->getColorTex(0));
 
+	ind = _allocTexture();
+	shader->setInt("uBloomMap", ind);
+	glActiveTexture(0x84C0 + ind);
+	glBindTexture(GL_TEXTURE_2D, 
+		camera->getBloom() >= 1.0f ? pFramebuffer[!horizontal]->colorTex : camera->getColorTex(1));
+	//glBindTexture(GL_TEXTURE_2D, camera->getColorTex(1));
 	glBindVertexArray(m_rectVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -364,6 +411,9 @@ void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform
 		else if (sName == "uRoughness") {
 			shader->setFloat(sName, pMat->getRoughness());
 		}
+		else if (sName == "uBloomValue") {
+			shader->setFloat(sName, camera->getBloom());
+		}
 	}
 
 	delete[] uniformName;
@@ -457,4 +507,22 @@ RUInt RenderSystem::_allocTexture() {
 //texture分配器状态重置
 void RenderSystem::_resetTexAlloc() {
 	m_texCounter = 0;
+}
+
+//取出一个framebuffer
+RFramebuffer* RenderSystem::_popFramebuffer() {
+	RFramebuffer* temp;
+	if (m_framebufferPool.size() > 0) {
+		temp = m_framebufferPool.back();
+		m_framebufferPool.pop_back();
+	}
+	else {
+		temp = new RFramebuffer();
+	}
+	return temp;
+}
+
+//用完的framebuffer重新放入buffer池
+void RenderSystem::_pushFramebuffer(RFramebuffer* pf) {
+	m_framebufferPool.push_back(pf);
 }

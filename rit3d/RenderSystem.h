@@ -8,6 +8,28 @@
 #include "RScene.h"
 #include "CRender.h"
 
+class RFramebuffer {
+public:
+	RFramebuffer() {
+		glGenFramebuffers(1, &fbo);
+		glGenTextures(1, &colorTex);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glBindTexture(GL_TEXTURE_2D, colorTex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, DEFAULT_WIDTH * 2, DEFAULT_HEIGHT * 2, 0, GL_RGB, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+	}
+	~RFramebuffer() {
+		glDeleteFramebuffers(1, &fbo);
+		glDeleteTextures(1, &colorTex);
+	}
+	RUInt fbo;
+	RUInt colorTex;
+};
+
 class RenderSystem : public ISystem {
 private:
 	RenderSystem(RInt od);
@@ -73,4 +95,11 @@ private:
 	RUInt _allocTexture();
 	//texture分配器状态重置
 	void _resetTexAlloc();
+
+	//framebuffer池
+	std::vector<RFramebuffer*> m_framebufferPool;
+	//取出一个framebuffer
+	RFramebuffer* _popFramebuffer();
+	//用完的framebuffer重新放入buffer池
+	void _pushFramebuffer(RFramebuffer* pf);
 };

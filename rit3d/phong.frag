@@ -1,4 +1,7 @@
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+#ifdef BLOOM
+layout (location = 1) out vec4 BrightColor;
+#endif
 
 in vec2 TexCoord;//uv坐标
 in vec3 fragNormal;//世界坐标系法向量
@@ -40,6 +43,10 @@ struct SpoLight {
 	float outer;
 	bool castShadow;
 };
+
+#ifdef BLOOM
+uniform float uBloomValue;
+#endif
 
 #ifdef DIR_LIGHT_NUM
 uniform DirLight uDirLights[DIR_LIGHT_NUM];
@@ -88,6 +95,14 @@ void main() {
 	}
 	#endif
     FragColor = vec4(result, 1.0f);
+
+	#ifdef BLOOM
+	float brightness = dot(FragColor.rgb, vec3(0.0, 0.0, 0.0));
+	BrightColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	if (brightness == 200000.0f) {
+		BrightColor = vec4(FragColor.rgb, 1.0f);
+	}
+	#endif
 	//FragColor = texture(texture0, TexCoord) * hasTex + vec4(color, 1.0f) * (1 - hasTex);
 }
 

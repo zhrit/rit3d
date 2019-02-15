@@ -8,6 +8,7 @@ private:
 	CCamera();
 	virtual ~CCamera();
 
+	//视锥体
 	RFloat m_near{ 0.1f };
 	RFloat m_far{ 100.0f };
 	RFloat m_asp{ 800.0f / 600.0f };
@@ -21,12 +22,15 @@ private:
 
 	RBool m_projDirty{ true };
 
+	//图层
 	RUInt m_cullMask{ LAYER::Default };
-
+	//渲染目标
 	RUInt m_framebuffer;//帧缓冲，为后处理提供接口
-	RUInt m_colorTex;//绑定在帧缓冲上的纹理
+	RUInt m_colorTexs[2];//绑定在帧缓冲上的纹理
 
+	//HDR参数
 	RFloat m_exposure{ 1.0f };//曝光参数
+	RFloat m_bloom{ 0.0f };//泛光阈值
 
 public:
 	RUInt getCullMask() const;
@@ -60,6 +64,9 @@ public:
 	RFloat getExposure() const;
 	void setExposure(RFloat _e);
 
+	RFloat getBloom() const;
+	void setBloom(RFloat _b);
+
 	//设置视锥体
 	void setOrthoFrustum(RFloat _fov, RFloat _asp, RFloat _near, RFloat _far);
 	void setPerspFrustum(RFloat _size, RFloat _asp, RFloat _near, RFloat _far);
@@ -72,7 +79,7 @@ public:
 	//获取帧缓冲对象
 	RUInt getFramebuffer();
 	//获取帧缓冲上的颜色纹理对象
-	RUInt getColorTex();
+	RUInt getColorTex(RUInt ind);
 
 	static CCamera* CreateInstance();
 };

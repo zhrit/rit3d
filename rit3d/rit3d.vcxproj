@@ -242,6 +242,7 @@
   <ItemGroup>
     <None Include="blur.frag" />
     <None Include="edgedetection.frag" />
+    <None Include="gaussianBlur.frag" />
     <None Include="grayscale.frag" />
     <None Include="inversion.frag" />
     <None Include="pbr.frag" />
