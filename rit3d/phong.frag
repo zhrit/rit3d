@@ -48,6 +48,11 @@ struct SpoLight {
 uniform float uBloomValue;
 #endif
 
+#ifdef NORMALMAP
+uniform sampler2D uNormalMap;
+in mat3 TBN;
+#endif
+
 #ifdef DIR_LIGHT_NUM
 uniform DirLight uDirLights[DIR_LIGHT_NUM];
 uniform sampler2D uDirShadowMap[DIR_LIGHT_NUM];
@@ -62,7 +67,6 @@ uniform SpoLight uSpoLights[SPO_LIGHT_NUM];
 uniform sampler2D uSpoShadowMap[SPO_LIGHT_NUM];
 in vec4 positionFromLightSpo[SPO_LIGHT_NUM];
 #endif
-
 uniform vec3 uColor;
 uniform int uHasTex;
 uniform sampler2D uTexture0;
@@ -76,6 +80,11 @@ vec3 CalcSpoLight(SpoLight light, vec3 normal, vec3 viewDir, vec3 fragPos, sampl
 
 void main() {
 	vec3 norm = normalize(fragNormal);
+	#ifdef NORMALMAP
+	norm = texture(uNormalMap, TexCoord).rgb;
+	norm = normalize(norm * 2.0f - 1.0f);
+	norm = normalize(TBN * norm);
+	#endif
 	vec3 viewDir = normalize(uViewPos - fragPos);
 
 	vec3 result = vec3(0.0f, 0.0f, 0.0f);

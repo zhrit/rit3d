@@ -170,39 +170,46 @@ GLProgram* ResourceManager::getShader(const RString& _name) {
 void ResourceManager::createDefaultMesh() {
 	{
 		//quad
+		const RUInt vc = 4 * 14;
+		const RUInt ic = 6;
 		RFloat vertices_quad[] = {
-			-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-			 0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+			 0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
 		};
 		RUInt indices_quad[] = {
 			0, 2, 1, 0, 3, 2
 		};
-		createMesh("quad", vertices_quad, 4 * 11, indices_quad, 6);
+		createMesh("quad", vertices_quad, vc, indices_quad, ic);
 	}
 	{
 		//plane
-		RFloat vertices_plane[1331];//121*11
+		const RUInt vc = 121 * 14;
+		const RUInt ic = 600;
+		RFloat vertices_plane[vc];//121*14
 		int k = 0;
 		for (int i = -5; i <= 5; i++) {
 			for (int j = -5; j <= 5; j++) {
-				vertices_plane[k * 11] = (RFloat)j;
-				vertices_plane[k * 11 + 1] = 0.0f;
-				vertices_plane[k * 11 + 2] = (RFloat)i;
-				vertices_plane[k * 11 + 3] = 0.0f;
-				vertices_plane[k * 11 + 4] = 1.0f;
-				vertices_plane[k * 11 + 5] = 0.0f;
-				vertices_plane[k * 11 + 6] = 1.0f;
-				vertices_plane[k * 11 + 7] = 1.0f;
-				vertices_plane[k * 11 + 8] = 1.0f;
-				vertices_plane[k * 11 + 9] = ((RFloat)j + 5.0f)*0.1f;
-				vertices_plane[k * 11 + 10] = (5.0f - (RFloat)i) * 0.1f;
+				vertices_plane[k * 14] = (RFloat)j;
+				vertices_plane[k * 14 + 1] = 0.0f;
+				vertices_plane[k * 14 + 2] = (RFloat)i;
+				vertices_plane[k * 14 + 3] = 0.0f;
+				vertices_plane[k * 14 + 4] = 1.0f;
+				vertices_plane[k * 14 + 5] = 0.0f;
+				vertices_plane[k * 14 + 6] = 1.0f;
+				vertices_plane[k * 14 + 7] = 0.0f;
+				vertices_plane[k * 14 + 8] = 0.0f;
+				vertices_plane[k * 14 + 9] = 1.0f;
+				vertices_plane[k * 14 + 10] = 1.0f;
+				vertices_plane[k * 14 + 11] = 1.0f;
+				vertices_plane[k * 14 + 12] = ((RFloat)j + 5.0f)*0.1f;
+				vertices_plane[k * 14 + 13] = (5.0f - (RFloat)i) * 0.1f;
 				k++;
 			}
 		}
 		k = 0;
-		RUInt indices_plane[600];
+		RUInt indices_plane[ic];
 		for (int i = 0; i < 109; i++) {
 			if (i % 11 == 10) {
 				continue;
@@ -215,52 +222,56 @@ void ResourceManager::createDefaultMesh() {
 			indices_plane[k * 6 + 5] = i + 12;
 			k++;
 		}
-		createMesh("plane", vertices_plane, 1331, indices_plane, 600);
+		createMesh("plane", vertices_plane, vc, indices_plane, ic);
 	}
 	{
 		//cube
+		const RUInt vc = 24 * 14;
+		const RUInt ic = 36;
 		float vertices_cube[] = {
-			-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
-			 0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
-			 0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
-			-0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
+			 0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+			 0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
+			-0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
 
-			-0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+			-0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
+			 0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+			 0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
+			-0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
 
-			-0.5f,  0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
+			-0.5f,  0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+			-0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
+			-0.5f, -0.5f,  0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
 
-			 0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
-			 0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
+			 0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+			 0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
+			 0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+			 0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
 
-			-0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
-			-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
+			-0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+			 0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
+			 0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+			-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f,
 
-			-0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-			 0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
-			 0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f
+			-0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+			 0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 1.0f,
+			 0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+			-0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f
 		};
 		RUInt indices_cube[] = {
 			0,2,1,0,3,2,4,6,5,4,7,6,8,10,9,8,11,10,12,14,13,12,15,14,16,18,17,16,19,18,20,22,21,20,23,22
 		};
-		createMesh("cube", vertices_cube, 24 * 11, indices_cube, 36);
+		createMesh("cube", vertices_cube, vc, indices_cube, ic);
 	}
 	{
 		//sphere
 		const RUInt X_SEGMENTS = 64;
 		const RUInt Y_SEGMENTS = 64;
+		const RUInt vc = (X_SEGMENTS + 1) * (Y_SEGMENTS + 1) * 14;
+		const RUInt ic = X_SEGMENTS * Y_SEGMENTS * 6;
 		//4225个点,46475
-		RFloat vertices_sphere[46475] = { 0.0f };
+		RFloat vertices_sphere[vc] = { 0.0f };
 		RUInt i = 0;
 		for (RUInt y = 0; y <= Y_SEGMENTS; y++) {
 			for (RUInt x = 0; x <= X_SEGMENTS; x++) {
@@ -269,21 +280,24 @@ void ResourceManager::createDefaultMesh() {
 				float xPos = 0.5f * cos(xSegment * PI2) * sin(ySegment * PI);
 				float yPos = 0.5f * cos(ySegment * PI);
 				float zPos = 0.5f * sin(xSegment * PI2) * sin(ySegment * PI);
-				vertices_sphere[i * 11] = xPos;
-				vertices_sphere[i * 11 + 1] = yPos;
-				vertices_sphere[i * 11 + 2] = zPos;
-				vertices_sphere[i * 11 + 3] = 2.0f * xPos;
-				vertices_sphere[i * 11 + 4] = 2.0f * yPos;
-				vertices_sphere[i * 11 + 5] = 2.0f * zPos;
-				vertices_sphere[i * 11 + 6] = 1.0f;
-				vertices_sphere[i * 11 + 7] = 1.0f;
-				vertices_sphere[i * 11 + 8] = 1.0f;
-				vertices_sphere[i * 11 + 9] = xSegment;
-				vertices_sphere[i * 11 + 10] = ySegment;
+				vertices_sphere[i * 14] = xPos;
+				vertices_sphere[i * 14 + 1] = yPos;
+				vertices_sphere[i * 14 + 2] = zPos;
+				vertices_sphere[i * 14 + 3] = 2.0f * xPos;
+				vertices_sphere[i * 14 + 4] = 2.0f * yPos;
+				vertices_sphere[i * 14 + 5] = 2.0f * zPos;
+				vertices_sphere[i * 14 + 6] = 1.0f;
+				vertices_sphere[i * 14 + 7] = 1.0f;
+				vertices_sphere[i * 14 + 8] = 1.0f;
+				vertices_sphere[i * 14 + 9] = 1.0f;
+				vertices_sphere[i * 14 + 10] = 1.0f;
+				vertices_sphere[i * 14 + 11] = 1.0f;
+				vertices_sphere[i * 14 + 12] = xSegment;
+				vertices_sphere[i * 14 + 13] = ySegment;
 				i++;
 			}
 		}
-		RUInt indices_sphere[24576] = { 0 };
+		RUInt indices_sphere[ic] = { 0 };
 		i = 0;
 		for (RUInt y = 0; y < Y_SEGMENTS; y++) {
 			for (RUInt x = 0; x < X_SEGMENTS; x++) {
@@ -295,10 +309,12 @@ void ResourceManager::createDefaultMesh() {
 				indices_sphere[i++] = y * (X_SEGMENTS + 1) + 1 + x;
 			}
 		}
-		createMesh("sphere", vertices_sphere, 46475, indices_sphere, 24576);
+		createMesh("sphere", vertices_sphere, vc, indices_sphere, ic);
 	}
 	{
 		//cone 60份 122个点
+		const RUInt vc = 122 * 14;
+		const RUInt ic = 360;
 		RFloat vertices[366] = { 0.0f };
 		int k = 0;
 		for (int i = 0; i < 60; i++) {
@@ -350,24 +366,29 @@ void ResourceManager::createDefaultMesh() {
 		}
 		uv[k++] = 0.5, uv[k++] = 0.5, uv[k++] = 0.5, uv[k++] = 0.5;
 
-		RFloat vertices_cone[1342];
+		RFloat vertices_cone[vc];
 		for (int i = 0; i < 122; i++) {
-			vertices_cone[i * 11] = vertices[i * 3];
-			vertices_cone[i * 11 + 1] = vertices[i * 3 + 1];
-			vertices_cone[i * 11 + 2] = vertices[i * 3 + 2];
-			vertices_cone[i * 11 + 3] = normals[i * 3];
-			vertices_cone[i * 11 + 4] = normals[i * 3 + 1];
-			vertices_cone[i * 11 + 5] = normals[i * 3 + 2];
-			vertices_cone[i * 11 + 6] = 1.0f;
-			vertices_cone[i * 11 + 7] = 1.0f;
-			vertices_cone[i * 11 + 8] = 1.0f;
-			vertices_cone[i * 11 + 9] = uv[i * 2];
-			vertices_cone[i * 11 + 10] = uv[i * 2] + 1;
+			vertices_cone[i * 14] = vertices[i * 3];
+			vertices_cone[i * 14 + 1] = vertices[i * 3 + 1];
+			vertices_cone[i * 14 + 2] = vertices[i * 3 + 2];
+			vertices_cone[i * 14 + 3] = normals[i * 3];
+			vertices_cone[i * 14 + 4] = normals[i * 3 + 1];
+			vertices_cone[i * 14 + 5] = normals[i * 3 + 2];
+			vertices_cone[i * 14 + 6] = 1.0f;
+			vertices_cone[i * 14 + 7] = 1.0f;
+			vertices_cone[i * 14 + 8] = 1.0f;
+			vertices_cone[i * 14 + 9] = 1.0f;
+			vertices_cone[i * 14 + 10] = 1.0f;
+			vertices_cone[i * 14 + 11] = 1.0f;
+			vertices_cone[i * 14 + 12] = uv[i * 2];
+			vertices_cone[i * 14 + 13] = uv[i * 2] + 1;
 		}
-		createMesh("cone", vertices_cone, 1342, indices_cone, 360);
+		createMesh("cone", vertices_cone, vc, indices_cone, ic);
 	}
 	{
 		//cylinder // 60份 244个点
+		const RUInt vc = 244 * 14;
+		const RUInt ic = 720;
 		RFloat vertices[732] = { 0.0f };
 		int k = 0;
 		for (int i = 0; i <= 60; i++) {
@@ -398,7 +419,7 @@ void ResourceManager::createDefaultMesh() {
 		vertices[3 * k + 1] = -0.5f;
 		vertices[3 * k + 2] = 0.0f;
 
-		RUInt indices_cylinder[720];
+		RUInt indices_cylinder[ic];
 		k = 0;
 		for (int i = 0; i < 60; i++) {
 			indices_cylinder[k++] = i * 2;
@@ -445,21 +466,24 @@ void ResourceManager::createDefaultMesh() {
 		}
 		uv[k++] = 0.5, uv[k++] = 0.5, uv[k++] = 0.5, uv[k++] = 0.5;
 
-		RFloat vertices_cylinder[2684];
+		RFloat vertices_cylinder[vc];
 		for (int i = 0; i < 244; i++) {
-			vertices_cylinder[i * 11] = vertices[i * 3];
-			vertices_cylinder[i * 11 + 1] = vertices[i * 3 + 1];
-			vertices_cylinder[i * 11 + 2] = vertices[i * 3 + 2];
-			vertices_cylinder[i * 11 + 3] = normals[i * 3];
-			vertices_cylinder[i * 11 + 4] = normals[i * 3 + 1];
-			vertices_cylinder[i * 11 + 5] = normals[i * 3 + 2];
-			vertices_cylinder[i * 11 + 6] = 1.0f;
-			vertices_cylinder[i * 11 + 7] = 1.0f;
-			vertices_cylinder[i * 11 + 8] = 1.0f;
-			vertices_cylinder[i * 11 + 9] = uv[i * 2];
-			vertices_cylinder[i * 11 + 10] = uv[i * 2] + 1;
+			vertices_cylinder[i * 14] = vertices[i * 3];
+			vertices_cylinder[i * 14 + 1] = vertices[i * 3 + 1];
+			vertices_cylinder[i * 14 + 2] = vertices[i * 3 + 2];
+			vertices_cylinder[i * 14 + 3] = normals[i * 3];
+			vertices_cylinder[i * 14 + 4] = normals[i * 3 + 1];
+			vertices_cylinder[i * 14 + 5] = normals[i * 3 + 2];
+			vertices_cylinder[i * 14 + 6] = 1.0f;
+			vertices_cylinder[i * 14 + 7] = 1.0f;
+			vertices_cylinder[i * 14 + 8] = 1.0f;
+			vertices_cylinder[i * 14 + 9] = 1.0f;
+			vertices_cylinder[i * 14 + 10] = 1.0f;
+			vertices_cylinder[i * 14 + 11] = 1.0f;
+			vertices_cylinder[i * 14 + 12] = uv[i * 2];
+			vertices_cylinder[i * 14 + 13] = uv[i * 2] + 1;
 		}
-		createMesh("cylinder", vertices_cylinder, 2684, indices_cylinder, 720);
+		createMesh("cylinder", vertices_cylinder, vc, indices_cylinder, ic);
 	}
 }
 

@@ -22,6 +22,7 @@ private:
 
 	//texture
 	std::vector<Texture*> m_texList;//纹理列表
+	Texture* m_normalMap{ nullptr };//法线贴图
 
 	//light and shadow
 	//phong
@@ -53,6 +54,8 @@ public:
 
 	//增加define
 	void addDefine(RString _key, RString _value);
+	//删除define
+	void removeDefine(RString _key);
 
 	glm::vec3 getColor() const;
 	void setColor(RFloat r, RFloat g, RFloat b);
@@ -74,6 +77,10 @@ public:
 	void clearTexture();
 	Texture* getTexture(RUInt i);
 	RUInt getTexNum() const;
+
+	void setNormalMap(Texture* _map);
+	Texture* getNormalMap() const;
+	void removeNormalMap();
 
 	RBool isUseLight() const;
 	void useLight();

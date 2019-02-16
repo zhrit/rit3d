@@ -56,6 +56,13 @@ void Material::addDefine(RString _key, RString _value) {
 	m_defines[_key] = _value;
 	m_shaderDirty = true;
 }
+//É¾³ýdefine
+void Material::removeDefine(RString _key) {
+	std::map<RString, RString>::iterator iter = m_defines.find("_key");
+	if (iter != m_defines.end()) {
+		m_defines.erase(iter);
+	}
+}
 
 glm::vec3 Material::getColor() const {
 	return m_color;
@@ -112,6 +119,22 @@ Texture* Material::getTexture(RUInt i) {
 		return m_texList[i];
 	}
 	return nullptr;
+}
+
+void Material::setNormalMap(Texture* _map) {
+	if (m_normalMap == _map) return;
+	if (nullptr == m_normalMap) {
+		addDefine("NORMALMAP", "1");
+	}
+	m_normalMap = _map;
+}
+Texture* Material::getNormalMap() const {
+	return m_normalMap;
+}
+void Material::removeNormalMap() {
+	if (nullptr == m_normalMap) return;
+	removeDefine("NORMALMAP");
+	m_normalMap = nullptr;
 }
 
 void Material::_destroy() {

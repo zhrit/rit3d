@@ -48,6 +48,11 @@ struct SpoLight {
 uniform float uBloomValue;
 #endif
 
+#ifdef NORMALMAP
+uniform sampler2D uNormalMap;
+in mat3 TBN;
+#endif
+
 #ifdef DIR_LIGHT_NUM
 uniform DirLight uDirLights[DIR_LIGHT_NUM];
 //uniform sampler2D uDirShadowMap[DIR_LIGHT_NUM];
@@ -68,7 +73,6 @@ uniform int uHasTex;
 uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;
-uniform sampler2D uTexture3;
 
 uniform vec3 uViewPos;
 //uniform float uShininess;
@@ -150,14 +154,19 @@ vec3 CalcPoiLight(PoiLight light, vec3 matColor, vec3 normal, vec3 viewDir, vec3
 
 void main() {
 	vec3 norm = normalize(fragNormal);
+	#ifdef NORMALMAP
+	norm = texture(uNormalMap, TexCoord).rgb;
+	norm = normalize(norm * 2.0f - 1.0f);
+	norm = normalize(TBN * norm);
+	#endif
 	vec3 viewDir = normalize(uViewPos - fragPos);
 
 	//从纹理中选择颜色
-	vec3 matColor = pow(vec3(texture(uTexture0, TexCoord)), vec3(2.2)) * uHasTex + uColor * (1 - uHasTex);
+	vec3 matColor = pow(vec3(texture(uTexture0, TexCoord)), vec3(2.2)) * int(uHasTex >= 1) + uColor * int(uHasTex < 1);
 	//从纹理中选择粗糙度
-	float roughness = texture(uTexture2, TexCoord).r * uHasTex + uRoughness * (1 - uHasTex);
+	float roughness = texture(uTexture2, TexCoord).r * int(uHasTex >= 2) + uRoughness * int(uHasTex <= 2);
 	//从纹理中选择金属度
-	float metallic = texture(uTexture1, TexCoord).r * uHasTex + uMetallic * (1 - uHasTex);
+	float metallic = texture(uTexture1, TexCoord).r * int(uHasTex >= 3) + uMetallic * int(uHasTex <= 3);
 	vec3 F0 = vec3(0.04f);
 	F0 = mix(F0, matColor, metallic);
 

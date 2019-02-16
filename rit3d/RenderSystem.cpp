@@ -187,7 +187,7 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 	//绑定相机的帧缓冲
 	glBindFramebuffer(GL_FRAMEBUFFER, camera->getFramebuffer());
 	glEnable(GL_DEPTH_TEST);
-	glViewport(0, 0, DEFAULT_WIDTH * 2, DEFAULT_HEIGHT * 2);
+	glViewport(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	//两个颜色附件
 	RUInt attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 	glDrawBuffers(1, attachments);
@@ -269,7 +269,7 @@ void RenderSystem::_postRender(CCamera* camera) {
 		for (RUInt i = 0; i < amout; i++) {
 			//交替模糊十次
 			glBindFramebuffer(GL_FRAMEBUFFER, pFramebuffer[horizontal]->fbo);
-			glViewport(0, 0, DEFAULT_WIDTH * 2, DEFAULT_HEIGHT * 2);
+			glViewport(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 			shader0->setBool("uHorizontal", horizontal);
 			RUInt ind = _allocTexture();
 			shader0->setInt("uTexture", ind);
@@ -375,7 +375,7 @@ void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform
 			shader->setVec3(sName, pMat->getColor());
 		}
 		else if (sName == "uHasTex") {
-			int has = pMat->getTexNum() > 0 ? 1 : 0;
+			int has = pMat->getTexNum();
 			shader->setInt(sName, has);
 		}
 		else if (sName == "uTexture0") {
@@ -402,11 +402,12 @@ void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform
 				shader->setInt(sName, ind);
 			}
 		}
-		else if (sName == "uTexture3") {
-			Texture* tex = pMat->getTexture(3);
+		else if (sName == "uNormalMap") {
+			Texture* tex = pMat->getNormalMap();
 			if (tex != nullptr) {
 				RUInt ind = _allocTexture();
-				tex->use(ind);
+				glActiveTexture(0x84C0 + ind);
+				glBindTexture(GL_TEXTURE_2D, tex->getTexture());
 				shader->setInt(sName, ind);
 			}
 		}

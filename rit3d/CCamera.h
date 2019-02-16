@@ -39,7 +39,7 @@ public:
 	RBool clearColor{ true };//清除深度缓冲
 	RBool clearDepth{ true };//清除颜色缓冲
 
-	glm::vec4 backgroundColor{ 0.2f, 0.3f, 0.3f, 1.0f };//背景色
+	glm::vec4 backgroundColor{ 0.0f, 0.0f, 0.0f, 1.0f };//背景色
 
 	RUInt order;
 
