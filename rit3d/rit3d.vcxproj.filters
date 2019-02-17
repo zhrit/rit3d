@@ -43,6 +43,9 @@
     <Filter Include="src\tools">
       <UniqueIdentifier>{3424a063-4cbc-47ff-9340-a7e0ef165a20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\example">
+      <UniqueIdentifier>{71fc4efd-af4f-4d91-85c2-31cc623887bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -147,12 +150,15 @@
     <ClInclude Include="declare.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="BehaviorSystem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseBehavior.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="rit3d.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
@@ -244,6 +250,15 @@
     </ClCompile>
     <ClCompile Include="CSkybox.cpp">
       <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorSystem.cpp">
+      <Filter>src\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseBehavior.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="rit3d.cpp">
+      <Filter>src\example</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

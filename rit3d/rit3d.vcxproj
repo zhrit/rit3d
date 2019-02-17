@@ -158,6 +158,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="BaseBehavior.h" />
+    <ClInclude Include="BehaviorSystem.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="CBehavior.h" />
     <ClInclude Include="CCamera.h" />
@@ -194,6 +196,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BaseBehavior.cpp" />
+    <ClCompile Include="BehaviorSystem.cpp" />
     <ClCompile Include="CBehavior.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCollider.cpp" />

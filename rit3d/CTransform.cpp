@@ -121,6 +121,7 @@ glm::mat4 CTransform::getLocalModelMatrix() {
 	//先缩放，再旋转Y，X，Z，再平移
 	if (m_localModelDirty) {
 		//位移
+		m_localModelMatrix = glm::mat4(1.0f);
 		m_localModelMatrix = glm::translate(m_localModelMatrix, m_localPosition);
 		//m_localModelMatrix = glm::rotate(m_localModelMatrix, glm::radians(m_localAngle.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		//m_localModelMatrix = glm::rotate(m_localModelMatrix, glm::radians(m_localAngle.x), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -163,9 +164,10 @@ void CTransform::_setLocalDirty() {
 	//自身局部标脏
 	m_localModelDirty = true;
 	//孩子全局标脏
-	for (auto it : children) {
-		it->_setDirty();
-	}
+	//for (auto it : children) {
+	//	it->_setDirty();
+	//}
+	_setDirty();
 }
 //全局模型矩阵标脏
 void CTransform::_setDirty() {

@@ -93,7 +93,8 @@ void Application::_initApp() {
 	resourceMng->createDefaultShader();
 	//注册必要系统
 	systemMng->registSystem(STARTSYSTEM, 1);
-	systemMng->registSystem(RENDERSYSTEM, 2);
+	systemMng->registSystem(BEHAVIORSYSTEM, 2);
+	systemMng->registSystem(RENDERSYSTEM, 3);
 }
 //引擎驱动
 void Application::_updateApp() {

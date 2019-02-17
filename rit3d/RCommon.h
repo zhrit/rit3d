@@ -79,6 +79,7 @@ const RString DEFAULT_GAMEOBJECT_NAME = "GameObject";
 //系统类型
 typedef enum {
 	STARTSYSTEM = 0,
+	BEHAVIORSYSTEM,
 	RENDERSYSTEM,
 	ENDSYSTEM,
 } SYSTEMTYPE;

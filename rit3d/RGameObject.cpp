@@ -2,6 +2,9 @@
 #include "RGameObject.h"
 #include "RScene.h"
 #include "CTransform.h"
+#include "Application.h"
+#include "SystemManager.h"
+#include "BehaviorSystem.h"
 
 
 RGameObject::RGameObject(RScene* s, RString n, RString t, LAYER l) :
@@ -44,6 +47,9 @@ IComponent* RGameObject::addComponent(COMPTYPE type) {
 	}
 	if (type == COMPTYPE::LIGHT && Insert_Pair.second) {
 		this->getScene()->addLight((CLight*)pComp);
+	}
+	if (type == COMPTYPE::BEHAVIOR && Insert_Pair.second) {
+		((BehaviorSystem*)Application::Instance()->systemMng->getSystem(BEHAVIORSYSTEM))->addBehavior((CBehavior*)pComp);
 	}
 
 	return pComp;

@@ -15,3 +15,5 @@
 #include "CRender.h"
 #include "CSkybox.h"
 #include "CPostProcess.h"
+#include "CBehavior.h"
+#include "BaseBehavior.h"
