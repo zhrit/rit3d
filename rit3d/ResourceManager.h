@@ -27,6 +27,8 @@ private:
 
 	//根据vertices和indices计算normals
 	void _calcNormal(RFloat* vs, RInt vSize, RUInt* id, RInt iSize, RFloat* nm);
+	//根据vertices和indices计算tangents
+	void _calcTangent(RFloat* vs, RInt vSize, RUInt* id, RInt iSize, RFloat* uv, RFloat* tg);
 public:
 	//创建新网格
 	Mesh* createMesh(const RString& _name, RFloat* verArray, RInt verSize, RUInt* indArray, RInt indSize);

@@ -165,3 +165,10 @@ void Material::setRoughness(RFloat _r) {
 	m_roughness = _r;
 }
 
+RFloat Material::getAo() const {
+	return m_ao;
+}
+void Material::setAo(RFloat _a) {
+	m_ao = _a;
+}
+

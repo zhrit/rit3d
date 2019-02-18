@@ -73,13 +73,14 @@ uniform int uHasTex;
 uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;
+uniform sampler2D uTexture3;
 
 uniform vec3 uViewPos;
 //uniform float uShininess;
 //uniform bool uRecieveShadow;
 uniform float uMetallic;
 uniform float uRoughness;
-//uniform float uAo;
+uniform float uAo;
 const float PI = 3.14159265359f;
 
 //分布函数
@@ -163,10 +164,12 @@ void main() {
 
 	//从纹理中选择颜色
 	vec3 matColor = pow(vec3(texture(uTexture0, TexCoord)), vec3(2.2)) * int(uHasTex >= 1) + uColor * int(uHasTex < 1);
-	//从纹理中选择粗糙度
-	float roughness = texture(uTexture2, TexCoord).r * int(uHasTex >= 2) + uRoughness * int(uHasTex <= 2);
 	//从纹理中选择金属度
-	float metallic = texture(uTexture1, TexCoord).r * int(uHasTex >= 3) + uMetallic * int(uHasTex <= 3);
+	float metallic = texture(uTexture1, TexCoord).r * int(uHasTex >= 2) + uMetallic * int(uHasTex < 2);
+	//从纹理中选择粗糙度
+	float roughness = texture(uTexture2, TexCoord).r * int(uHasTex >= 3) + uRoughness * int(uHasTex < 3);
+	//从纹理中选择环境映射
+	float ao = texture(uTexture3, TexCoord).r * int(uHasTex >= 4) + uMetallic * int(uHasTex < 4);
 	vec3 F0 = vec3(0.04f);
 	F0 = mix(F0, matColor, metallic);
 
@@ -186,6 +189,8 @@ void main() {
 //		result += CalcSpoLight(uSpoLights[i], norm, viewDir, fragPos, uSpoShadowMap[i], positionFromLightSpo[i]);
 //	}
 //	#endif
+
+	result = result + vec3(0.03) * matColor * ao;
 
     FragColor = vec4(result, 1.0f);
 

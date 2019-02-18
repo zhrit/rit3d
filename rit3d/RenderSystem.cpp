@@ -402,6 +402,14 @@ void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform
 				shader->setInt(sName, ind);
 			}
 		}
+		else if (sName == "uTexture3") {
+			Texture* tex = pMat->getTexture(3);
+			if (tex != nullptr) {
+				RUInt ind = _allocTexture();
+				tex->use(ind);
+				shader->setInt(sName, ind);
+			}
+		}
 		else if (sName == "uNormalMap") {
 			Texture* tex = pMat->getNormalMap();
 			if (tex != nullptr) {
@@ -425,6 +433,9 @@ void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform
 		}
 		else if (sName == "uRoughness") {
 			shader->setFloat(sName, pMat->getRoughness());
+		}
+		else if (sName == "uAo") {
+			shader->setFloat(sName, pMat->getAo());
 		}
 		else if (sName == "uBloomValue") {
 			shader->setFloat(sName, camera->getBloom());

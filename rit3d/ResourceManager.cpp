@@ -286,9 +286,12 @@ void ResourceManager::createDefaultMesh() {
 				vertices_sphere[i * 14 + 3] = 2.0f * xPos;
 				vertices_sphere[i * 14 + 4] = 2.0f * yPos;
 				vertices_sphere[i * 14 + 5] = 2.0f * zPos;
-				vertices_sphere[i * 14 + 6] = 1.0f;
-				vertices_sphere[i * 14 + 7] = 1.0f;
-				vertices_sphere[i * 14 + 8] = 1.0f;
+
+				float len = sqrt(xPos * xPos + zPos * zPos);
+				vertices_sphere[i * 14 + 6] = -zPos / len;
+				vertices_sphere[i * 14 + 7] = 0.0f;
+				vertices_sphere[i * 14 + 8] = xPos / len;
+
 				vertices_sphere[i * 14 + 9] = 1.0f;
 				vertices_sphere[i * 14 + 10] = 1.0f;
 				vertices_sphere[i * 14 + 11] = 1.0f;
@@ -366,6 +369,9 @@ void ResourceManager::createDefaultMesh() {
 		}
 		uv[k++] = 0.5, uv[k++] = 0.5, uv[k++] = 0.5, uv[k++] = 0.5;
 
+		RFloat tangents[366] = { 0.0f };
+		_calcTangent(vertices, 366, indices_cone, 360, uv, tangents);
+
 		RFloat vertices_cone[vc];
 		for (int i = 0; i < 122; i++) {
 			vertices_cone[i * 14] = vertices[i * 3];
@@ -374,9 +380,9 @@ void ResourceManager::createDefaultMesh() {
 			vertices_cone[i * 14 + 3] = normals[i * 3];
 			vertices_cone[i * 14 + 4] = normals[i * 3 + 1];
 			vertices_cone[i * 14 + 5] = normals[i * 3 + 2];
-			vertices_cone[i * 14 + 6] = 1.0f;
-			vertices_cone[i * 14 + 7] = 1.0f;
-			vertices_cone[i * 14 + 8] = 1.0f;
+			vertices_cone[i * 14 + 6] = tangents[i * 3];
+			vertices_cone[i * 14 + 4] = tangents[i * 3 + 1];
+			vertices_cone[i * 14 + 5] = tangents[i * 3 + 2];
 			vertices_cone[i * 14 + 9] = 1.0f;
 			vertices_cone[i * 14 + 10] = 1.0f;
 			vertices_cone[i * 14 + 11] = 1.0f;
@@ -466,6 +472,9 @@ void ResourceManager::createDefaultMesh() {
 		}
 		uv[k++] = 0.5, uv[k++] = 0.5, uv[k++] = 0.5, uv[k++] = 0.5;
 
+		RFloat tangents[732] = { 0.0f };
+		_calcTangent(vertices, 732, indices_cylinder, 720, uv, tangents);
+
 		RFloat vertices_cylinder[vc];
 		for (int i = 0; i < 244; i++) {
 			vertices_cylinder[i * 14] = vertices[i * 3];
@@ -474,9 +483,9 @@ void ResourceManager::createDefaultMesh() {
 			vertices_cylinder[i * 14 + 3] = normals[i * 3];
 			vertices_cylinder[i * 14 + 4] = normals[i * 3 + 1];
 			vertices_cylinder[i * 14 + 5] = normals[i * 3 + 2];
-			vertices_cylinder[i * 14 + 6] = 1.0f;
-			vertices_cylinder[i * 14 + 7] = 1.0f;
-			vertices_cylinder[i * 14 + 8] = 1.0f;
+			vertices_cylinder[i * 14 + 6] = tangents[i * 3];
+			vertices_cylinder[i * 14 + 4] = tangents[i * 3 + 1];
+			vertices_cylinder[i * 14 + 5] = tangents[i * 3 + 2];
 			vertices_cylinder[i * 14 + 9] = 1.0f;
 			vertices_cylinder[i * 14 + 10] = 1.0f;
 			vertices_cylinder[i * 14 + 11] = 1.0f;
@@ -544,6 +553,62 @@ void ResourceManager::_calcNormal(RFloat* vs, RInt vSize, RUInt* id, RInt iSize,
 		nm[i] /= len;
 		nm[i + 1] /= len;
 		nm[i + 2] /= len;
+	}
+}
+
+//根据vertices和indices计算tangents
+void ResourceManager::_calcTangent(RFloat* vs, RInt vSize, RUInt* id, RInt iSize, RFloat* uv, RFloat* tg) {
+	for (int i = 0; i < vSize; i++) {
+		tg[i] = 0.0f;
+	}
+	for (int i = 0; i < iSize; i += 3) {
+		RFloat e1[3] = { 0.0f };
+		RFloat e2[3] = { 0.0f };
+		RFloat duv1[2] = { 0.0f };
+		RFloat duv2[2] = { 0.0f };
+		RFloat tangent[3] = { 0.0f };
+
+		//e1 = p1 - p0
+		e1[0] = vs[3 * id[i + 1]] - vs[3 * id[i]];
+		e1[1] = vs[3 * id[i + 1] + 1] - vs[3 * id[i] + 1];
+		e1[2] = vs[3 * id[i + 1] + 2] - vs[3 * id[i] + 2];
+
+		//e2 = p2 - p0
+		e2[0] = vs[3 * id[i + 2]] - vs[3 * id[i]];
+		e2[1] = vs[3 * id[i + 2] + 1] - vs[3 * id[i] + 1];
+		e2[2] = vs[3 * id[i + 2] + 2] - vs[3 * id[i] + 2];
+
+		//duv1 = uv1 - uv0
+		duv1[0] = uv[2 * id[i + 1]] - uv[2 * id[i]];
+		duv1[1] = uv[2 * id[i + 1] + 1] - uv[2 * id[i] + 1];
+
+		//duv2 = uv2 - uv0
+		duv2[0] = uv[2 * id[i + 2]] - uv[2 * id[i]];
+		duv2[1] = uv[2 * id[i + 2] + 1] - uv[2 * id[i] + 1];
+
+		//tangent
+		RFloat f = 1.0f / duv1[0] * duv2[1] - duv2[0] * duv1[1];
+		tangent[0] = f * (duv2[1] * e1[0] - duv1[1] * e2[0]);
+		tangent[1] = f * (duv2[1] * e1[1] - duv1[1] * e2[1]);
+		tangent[2] = f * (duv2[1] * e1[2] - duv1[1] * e2[2]);
+
+		//normalize
+		RFloat len = sqrt(tangent[0] * tangent[0] + tangent[1] * tangent[1] + tangent[2] * tangent[2]);
+		tangent[0] /= len, tangent[1] /= len, tangent[2] /= len;
+
+		for (int j = 0; j < 3; j++) {
+			tg[3 * id[i + j] + 0] += tangent[0];
+			tg[3 * id[i + j] + 1] += tangent[1];
+			tg[3 * id[i + j] + 2] += tangent[2];
+		}
+	}
+
+	//单位化
+	for (int i = 0; i < vSize; i += 3) {
+		float len = sqrt(tg[i] * tg[i] + tg[i + 1] * tg[i + 1] + tg[i + 2] * tg[i + 2]);
+		tg[i] /= len;
+		tg[i + 1] /= len;
+		tg[i + 2] /= len;
 	}
 }
 

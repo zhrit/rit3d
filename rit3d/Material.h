@@ -43,6 +43,7 @@ private:
 	//pbr
 	RFloat m_metallic{ 0.0f };//金属度
 	RFloat m_roughness{ 0.0f };//粗糙度
+	RFloat m_ao{ 1.0f };//环境光照强度
 
 	void _destroy();
 
@@ -91,4 +92,7 @@ public:
 
 	RFloat getRoughness() const;
 	void setRoughness(RFloat _r);
+
+	RFloat getAo() const;
+	void setAo(RFloat _a);
 };
