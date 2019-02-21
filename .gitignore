@@ -1,6 +1,5 @@
-/.vs/
-/Debug/
-/x64/
+.vs/
+Debug/
 # Prerequisites
 *.d
 
