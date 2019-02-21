@@ -466,3 +466,99 @@ void example_light_shadow_4() {
 	light1->setColor(300.0f, 300.0f, 300.0f);
 	light1->setLightType(LIGHTTYPE::LPOINT);
 }
+
+/**
+ *后期处理
+ */
+void example_light_shadow_5() {
+	cout << "light and shadow" << endl;
+	Application* app = Application::Instance();
+	app->showFPS();
+	RScene* pSce = app->sceneMng->createScene();
+
+	//纹理和材质
+	Texture* tex1 = app->resourceMng->createTexture("container.jpg");
+	Material* mat = app->resourceMng->createMaterial("mat1");
+	mat->addTexture(tex1);
+	mat->setShader("phong");
+
+	Material* mat2 = app->resourceMng->createMaterial("mat2");
+	mat2->setShader("phong");
+	mat2->setColor(1.0f, 1.0f, 1.0f);
+
+	//平面
+	RGameObject* plane = pSce->addGameObject();
+	plane->transform->setLocalScale(0.7f, 1.0f, 0.7f);
+	CRender* planerender = (CRender*)plane->addComponent(RENDER);
+	planerender->setMesh(app->resourceMng->getMesh("plane"));
+	planerender->setMaterial(mat2);
+	planerender->recieveShadow(true);
+	//立方体
+	RGameObject* cube = pSce->addGameObject();
+	cube->transform->setLocalPosition(0.0f, 0.5f, 0.0f);
+	cube->transform->setLocalScale(0.7f, 0.7f, 0.7f);
+	cube->transform->setLocalFrontDir(0.2f, 0.0f, 0.9f);
+	CRender* cuberender = (CRender*)cube->addComponent(RENDER);
+	cuberender->setMesh(app->resourceMng->getMesh("cube"));
+	cuberender->setMaterial(mat2);
+	cuberender->castShadow(true);
+	//球
+	RGameObject* sphere = pSce->addGameObject();
+	sphere->transform->setLocalPosition(-1.0f, 0.5f, 0.5f);
+	sphere->transform->setLocalScale(0.7f, 0.7f, 0.7f);
+	sphere->transform->setLocalFrontDir(1.0f, 0.0f, 0.0f);
+	CRender* sphererender = (CRender*)sphere->addComponent(RENDER);
+	sphererender->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender->setMaterial(mat2);
+	sphererender->castShadow(true);
+
+	//相机
+	RGameObject* CO = pSce->addGameObject();
+	CO->transform->setLocalPosition(0.0f, 4.0f, 6.0f);
+	CO->transform->setLocalFrontDir(0.0f, -2.0f, -3.0f);
+	CO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CCamera* cam = (CCamera*)CO->addComponent(COMPTYPE::CAMERA);
+	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
+	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+
+	CPostProcess* post = (CPostProcess*)CO->addComponent(COMPTYPE::POSTPROCESS);
+	//post->setShaderPath("sharpen");
+	//post->setShaderPath("blur");
+	//post->setShaderPath("edgedetection");
+	post->setShaderPath("grayscale");
+	//post->setShaderPath("inversion");
+
+	//平行光
+	RGameObject* LO = pSce->addGameObject();
+	LO->transform->setLocalPosition(3.0f, 1.5f, 0.0f);
+	LO->transform->setLocalFrontDir(-1.0f, -0.5f, 0.0f);
+	LO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CLight* light = (CLight*)LO->addComponent(COMPTYPE::LIGHT);
+	light->castShadow(true);
+	light->setColor(1.0f, 1.0f, 1.0f);
+	light->setLightType(LIGHTTYPE::DIRECTION);
+	light->setEnabled(true);
+
+	//点光源
+	RGameObject* LO1 = pSce->addGameObject();
+	LO1->transform->setLocalPosition(0.0f, 2.0f, 0.0f);
+	LO1->transform->setLocalFrontDir(1.0f, -0.5f, 0.0f);
+	LO1->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CLight* light1 = (CLight*)LO1->addComponent(COMPTYPE::LIGHT);
+	light1->castShadow(true);
+	light1->setIntensity(0.1f, 1.0f, 1.0f);
+	light1->setColor(1.0f, 1.0f, 1.0f);
+	light1->setLightType(LIGHTTYPE::LPOINT);
+
+	//聚光灯
+	RGameObject* LO2 = pSce->addGameObject();
+	LO2->transform->setLocalPosition(2.0f, 3.0f, -1.0f);
+	LO2->transform->setLocalFrontDir(-2.0f, -2.5f, 1.0f);
+	LO2->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CLight* light2 = (CLight*)LO2->addComponent(COMPTYPE::LIGHT);
+	light2->castShadow(true);
+	light2->setIntensity(0.1f, 1.0f, 1.0f);
+	light2->setColor(1.0f, 0.0f, 0.0f);
+	light2->setCutOff(10, 15);
+	light2->setLightType(LIGHTTYPE::SPOT);
+}

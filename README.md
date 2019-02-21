@@ -38,7 +38,11 @@ rit3d采用类似Unity3D的组件实体系统架构。
 
 ### 行为脚本
 
-### 后处理
+### 后期处理
+
+post process组件负责后期处理，该组件必须和camera组件挂在同一个gameObject下才能发挥作用，下图是三种常见的后期处理效果。左上：原图，右上：模糊，左下：边缘检测，右下：灰度化。
+
+<img src="doc/demo_image/light_shadow_1.png"  height="300" width="400"><img src="doc/demo_image/post_blur.png"  height="300" width="400"><img src="doc/demo_image/post_edge.png"  height="300" width="400"><img src="doc/demo_image/post_gray.png"  height="300" width="400">
 
 ### 天空盒
 
