@@ -260,6 +260,9 @@
     <ClCompile Include="rit3d.cpp">
       <Filter>src\example</Filter>
     </ClCompile>
+    <ClCompile Include="example_light_shadow.cpp">
+      <Filter>src\example</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="simple.vert">
