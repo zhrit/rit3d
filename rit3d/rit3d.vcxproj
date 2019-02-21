@@ -246,6 +246,8 @@
   <ItemGroup>
     <None Include="blur.frag" />
     <None Include="edgedetection.frag" />
+    <None Include="environment.frag" />
+    <None Include="environment.vert" />
     <None Include="gaussianBlur.frag" />
     <None Include="grayscale.frag" />
     <None Include="inversion.frag" />

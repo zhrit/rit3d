@@ -12,7 +12,7 @@ void example_light_shadow_1() {
 	RScene* pSce = app->sceneMng->createScene();
 
 	//纹理和材质
-	Texture* tex1 = app->resourceMng->createTexture("container.jpg");
+	Texture* tex1 = app->resourceMng->createTexture("resources/textures/container.jpg");
 	Material* mat = app->resourceMng->createMaterial("mat1");
 	mat->addTexture(tex1);
 	mat->setShader("phong");
@@ -55,19 +55,6 @@ void example_light_shadow_1() {
 	CCamera* cam = (CCamera*)CO->addComponent(COMPTYPE::CAMERA);
 	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
 	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
-
-	//CPostProcess* post = (CPostProcess*)CO->addComponent(COMPTYPE::POSTPROCESS);
-	//post->setShaderPath("edgedetection");
-	//CSkybox* skybox = (CSkybox*)CO->addComponent(COMPTYPE::SKYBOX);
-	//std::vector<RString> path;
-	//path.push_back("ashcanyon_rt.tga");
-	//path.push_back("ashcanyon_lf.tga");
-	//path.push_back("ashcanyon_up.tga");
-	//path.push_back("ashcanyon_dn.tga");
-	//path.push_back("ashcanyon_ft.tga");
-	//path.push_back("ashcanyon_bk.tga");
-	////container.jpg
-	//skybox->setTextures(path);
 
 	//平行光
 	RGameObject* LO = pSce->addGameObject();
@@ -125,23 +112,6 @@ void example_light_shadow_2() {
 	mat2->setShader("simple");
 	mat2->setColor(10.0f, 0.0f, 0.0f);
 
-
-	//平面
-	//RGameObject* plane = pSce->addGameObject();
-	//plane->transform->setLocalScale(1.0f, 1.0f, 1.0f);
-	//CRender* planerender = (CRender*)plane->addComponent(RENDER);
-	//planerender->setMesh(app->resourceMng->getMesh("plane"));
-	//planerender->setMaterial(mat);
-	//planerender->recieveShadow(true);
-	//立方体
-	//RGameObject* cube = pSce->addGameObject();
-	//cube->transform->setLocalPosition(0.0f, 0.5f, 0.0f);
-	//cube->transform->setLocalScale(0.3f, 0.3f, 0.3f);
-	//cube->transform->setLocalFrontDir(0.2f, 0.0f, 0.9f);
-	//CRender* cuberender = (CRender*)cube->addComponent(RENDER);
-	//cuberender->setMesh(app->resourceMng->getMesh("cube"));
-	//cuberender->setMaterial(mat);
-	//cuberender->castShadow(true);
 	//球
 	RGameObject* sphere = pSce->addGameObject();
 	sphere->transform->setLocalPosition(0.0f, 0.0f, 0.0f);
@@ -151,7 +121,6 @@ void example_light_shadow_2() {
 	sphererender->setMesh(app->resourceMng->getMesh("sphere"));
 	sphererender->setMaterial(mat);
 	sphererender->castShadow(true);
-	//sphere->setLayer(LAYER::BuiltinLayer1);
 
 	//相机
 	RGameObject* CO = pSce->addGameObject();
@@ -232,28 +201,28 @@ void example_light_shadow_3() {
 	RScene* pSce = app->sceneMng->createScene();
 
 	//创建纹理
-	Texture* tex0 = app->resourceMng->createTexture("rustediron2_basecolor.png");
-	Texture* tex1 = app->resourceMng->createTexture("rustediron2_metallic.png");
-	Texture* tex2 = app->resourceMng->createTexture("rustediron2_roughness.png");
-	Texture* tex3 = app->resourceMng->createTexture("brickwall.jpg");
-	Texture* tex4 = app->resourceMng->createTexture("brickwall_normal.jpg");
-	Texture* tex5 = app->resourceMng->createTexture("copper-rock1-alb.png");
-	Texture* tex6 = app->resourceMng->createTexture("copper-rock1-metal.png");
-	Texture* tex7 = app->resourceMng->createTexture("copper-rock1-rough.png");
-	Texture* tex8 = app->resourceMng->createTexture("copper-rock1-normal.png");
-	Texture* tex9 = app->resourceMng->createTexture("copper-rock1-ao.png");
-	Texture* tex10 = app->resourceMng->createTexture("greasy-pan-2-albedo.png");
-	Texture* tex11 = app->resourceMng->createTexture("greasy-pan-2-metal.png");
-	Texture* tex12 = app->resourceMng->createTexture("greasy-pan-2-roughness.png");
-	Texture* tex13 = app->resourceMng->createTexture("greasy-pan-2-normal.png");
-	Texture* tex14 = app->resourceMng->createTexture("chipped-paint-metal-albedo.png");
-	Texture* tex15 = app->resourceMng->createTexture("chipped-paint-metal-metal.png");
-	Texture* tex16 = app->resourceMng->createTexture("chipped-paint-metal-rough2.png");
-	Texture* tex17 = app->resourceMng->createTexture("chipped-paint-metal-normal-dx.png");
-	Texture* tex18 = app->resourceMng->createTexture("chipped-paint-ao.png");
-	Texture* tex19 = app->resourceMng->createTexture("streakedmetal-albedo.png");
-	Texture* tex20 = app->resourceMng->createTexture("streakedmetal-metalness.png");
-	Texture* tex21 = app->resourceMng->createTexture("streakedmetal-roughness.png");
+	Texture* tex0 = app->resourceMng->createTexture("resources/textures/rustediron2_basecolor.png");
+	Texture* tex1 = app->resourceMng->createTexture("resources/textures/rustediron2_metallic.png");
+	Texture* tex2 = app->resourceMng->createTexture("resources/textures/rustediron2_roughness.png");
+	Texture* tex3 = app->resourceMng->createTexture("resources/textures/brickwall.jpg");
+	Texture* tex4 = app->resourceMng->createTexture("resources/textures/brickwall_normal.jpg");
+	Texture* tex5 = app->resourceMng->createTexture("resources/textures/copper-rock1-alb.png");
+	Texture* tex6 = app->resourceMng->createTexture("resources/textures/copper-rock1-metal.png");
+	Texture* tex7 = app->resourceMng->createTexture("resources/textures/copper-rock1-rough.png");
+	Texture* tex8 = app->resourceMng->createTexture("resources/textures/copper-rock1-normal.png");
+	Texture* tex9 = app->resourceMng->createTexture("resources/textures/copper-rock1-ao.png");
+	Texture* tex10 = app->resourceMng->createTexture("resources/textures/greasy-pan-2-albedo.png");
+	Texture* tex11 = app->resourceMng->createTexture("resources/textures/greasy-pan-2-metal.png");
+	Texture* tex12 = app->resourceMng->createTexture("resources/textures/greasy-pan-2-roughness.png");
+	Texture* tex13 = app->resourceMng->createTexture("resources/textures/greasy-pan-2-normal.png");
+	Texture* tex14 = app->resourceMng->createTexture("resources/textures/chipped-paint-metal-albedo.png");
+	Texture* tex15 = app->resourceMng->createTexture("resources/textures/chipped-paint-metal-metal.png");
+	Texture* tex16 = app->resourceMng->createTexture("resources/textures/chipped-paint-metal-rough2.png");
+	Texture* tex17 = app->resourceMng->createTexture("resources/textures/chipped-paint-metal-normal-dx.png");
+	Texture* tex18 = app->resourceMng->createTexture("resources/textures/chipped-paint-ao.png");
+	Texture* tex19 = app->resourceMng->createTexture("resources/textures/streakedmetal-albedo.png");
+	Texture* tex20 = app->resourceMng->createTexture("resources/textures/streakedmetal-metalness.png");
+	Texture* tex21 = app->resourceMng->createTexture("resources/textures/streakedmetal-roughness.png");
 
 	//创建材质
 	Material* mat1 = app->resourceMng->createMaterial("mat1");
@@ -404,8 +373,8 @@ void example_light_shadow_4() {
 	RScene* pSce = app->sceneMng->createScene();
 
 	//纹理和材质
-	Texture* tex1 = app->resourceMng->createTexture("brickwall.jpg");
-	Texture* tex2 = app->resourceMng->createTexture("brickwall_normal.jpg");
+	Texture* tex1 = app->resourceMng->createTexture("resources/textures/brickwall.jpg");
+	Texture* tex2 = app->resourceMng->createTexture("resources/textures/brickwall_normal.jpg");
 	Material* mat = app->resourceMng->createMaterial("mat1");
 	mat->addTexture(tex1);
 	mat->setShader("pbr");
@@ -471,13 +440,13 @@ void example_light_shadow_4() {
  *后期处理
  */
 void example_light_shadow_5() {
-	cout << "light and shadow" << endl;
+	cout << "post process" << endl;
 	Application* app = Application::Instance();
 	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
 	//纹理和材质
-	Texture* tex1 = app->resourceMng->createTexture("container.jpg");
+	Texture* tex1 = app->resourceMng->createTexture("resources/textures/container.jpg");
 	Material* mat = app->resourceMng->createMaterial("mat1");
 	mat->addTexture(tex1);
 	mat->setShader("phong");
@@ -527,6 +496,105 @@ void example_light_shadow_5() {
 	//post->setShaderPath("edgedetection");
 	post->setShaderPath("grayscale");
 	//post->setShaderPath("inversion");
+
+	//平行光
+	RGameObject* LO = pSce->addGameObject();
+	LO->transform->setLocalPosition(3.0f, 1.5f, 0.0f);
+	LO->transform->setLocalFrontDir(-1.0f, -0.5f, 0.0f);
+	LO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CLight* light = (CLight*)LO->addComponent(COMPTYPE::LIGHT);
+	light->castShadow(true);
+	light->setColor(1.0f, 1.0f, 1.0f);
+	light->setLightType(LIGHTTYPE::DIRECTION);
+	light->setEnabled(true);
+
+	//点光源
+	RGameObject* LO1 = pSce->addGameObject();
+	LO1->transform->setLocalPosition(0.0f, 2.0f, 0.0f);
+	LO1->transform->setLocalFrontDir(1.0f, -0.5f, 0.0f);
+	LO1->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CLight* light1 = (CLight*)LO1->addComponent(COMPTYPE::LIGHT);
+	light1->castShadow(true);
+	light1->setIntensity(0.1f, 1.0f, 1.0f);
+	light1->setColor(1.0f, 1.0f, 1.0f);
+	light1->setLightType(LIGHTTYPE::LPOINT);
+
+	//聚光灯
+	RGameObject* LO2 = pSce->addGameObject();
+	LO2->transform->setLocalPosition(2.0f, 3.0f, -1.0f);
+	LO2->transform->setLocalFrontDir(-2.0f, -2.5f, 1.0f);
+	LO2->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CLight* light2 = (CLight*)LO2->addComponent(COMPTYPE::LIGHT);
+	light2->castShadow(true);
+	light2->setIntensity(0.1f, 1.0f, 1.0f);
+	light2->setColor(1.0f, 0.0f, 0.0f);
+	light2->setCutOff(10, 15);
+	light2->setLightType(LIGHTTYPE::SPOT);
+}
+
+/**
+ *天空盒
+ */
+void example_skybox_1() {
+	class TestScript : public BaseBehavior {
+
+	private:
+		DWORD startTime;
+		float speed{ 0.2f };
+	public:
+		virtual void onStart() {
+			startTime = ::GetTickCount();
+		}
+		virtual void onUpdate() {
+			DWORD delta = ::GetTickCount() - startTime;
+			float angle = (float)delta / 1000.0f * speed;
+			gameObject->transform->setLocalFrontDir(sin(angle), -0.2f, cos(angle));
+		}
+		virtual void onLateUpdate() {
+			//cout << "lateUpdate!" << endl;
+		}
+	};
+	cout << "skybox" << endl;
+	Application* app = Application::Instance();
+	app->showFPS();
+	RScene* pSce = app->sceneMng->createScene();
+
+	//纹理和材质
+	Material* mat2 = app->resourceMng->createMaterial("mat2");
+	mat2->setShader("environment");
+	mat2->setColor(1.0f, 1.0f, 1.0f);
+
+	//球
+	RGameObject* sphere = pSce->addGameObject();
+	sphere->transform->setLocalPosition(0.0f, 0.0f, 0.0f);
+	sphere->transform->setLocalScale(1.0f, 1.0f, 1.0f);
+	sphere->transform->setLocalFrontDir(1.0f, 0.0f, 0.0f);
+	CRender* sphererender = (CRender*)sphere->addComponent(RENDER);
+	sphererender->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender->setMaterial(mat2);
+	sphererender->castShadow(true);
+
+	//相机
+	RGameObject* CO = pSce->addGameObject();
+	CO->transform->setLocalPosition(0.0f, 0.0f, 5.0f);
+	CO->transform->setLocalFrontDir(0.0f, 0.0f, -1.0f);
+	CO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CCamera* cam = (CCamera*)CO->addComponent(COMPTYPE::CAMERA);
+	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
+	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+
+	//CBehavior* coBehavior = (CBehavior*)CO->addComponent(BEHAVIOR);
+	//coBehavior->setBehavior(new TestScript());
+
+	CSkybox* skybox = (CSkybox*)CO->addComponent(COMPTYPE::SKYBOX);
+	std::vector<RString> path;
+	path.push_back("resources/skybox/darkskies_ft.tga");
+	path.push_back("resources/skybox/darkskies_bk.tga");
+	path.push_back("resources/skybox/darkskies_up.tga");
+	path.push_back("resources/skybox/darkskies_dn.tga");
+	path.push_back("resources/skybox/darkskies_rt.tga");
+	path.push_back("resources/skybox/darkskies_lf.tga");
+	skybox->setTextures(path);
 
 	//平行光
 	RGameObject* LO = pSce->addGameObject();

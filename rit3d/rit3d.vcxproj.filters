@@ -328,5 +328,11 @@
     <None Include="gaussianBlur.frag">
       <Filter>src\asset\shader</Filter>
     </None>
+    <None Include="environment.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="environment.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

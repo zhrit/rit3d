@@ -38,12 +38,40 @@ rit3d采用类似Unity3D的组件实体系统架构。
 
 ### 行为脚本
 
+behavior组件使用户可以自己定义游戏对象的行为方式。在该组件中，用户需要自己写一个继承自BaseBehavior的类，并把它的实例绑定到behavior组件上(与Unity3D中脚本绑定方法类似)。
+
+```
+class TestScript : public BaseBehavior {
+
+public:
+	DWORD startTime;
+	float speed{ 0.2f };
+
+	virtual void onStart() {
+		startTime = ::GetTickCount();
+	}
+	virtual void onUpdate() {
+		DWORD delta = ::GetTickCount() - startTime;
+		float angle = (float)delta / 1000.0f * speed;
+		gameObject->transform->setLocalFrontDir(sin(angle), -0.2f, cos(angle));
+	}
+	virtual void onLateUpdate() {
+
+	}
+};
+```
+
+onStart()方法在脚本绑定到游戏对象上的下一帧执行，onUpdate()方法每帧执行。
+
 ### 后期处理
 
 post process组件负责后期处理，该组件必须和camera组件挂在同一个gameObject下才能发挥作用，下图是三种常见的后期处理效果。左上：原图，右上：模糊，左下：边缘检测，右下：灰度化。
 
 <img src="doc/demo_image/light_shadow_1.png"  height="300" width="400"><img src="doc/demo_image/post_blur.png"  height="300" width="400"><img src="doc/demo_image/post_edge.png"  height="300" width="400"><img src="doc/demo_image/post_gray.png"  height="300" width="400">
 
-### 天空盒
+### 天空盒和环境映射
+skybox组件负责天空盒，该组件必须和camera组件挂在同一个gameObject下才能发挥作用，模型可以选用环境映射材质，但只有在有天空盒的情况下才会生效。
+
+<img src="doc/demo_image/skybox_1.png"  height="300" width="400">
 
 

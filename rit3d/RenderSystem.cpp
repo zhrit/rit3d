@@ -440,6 +440,15 @@ void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform
 		else if (sName == "uBloomValue") {
 			shader->setFloat(sName, camera->getBloom());
 		}
+		else if (sName == "uSkybox") {
+			CSkybox* skybox = (CSkybox*)camera->gameObject->getComponent(COMPTYPE::SKYBOX);
+			if (skybox != nullptr) {
+				RUInt ind = _allocTexture();
+				shader->setInt(sName, ind);
+				glActiveTexture(0x84C0 + ind);
+				glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->getBoxTexture());
+			}
+		}
 	}
 
 	delete[] uniformName;
