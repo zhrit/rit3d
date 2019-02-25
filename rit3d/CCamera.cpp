@@ -15,7 +15,7 @@ CCamera::CCamera() {
 	glGenTextures(2, m_colorTexs);
 	for (RUInt i = 0; i < 2; i++) {
 		glBindTexture(GL_TEXTURE_2D, m_colorTexs[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, DEFAULT_WIDTH, DEFAULT_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1024, 1024, 0, GL_RGBA, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -30,7 +30,7 @@ CCamera::CCamera() {
 	RUInt rbo;
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1024, 1024);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
@@ -137,6 +137,16 @@ void CCamera::setPerspFrustum(RFloat _size, RFloat _asp, RFloat _near, RFloat _f
 		m_far = _far;
 		m_projDirty = true;
 	}
+}
+
+void CCamera::setViewport(int _x, int _y, int _w, int _h) {
+	m_viewport.x = _x;
+	m_viewport.y = _y;
+	m_viewport.w = _w;
+	m_viewport.h = _h;
+}
+Viewport CCamera::getViewport() const {
+	return m_viewport;
 }
 
 //获取帧缓冲对象

@@ -21,20 +21,14 @@ Application* Application::Instance() {
 }
 
 //引擎入口
-void Application::runRit3d() {
+void Application::runRit3d(RString _title, int _w, int _h) {
 	if (m_isRunning) {
 		return;
 	}
 	//输出版本信息
 	cout << "current version: " << m_version << endl;
 	//创建窗口
-	m_window = new RWindow();
-	//if (m_window == nullptr || m_window->getWindowContext() == nullptr) {
-	//	cout << "application startup failed" << endl;
-	//	return;
-	//}
-
-	GLFWwindow* wd = m_window->getWindowContext();
+	m_window = new RWindow(_title, 0, 0, _w, _h);
 
 	//初始化glad
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -95,6 +89,14 @@ void Application::_initApp() {
 	systemMng->registSystem(STARTSYSTEM, 1);
 	systemMng->registSystem(BEHAVIORSYSTEM, 2);
 	systemMng->registSystem(RENDERSYSTEM, 3);
+
+	//获取窗口环境
+	GLFWwindow* wd = m_window->getWindowContext();
+	glfwSetKeyCallback(wd, Application::_key_callback);
+	glfwSetFramebufferSizeCallback(wd, Application::_framebuffer_size_callback);
+	glfwSetMouseButtonCallback(wd, Application::_mouse_button_callback);
+	glfwSetCursorPosCallback(wd, Application::_cursor_position_callback);
+	glfwSetScrollCallback(wd, Application::_scroll_callback);
 }
 //引擎驱动
 void Application::_updateApp() {
@@ -107,4 +109,25 @@ void Application::_updateApp() {
 //设置游戏入口函数
 void Application::setGameEntry(std::function<void()> _gameEntry) {
 	m_gameEntry = _gameEntry;
+}
+
+//窗口大小变化时回调函数
+void Application::_framebuffer_size_callback(GLFWwindow* window, int w, int h) {
+	SystemManager::Instance()->framebuffer_size_callback(w, h);
+}
+//鼠标按键回调函数
+void Application::_mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+	//cout << "mousebutton" << endl;
+}
+//光标位置回调
+void Application::_cursor_position_callback(GLFWwindow* window, double x, double y) {
+	//cout << "cursorposition" << endl;
+}
+//鼠标滚轮回调
+void Application::_scroll_callback(GLFWwindow* window, double x, double y) {
+	//cout << "scroll" << endl;
+}
+//键盘按键回调
+void Application::_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	//cout << "keyboard" << endl;
 }

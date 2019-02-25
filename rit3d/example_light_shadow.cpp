@@ -2,6 +2,15 @@
 #include <iostream>
 #include "declare.h"
 
+class CameraScript : public BaseBehavior {
+public:
+	virtual void onChangeSize(int _w, int _h) {
+		CCamera* camera = (CCamera*)gameObject->getComponent(COMPTYPE::CAMERA);
+		if (camera != nullptr) {
+			camera->setViewport(0, 0, _w, _h);
+		}
+	}
+};
 /**
  *光照和阴影
  */
@@ -55,6 +64,9 @@ void example_light_shadow_1() {
 	CCamera* cam = (CCamera*)CO->addComponent(COMPTYPE::CAMERA);
 	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
 	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+	cam->setViewport(0, 0, 1000, 800);
+	CBehavior* cameraBehavior1 = (CBehavior*)CO->addComponent(BEHAVIOR);
+	cameraBehavior1->setBehavior(new CameraScript());
 
 	//平行光
 	RGameObject* LO = pSce->addGameObject();
@@ -131,6 +143,9 @@ void example_light_shadow_2() {
 	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
 	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
 	cam->setBloom(2.0f);
+	cam->setViewport(0, 0, 1000, 800);
+	CBehavior* cameraBehavior1 = (CBehavior*)CO->addComponent(BEHAVIOR);
+	cameraBehavior1->setBehavior(new CameraScript());
 
 
 	RGameObject* LO = pSce->addGameObject();
@@ -339,6 +354,9 @@ void example_light_shadow_3() {
 	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
 	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
 	cam->backgroundColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	cam->setViewport(0, 0, 1000, 800);
+	CBehavior* cameraBehavior1 = (CBehavior*)CO->addComponent(BEHAVIOR);
+	cameraBehavior1->setBehavior(new CameraScript());
 
 	//四个点光源
 	RGameObject* LO1 = pSce->addGameObject();
@@ -415,6 +433,9 @@ void example_light_shadow_4() {
 	CCamera* cam = (CCamera*)CO->addComponent(COMPTYPE::CAMERA);
 	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
 	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+	cam->setViewport(0, 0, 1000, 800);
+	CBehavior* cameraBehavior1 = (CBehavior*)CO->addComponent(BEHAVIOR);
+	cameraBehavior1->setBehavior(new CameraScript());
 
 	RGameObject* LO = pSce->addGameObject();
 	LO->transform->setLocalPosition(3.0f, 1.5f, 0.0f);
@@ -489,6 +510,9 @@ void example_light_shadow_5() {
 	CCamera* cam = (CCamera*)CO->addComponent(COMPTYPE::CAMERA);
 	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
 	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+	cam->setViewport(0, 0, 1000, 800);
+	CBehavior* cameraBehavior1 = (CBehavior*)CO->addComponent(BEHAVIOR);
+	cameraBehavior1->setBehavior(new CameraScript());
 
 	CPostProcess* post = (CPostProcess*)CO->addComponent(COMPTYPE::POSTPROCESS);
 	//post->setShaderPath("sharpen");
@@ -582,6 +606,9 @@ void example_skybox_1() {
 	CCamera* cam = (CCamera*)CO->addComponent(COMPTYPE::CAMERA);
 	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
 	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+	cam->setViewport(0, 0, 1000, 800);
+	CBehavior* cameraBehavior1 = (CBehavior*)CO->addComponent(BEHAVIOR);
+	cameraBehavior1->setBehavior(new CameraScript());
 
 	//CBehavior* coBehavior = (CBehavior*)CO->addComponent(BEHAVIOR);
 	//coBehavior->setBehavior(new TestScript());

@@ -44,6 +44,9 @@ public:
 	//系统更新2
 	void lateUpdate();
 
+	//窗口大小改变时执行
+	virtual void onChangeSize(int _w, int _h);
+
 	//系统初始化时调用
 	virtual void onAwake() = 0;
 

@@ -118,3 +118,12 @@ ISystem* SystemManager::getSystem(SYSTEMTYPE type) {
 	}
 	return nullptr;
 }
+
+//窗口大小变化时回调函数
+void SystemManager::framebuffer_size_callback(int _w, int _h) {
+	for (auto st : m_systemList) {
+		if (st->isEnabled()) {
+			st->onChangeSize(_w, _h);
+		}
+	}
+}

@@ -2,6 +2,13 @@
 #include "RCommon.h"
 #include "IComponent.h"
 
+struct Viewport {
+	int x;
+	int y;
+	int w;
+	int h;
+};
+
 class CCamera : public IComponent
 {
 private:
@@ -21,6 +28,8 @@ private:
 	glm::mat4 m_projMatrix{ 1.0f };
 
 	RBool m_projDirty{ true };
+
+	Viewport m_viewport{ 0, 0, 800, 600 };
 
 	//图层
 	RUInt m_cullMask{ LAYER::Default };
@@ -80,6 +89,9 @@ public:
 	RUInt getFramebuffer();
 	//获取帧缓冲上的颜色纹理对象
 	RUInt getColorTex(RUInt ind);
+
+	void setViewport(int _x, int _y, int _w, int _h);
+	Viewport getViewport() const;
 
 	static CCamera* CreateInstance();
 };

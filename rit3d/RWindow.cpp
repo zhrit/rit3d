@@ -61,7 +61,7 @@ void RWindow::initWindow() {
 		std::cout << "Failed to init glfw" << std::endl;
 		return;
 	}
-	m_window = glfwCreateWindow(800, 600, "Rit3D", NULL, NULL);
+	m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), NULL, NULL);
 	if (m_window == nullptr) {
 		std::cout << "Failed to create window" << std::endl;
 		glfwTerminate();

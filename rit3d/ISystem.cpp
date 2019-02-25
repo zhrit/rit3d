@@ -44,6 +44,11 @@ void ISystem::lateUpdate() {
 	this->onLateUpdate();
 }
 
+//窗口大小改变时执行
+void ISystem::onChangeSize(int _w, int _h) {
+
+}
+
 //返回系统是否被激活
 RBool ISystem::isEnabled() const {
 	return enabled;

@@ -28,6 +28,11 @@ void BaseBehavior::onCollide() {
 
 }
 
+//窗口大小改变时执行
+void BaseBehavior::onChangeSize(int _w, int _h) {
+	
+}
+
 void BaseBehavior::update() {
 	if (!m_started) {
 		onStart();

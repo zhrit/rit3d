@@ -32,4 +32,6 @@ public:
 	ISystem* getSystem(SYSTEMTYPE type);
 	//判断时候已经注册某个系统
 	RBool hasSystem(SYSTEMTYPE type);
+	//窗口大小变化时回调函数
+	void framebuffer_size_callback(int _w, int _h);
 };

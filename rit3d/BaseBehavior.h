@@ -19,6 +19,9 @@ public:
 	//碰撞时执行
 	virtual void onCollide();
 
+	//窗口大小改变时执行
+	virtual void onChangeSize(int _w, int _h);
+
 	void update();
 
 	void lateUpdate();

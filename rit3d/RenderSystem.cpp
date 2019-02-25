@@ -187,7 +187,7 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 	//绑定相机的帧缓冲
 	glBindFramebuffer(GL_FRAMEBUFFER, camera->getFramebuffer());
 	glEnable(GL_DEPTH_TEST);
-	glViewport(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	glViewport(0, 0, 1024, 1024);
 	//两个颜色附件
 	RUInt attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 	glDrawBuffers(1, attachments);
@@ -269,7 +269,7 @@ void RenderSystem::_postRender(CCamera* camera) {
 		for (RUInt i = 0; i < amout; i++) {
 			//交替模糊十次
 			glBindFramebuffer(GL_FRAMEBUFFER, pFramebuffer[horizontal]->fbo);
-			glViewport(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+			glViewport(0, 0, 1024, 1024);
 			shader0->setBool("uHorizontal", horizontal);
 			RUInt ind = _allocTexture();
 			shader0->setInt("uTexture", ind);
@@ -288,7 +288,8 @@ void RenderSystem::_postRender(CCamera* camera) {
 
 	//渲染到屏幕buffer上
 	_resetTexAlloc();
-	glViewport(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	Viewport viewport = camera->getViewport();
+	glViewport(viewport.x, viewport.y, viewport.w, viewport.h);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
 	glDisable(GL_DEPTH_TEST);
 	

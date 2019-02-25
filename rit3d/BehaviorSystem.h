@@ -46,4 +46,7 @@ public:
 
 	//系统被注销时调用
 	virtual void onDestroy();
+
+	//窗口大小改变时执行
+	virtual void onChangeSize(int _w, int _h);
 };

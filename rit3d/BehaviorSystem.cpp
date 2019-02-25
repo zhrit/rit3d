@@ -73,6 +73,13 @@ void BehaviorSystem::onDestroy() {
 
 }
 
+//窗口大小改变时执行
+void BehaviorSystem::onChangeSize(int _w, int _h) {
+	for (auto iter : m_behaviorPool) {
+		iter->getBehavior()->onChangeSize(_w, _h);
+	}
+}
+
 void BehaviorSystem::addBehavior(CBehavior* _b) {
 	std::vector<CBehavior*>::iterator iter;
 	iter = std::find(m_behaviorPool.begin(), m_behaviorPool.end(), _b);
