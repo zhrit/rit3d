@@ -80,6 +80,54 @@ void BehaviorSystem::onChangeSize(int _w, int _h) {
 	}
 }
 
+//鼠标事件
+void BehaviorSystem::onLeftButtonDown() {
+	for (auto iter : m_behaviorPool) {
+		iter->getBehavior()->onLeftButtonDown();
+	}
+}
+void BehaviorSystem::onLeftButtonUp() {
+	for (auto iter : m_behaviorPool) {
+		iter->getBehavior()->onLeftButtonUp();
+	}
+}
+void BehaviorSystem::onRightButtonDown() {
+	for (auto iter : m_behaviorPool) {
+		iter->getBehavior()->onRightButtonDown();
+	}
+}
+void BehaviorSystem::onRightButtonUp() {
+	for (auto iter : m_behaviorPool) {
+		iter->getBehavior()->onRightButtonUp();
+	}
+}
+void BehaviorSystem::onMouseMove(double _x, double _y) {
+	for (auto iter : m_behaviorPool) {
+		iter->getBehavior()->onMouseMove(_x, _y);
+	}
+}
+void BehaviorSystem::onScroll(double _x, double _y) {
+	for (auto iter : m_behaviorPool) {
+		iter->getBehavior()->onScroll(_x, _y);
+	}
+}
+//键盘事件
+void BehaviorSystem::onKeyDown(int key) {
+	for (auto iter : m_behaviorPool) {
+		iter->getBehavior()->onKeyDown(key);
+	}
+}
+void BehaviorSystem::onKeyKeep(int key) {
+	for (auto iter : m_behaviorPool) {
+		iter->getBehavior()->onKeyKeep(key);
+	}
+}
+void BehaviorSystem::onKeyUp(int key) {
+	for (auto iter : m_behaviorPool) {
+		iter->getBehavior()->onKeyUp(key);
+	}
+}
+
 void BehaviorSystem::addBehavior(CBehavior* _b) {
 	std::vector<CBehavior*>::iterator iter;
 	iter = std::find(m_behaviorPool.begin(), m_behaviorPool.end(), _b);

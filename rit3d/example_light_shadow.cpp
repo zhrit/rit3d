@@ -10,6 +10,33 @@ public:
 			camera->setViewport(0, 0, _w, _h);
 		}
 	}
+	virtual void onLeftButtonDown() {
+		
+	}
+	virtual void onLeftButtonUp() {
+		
+	}
+	virtual void onRightButtonDown() {
+		
+	}
+	virtual void onRightButtonUp() {
+		
+	}
+	virtual void onMouseMove(double _x, double _y) {
+		
+	}
+	virtual void onScroll(double _x, double _y) {
+
+	}
+	virtual void onKeyDown(int key) {
+		
+	}
+	virtual void onKeyKeep(int key) {
+		
+	}
+	virtual void onKeyUp(int key) {
+		
+	}
 };
 /**
  *π‚’’∫Õ“ı”∞

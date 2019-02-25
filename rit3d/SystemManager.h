@@ -33,5 +33,17 @@ public:
 	//判断时候已经注册某个系统
 	RBool hasSystem(SYSTEMTYPE type);
 	//窗口大小变化时回调函数
-	void framebuffer_size_callback(int _w, int _h);
+	void onChangeSize(int _w, int _h);
+
+	//鼠标事件
+	virtual void onLeftButtonDown();
+	virtual void onLeftButtonUp();
+	virtual void onRightButtonDown();
+	virtual void onRightButtonUp();
+	virtual void onMouseMove(double _x, double _y);
+	virtual void onScroll(double _x, double _y);
+	//键盘事件
+	virtual void onKeyDown(int key);
+	virtual void onKeyKeep(int key);
+	virtual void onKeyUp(int key);
 };

@@ -120,10 +120,79 @@ ISystem* SystemManager::getSystem(SYSTEMTYPE type) {
 }
 
 //窗口大小变化时回调函数
-void SystemManager::framebuffer_size_callback(int _w, int _h) {
+void SystemManager::onChangeSize(int _w, int _h) {
 	for (auto st : m_systemList) {
 		if (st->isEnabled()) {
 			st->onChangeSize(_w, _h);
+		}
+	}
+}
+
+//鼠标事件
+void SystemManager::onLeftButtonDown() {
+	for (auto st : m_systemList) {
+		if (st->isEnabled()) {
+			st->onLeftButtonDown();
+		}
+	}
+}
+void SystemManager::onLeftButtonUp() {
+	for (auto st : m_systemList) {
+		if (st->isEnabled()) {
+			st->onLeftButtonUp();
+		}
+	}
+}
+//void SystemManager::onLeftButtonTap() {}
+void SystemManager::onRightButtonDown() {
+	for (auto st : m_systemList) {
+		if (st->isEnabled()) {
+			st->onRightButtonDown();
+		}
+	}
+}
+void SystemManager::onRightButtonUp() {
+	for (auto st : m_systemList) {
+		if (st->isEnabled()) {
+			st->onRightButtonUp();
+		}
+	}
+}
+//void SystemManager::onRightButtonTap() {}
+void SystemManager::onMouseMove(double _x, double _y) {
+	for (auto st : m_systemList) {
+		if (st->isEnabled()) {
+			st->onMouseMove(_x, _y);
+		}
+	}
+}
+void SystemManager::onScroll(double _x, double _y) {
+	for (auto st : m_systemList) {
+		if (st->isEnabled()) {
+			st->onScroll(_x, _y);
+		}
+	}
+}
+
+//键盘事件
+void SystemManager::onKeyDown(int key) {
+	for (auto st : m_systemList) {
+		if (st->isEnabled()) {
+			st->onKeyDown(key);
+		}
+	}
+}
+void SystemManager::onKeyKeep(int key) {
+	for (auto st : m_systemList) {
+		if (st->isEnabled()) {
+			st->onKeyKeep(key);
+		}
+	}
+}
+void SystemManager::onKeyUp(int key) {
+	for (auto st : m_systemList) {
+		if (st->isEnabled()) {
+			st->onKeyUp(key);
 		}
 	}
 }

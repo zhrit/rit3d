@@ -113,21 +113,62 @@ void Application::setGameEntry(std::function<void()> _gameEntry) {
 
 //窗口大小变化时回调函数
 void Application::_framebuffer_size_callback(GLFWwindow* window, int w, int h) {
-	SystemManager::Instance()->framebuffer_size_callback(w, h);
+	SystemManager::Instance()->onChangeSize(w, h);
 }
 //鼠标按键回调函数
 void Application::_mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-	//cout << "mousebutton" << endl;
+	if (button == GLFW_MOUSE_BUTTON_LEFT) {
+		if (action == GLFW_PRESS) {
+			//左键按下
+			SystemManager::Instance()->onLeftButtonDown();
+		}
+		else if (action == GLFW_RELEASE) {
+			//左键抬起
+			SystemManager::Instance()->onLeftButtonUp();
+		}
+		else {
+
+		}
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+		if (action == GLFW_PRESS) {
+			//右键按下
+			SystemManager::Instance()->onRightButtonDown();
+		}
+		else if (action == GLFW_RELEASE) {
+			//右键抬起
+			SystemManager::Instance()->onRightButtonUp();
+		}
+		else {
+
+		}
+	}
+	else {
+
+	}
 }
 //光标位置回调
 void Application::_cursor_position_callback(GLFWwindow* window, double x, double y) {
-	//cout << "cursorposition" << endl;
+	SystemManager::Instance()->onMouseMove(x, y);
 }
 //鼠标滚轮回调
 void Application::_scroll_callback(GLFWwindow* window, double x, double y) {
-	//cout << "scroll" << endl;
+	SystemManager::Instance()->onScroll(x, y);
 }
 //键盘按键回调
 void Application::_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	//cout << "keyboard" << endl;
+	switch (action)
+	{
+	case GLFW_PRESS:
+		SystemManager::Instance()->onKeyDown(key);
+		break;
+	case GLFW_RELEASE:
+		SystemManager::Instance()->onKeyUp(key);
+		break;
+	case GLFW_REPEAT:
+		SystemManager::Instance()->onKeyKeep(key);
+		break;
+	default:
+		break;
+	}
 }

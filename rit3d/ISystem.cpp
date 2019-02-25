@@ -45,9 +45,18 @@ void ISystem::lateUpdate() {
 }
 
 //窗口大小改变时执行
-void ISystem::onChangeSize(int _w, int _h) {
-
-}
+void ISystem::onChangeSize(int _w, int _h) {}
+//鼠标事件
+void ISystem::onLeftButtonDown() {}
+void ISystem::onLeftButtonUp() {}
+void ISystem::onRightButtonDown() {}
+void ISystem::onRightButtonUp() {}
+void ISystem::onMouseMove(double _x, double _y) {}
+void ISystem::onScroll(double _x, double _y) {}
+//键盘事件
+void ISystem::onKeyDown(int key) {}
+void ISystem::onKeyKeep(int key) {}
+void ISystem::onKeyUp(int key) {}
 
 //返回系统是否被激活
 RBool ISystem::isEnabled() const {
