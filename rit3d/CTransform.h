@@ -12,6 +12,7 @@ private:
 	glm::vec3 m_localAngle{ 0.0f,0.0f,0.0f };     //局部坐标系 各轴旋转角度
 	glm::vec3 m_localUpDir{ 0.0f, 1.0f, 0.0f };   //上向量(+y)
 	glm::vec3 m_localFrontDir{ 0.0f, 0.0f, 1.0f };//前向量(+z)
+	glm::vec3 m_localRightDir{ 1.0f, 0.0f, 0.0f };//右向量(+x)
 	glm::vec3 m_localScale{ 1.0f, 1.0f,1.0f };    //局部坐标系 缩放
 
 	glm::mat4 m_modelMatrix{ 1.0f };              //全局模型矩阵
@@ -45,8 +46,9 @@ public:
 	glm::vec3 getLocalPosition() const;
 	glm::vec3 getLocalAngle() const;
 	glm::vec3 getLocalScale() const;
-	glm::vec3 getLocalUpDir() const;
-	glm::vec3 getLocalFrontDir() const;
+	glm::vec3 getLocalUpDir();
+	glm::vec3 getLocalFrontDir();
+	glm::vec3 getLocalRightDir();
 
 	//局部设置几何信息
 	void setLocalPosition(float x, float y, float z);

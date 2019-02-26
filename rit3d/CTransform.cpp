@@ -51,11 +51,17 @@ glm::vec3 CTransform::getLocalAngle() const {
 glm::vec3 CTransform::getLocalScale() const {
 	return m_localScale;
 }
-glm::vec3 CTransform::getLocalUpDir() const {
+glm::vec3 CTransform::getLocalUpDir() {
+	getLocalModelMatrix();
 	return m_localUpDir;
 }
-glm::vec3 CTransform::getLocalFrontDir() const {
+glm::vec3 CTransform::getLocalFrontDir() {
+	getLocalModelMatrix();
 	return m_localFrontDir;
+}
+glm::vec3 CTransform::getLocalRightDir() {
+	getLocalModelMatrix();
+	return m_localRightDir;
 }
 
 //局部设置几何信息
@@ -128,7 +134,9 @@ glm::mat4 CTransform::getLocalModelMatrix() {
 		//m_localModelMatrix = glm::rotate(m_localModelMatrix, glm::radians(m_localAngle.y), glm::vec3(0.0f, 1.0f, 0.0f));
 		//旋转
 		glm::vec3 right = glm::normalize(glm::cross(m_localUpDir, m_localFrontDir));
+		m_localRightDir = right;
 		glm::vec3 up = glm::normalize(glm::cross(m_localFrontDir, right));
+		m_localUpDir = up;
 		glm::vec3 front = m_localFrontDir;
 
 		glm::mat4 trans(

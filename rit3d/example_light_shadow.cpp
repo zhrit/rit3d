@@ -3,7 +3,16 @@
 #include "declare.h"
 
 class CameraScript : public BaseBehavior {
+private:
+	glm::vec3 lastPos;
+	DWORD lastTime;
+	bool isKeyDown{ false };
+	bool isLeftButtonDown{ false };
+	float lastX;
+	float lastY;
 public:
+	float speed = 1.0f;//世界坐标单位长度/每秒
+	float rotateSpeed = 1.0f / 100.0f * 0.3f;//弧度/100像素
 	virtual void onChangeSize(int _w, int _h) {
 		CCamera* camera = (CCamera*)gameObject->getComponent(COMPTYPE::CAMERA);
 		if (camera != nullptr) {
@@ -11,31 +20,81 @@ public:
 		}
 	}
 	virtual void onLeftButtonDown() {
-		
+		isLeftButtonDown = true;
 	}
 	virtual void onLeftButtonUp() {
-		
-	}
-	virtual void onRightButtonDown() {
-		
-	}
-	virtual void onRightButtonUp() {
-		
+		isLeftButtonDown = false;
 	}
 	virtual void onMouseMove(double _x, double _y) {
-		
+		if (isLeftButtonDown) {
+			float deltaX = (lastX - static_cast<float>(_x)) * rotateSpeed;
+			float deltaY = (lastY - static_cast<float>(_y)) * rotateSpeed;
+
+			glm::vec3 front = gameObject->transform->getLocalFrontDir();
+			glm::vec3 up = gameObject->transform->getLocalUpDir();
+			glm::vec3 right = gameObject->transform->getLocalRightDir();
+
+			front = front * cos(deltaY) + up * sin(deltaY);
+			front = front * cos(deltaX) + right * sin(deltaX);
+			gameObject->transform->setLocalFrontDir(front.x, front.y, front.z);
+
+			lastX = static_cast<float>(_x);
+			lastY = static_cast<float>(_y);
+		}
+		else {
+			lastX = static_cast<float>(_x);
+			lastY = static_cast<float>(_y);
+		}
 	}
 	virtual void onScroll(double _x, double _y) {
 
 	}
 	virtual void onKeyDown(int key) {
-		
 	}
 	virtual void onKeyKeep(int key) {
-		
+		if (!isKeyDown) {
+			lastTime = ::GetTickCount();
+			isKeyDown = true;
+		}
+		if (key == GLFW_KEY_W) {
+			lastPos = gameObject->transform->getLocalPosition();
+			DWORD now = ::GetTickCount();
+			DWORD deltaTime = now - lastTime;
+			lastTime = now;
+			float deltaZ = deltaTime / 1000.0f * speed;
+			glm::vec3 newPos = lastPos + deltaZ * gameObject->transform->getLocalFrontDir();
+			gameObject->transform->setLocalPosition(newPos.x, newPos.y, newPos.z);
+		}
+		else if (key == GLFW_KEY_S) {
+			lastPos = gameObject->transform->getLocalPosition();
+			DWORD now = ::GetTickCount();
+			DWORD deltaTime = now - lastTime;
+			lastTime = now;
+			float deltaZ = deltaTime / 1000.0f * speed;
+			glm::vec3 newPos = lastPos - deltaZ * gameObject->transform->getLocalFrontDir();
+			gameObject->transform->setLocalPosition(newPos.x, newPos.y, newPos.z);
+		}
+		else if (key == GLFW_KEY_A) {
+			lastPos = gameObject->transform->getLocalPosition();
+			DWORD now = ::GetTickCount();
+			DWORD deltaTime = now - lastTime;
+			lastTime = now;
+			float deltaZ = deltaTime / 1000.0f * speed;
+			glm::vec3 newPos = lastPos + deltaZ * gameObject->transform->getLocalRightDir();
+			gameObject->transform->setLocalPosition(newPos.x, newPos.y, newPos.z);
+		}
+		else if (key == GLFW_KEY_D) {
+			lastPos = gameObject->transform->getLocalPosition();
+			DWORD now = ::GetTickCount();
+			DWORD deltaTime = now - lastTime;
+			lastTime = now;
+			float deltaZ = deltaTime / 1000.0f * speed;
+			glm::vec3 newPos = lastPos - deltaZ * gameObject->transform->getLocalRightDir();
+			gameObject->transform->setLocalPosition(newPos.x, newPos.y, newPos.z);
+		}
 	}
 	virtual void onKeyUp(int key) {
-		
+		isKeyDown = false;
 	}
 };
 /**
