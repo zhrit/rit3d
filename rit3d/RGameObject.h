@@ -2,11 +2,11 @@
 
 #include "RCommon.h"
 #include "IComponent.h"
+#include "Object.h"
 
 class CTransform;
 class RScene;
-class RGameObject
-{
+class RGameObject : public Object {
 public:
 	RGameObject(RScene* s, RString n = "UnName", RString t = "UnTag", LAYER l = LAYER::Default);
 	~RGameObject();

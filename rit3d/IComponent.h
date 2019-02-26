@@ -1,9 +1,9 @@
 #pragma once
 #include "RCommon.h"
+#include "Object.h"
 
 class RGameObject;
-class IComponent
-{
+class IComponent : public Object {
 public:
 	IComponent();
 	virtual ~IComponent();

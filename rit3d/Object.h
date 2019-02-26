@@ -5,14 +5,9 @@
 class Object
 {
 public:
-	Object() {
-		className = "Object";
-	}
+	Object();
+	virtual ~Object();
 
-	virtual RString toString() {
-		return this->className;
-	}
-
-protected:
-	RString className;
+public:
+	RUInt id;
 };

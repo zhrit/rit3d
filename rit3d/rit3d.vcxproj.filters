@@ -263,6 +263,9 @@
     <ClCompile Include="example_light_shadow.cpp">
       <Filter>src\example</Filter>
     </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="simple.vert">

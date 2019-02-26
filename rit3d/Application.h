@@ -32,6 +32,9 @@ private:
 	//fps工具
 	FPS m_fps;
 
+	//当前产生过的对象总数
+	RUInt m_objectCounter{ 0 };
+
 public:
 	//系统管理器
 	SystemManager* systemMng{ nullptr };
@@ -47,6 +50,10 @@ public:
 	void showFPS();
 	//隐藏fps
 	void hideFPS();
+	//id分配器初始化
+	void initIDAllocator();
+	//id分配器
+	RUInt IDAllocator();
 private:
 	//引擎初始化
 	void _initApp();

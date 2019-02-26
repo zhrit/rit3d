@@ -1,11 +1,12 @@
 #pragma once
 
 #include "RCommon.h"
+#include "Object.h"
 
 class RGameObject;
 class CCamera;
 class CLight;
-class RScene {
+class RScene : public Object {
 public:
 	//´´½¨³¡¾°
 	static RScene* CreateScene(RString name = DEFAULT_SCENE_NAME);

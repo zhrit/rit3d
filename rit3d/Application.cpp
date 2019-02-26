@@ -73,6 +73,15 @@ void Application::hideFPS() {
 	m_fps.hide();
 }
 
+//id分配器初始化
+void Application::initIDAllocator() {
+	m_objectCounter = 0;
+}
+//id分配器
+RUInt Application::IDAllocator() {
+	return ++m_objectCounter;
+}
+
 //引擎初始化
 void Application::_initApp() {
 	//初始化系统管理类
@@ -92,11 +101,15 @@ void Application::_initApp() {
 
 	//获取窗口环境
 	GLFWwindow* wd = m_window->getWindowContext();
+	//绑定设备输入回调函数
 	glfwSetKeyCallback(wd, Application::_key_callback);
 	glfwSetFramebufferSizeCallback(wd, Application::_framebuffer_size_callback);
 	glfwSetMouseButtonCallback(wd, Application::_mouse_button_callback);
 	glfwSetCursorPosCallback(wd, Application::_cursor_position_callback);
 	glfwSetScrollCallback(wd, Application::_scroll_callback);
+
+	//初始化ID分配器
+	initIDAllocator();
 }
 //引擎驱动
 void Application::_updateApp() {
