@@ -1,11 +1,17 @@
-layout (location = 0) out vec4 FragColor;
-#ifdef BLOOM
-layout (location = 1) out vec4 BrightColor;
-#endif
+#version 330 core
+out vec4 FragColor;
 
-in vec2 TexCoord;//uv坐标
-in vec3 fragNormal;//世界坐标系法向量
-in vec3 fragPos;//世界坐标系位置
+in vec2 TexCoord;
+
+uniform float uExposure;
+
+uniform sampler2D uPosition;
+uniform sampler2D uNormal;
+uniform sampler2D uAlbedoSpec;
+
+#define DIR_LIGHT_NUM 1
+#define POI_LIGHT_NUM 1
+#define SPO_LIGHT_NUM 1
 
 //平行光结构体
 struct DirLight {
@@ -44,19 +50,10 @@ struct SpoLight {
 	bool castShadow;
 };
 
-#ifdef BLOOM
-uniform float uBloomValue;
-#endif
-
-#ifdef NORMALMAP
-uniform sampler2D uNormalMap;
-in mat3 TBN;
-#endif
-
 #ifdef DIR_LIGHT_NUM
 uniform DirLight uDirLights[DIR_LIGHT_NUM];
 uniform sampler2D uDirShadowMap[DIR_LIGHT_NUM];
-in vec4 positionFromLightDir[DIR_LIGHT_NUM];
+uniform mat4 uLightSpaceMatrixDir[DIR_LIGHT_NUM];
 #endif
 #ifdef POI_LIGHT_NUM
 uniform PoiLight uPoiLights[POI_LIGHT_NUM];
@@ -65,32 +62,24 @@ uniform samplerCube uPoiShadowMap[POI_LIGHT_NUM];
 #ifdef SPO_LIGHT_NUM
 uniform SpoLight uSpoLights[SPO_LIGHT_NUM];
 uniform sampler2D uSpoShadowMap[SPO_LIGHT_NUM];
-in vec4 positionFromLightSpo[SPO_LIGHT_NUM];
+uniform mat4 uLightSpaceMatrixSpo[SPO_LIGHT_NUM];
 #endif
-uniform vec3 uColor;
-uniform int uHasTex;
-uniform sampler2D uTexture0;
 uniform vec3 uViewPos;
-uniform float uShininess;
-uniform bool uRecieveShadow;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, sampler2D shadowMap, vec4 pos4light);
 vec3 CalcPoiLight(PoiLight light, vec3 normal, vec3 viewDir, vec3 fragPos, samplerCube shadowMap);
 vec3 CalcSpoLight(SpoLight light, vec3 normal, vec3 viewDir, vec3 fragPos, sampler2D shadowMap, vec4 pos4light);
 
 void main() {
-	vec3 norm = normalize(fragNormal);
-	#ifdef NORMALMAP
-	norm = texture(uNormalMap, TexCoord).rgb;
-	norm = normalize(norm * 2.0f - 1.0f);
-	norm = normalize(TBN * norm);
-	#endif
+	vec3 norm = normalize(texture(uNormal, TexCoord).xyz);
+	vec3 fragPos = texture(uPosition, TexCoord).xyz;
 	vec3 viewDir = normalize(uViewPos - fragPos);
 
 	vec3 result = vec3(0.0f, 0.0f, 0.0f);
 	#ifdef DIR_LIGHT_NUM
 	for(int i = 0; i < DIR_LIGHT_NUM; i++) {
-		result += CalcDirLight(uDirLights[i], norm, viewDir, uDirShadowMap[i], positionFromLightDir[i]);
+		vec4 pos4light = uLightSpaceMatrixDir[i] * vec4(fragPos, 1.0f);
+		result += CalcDirLight(uDirLights[i], norm, viewDir, uDirShadowMap[i], pos4light);
 	}
 	#endif
 	#ifdef POI_LIGHT_NUM
@@ -100,18 +89,14 @@ void main() {
 	#endif
 	#ifdef SPO_LIGHT_NUM
 	for(int i = 0; i < SPO_LIGHT_NUM; i++) {
-		result += CalcSpoLight(uSpoLights[i], norm, viewDir, fragPos, uSpoShadowMap[i], positionFromLightSpo[i]);
+		vec4 pos4light = uLightSpaceMatrixSpo[i] * vec4(fragPos, 1.0f);
+		result += CalcSpoLight(uSpoLights[i], norm, viewDir, fragPos, uSpoShadowMap[i], pos4light);
 	}
 	#endif
-    FragColor = vec4(result, 1.0f);
 
-	#ifdef BLOOM
-	float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-	BrightColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-	if(brightness > uBloomValue) {
-		BrightColor = vec4(FragColor.rgb, 1.0f);
-	}
-	#endif
+	result = vec3(1.0f) - exp(-result * uExposure);
+	FragColor = vec4(result, 1.0f);
+
 	//FragColor = texture(texture0, TexCoord) * hasTex + vec4(color, 1.0f) * (1 - hasTex);
 }
 
@@ -120,9 +105,9 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, sampler2D shadowMap
 	vec3 lightDir = normalize(light.direction);
 	float diff = max(dot(-lightDir, normal), 0.0f);
 	vec3 reflectDir = normalize(reflect(lightDir, normal));
-	float spec =  pow(max(dot(reflectDir, viewDir), 0.0f), uShininess);
+	float spec =  pow(max(dot(reflectDir, viewDir), 0.0f), 32.0f);
 
-	vec3 matColor = vec3(texture(uTexture0, TexCoord) * uHasTex + vec4(uColor, 1.0f) * (1 - uHasTex));
+	vec3 matColor = vec3(texture(uAlbedoSpec, TexCoord));
 	vec3 ambient = light.ambInt * light.color * matColor;
 	vec3 diffuse = light.difInt * diff * light.color * matColor;
 	vec3 specular = light.speInt * spec * light.color * matColor;
@@ -133,9 +118,9 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, sampler2D shadowMap
 	float closestDepth = texture(shadowMap, shadowCoord.xy).r;
 	float currentDepth = shadowCoord.z;
 	//暂时没考虑阴影失真
-	//float bias = max(0.05f * (1.0f - dot(normal, -lightDir)), 0.005f);
+	float bias = max(0.05f * (1.0f - dot(normal, -lightDir)), 0.005f);
 	//超出光源视锥体的地方需要特殊处理
-	float shadow = (currentDepth > (closestDepth) && currentDepth <= 1.0f && uRecieveShadow && light.castShadow) ? 0.0f : 1.0f;
+	float shadow = (currentDepth > (closestDepth + bias) && currentDepth <= 1.0f && light.castShadow) ? 0.0f : 1.0f;
 	//PCF柔化阴影边缘
 	//float shadow = 0.0;
 	//vec2 texelSize = 1.0 / textureSize(uDirShadowMap[ind], 0);
@@ -146,8 +131,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, sampler2D shadowMap
 	//	}    
 	//}
 	//shadow /= 9.0f;
-
-	return (ambient + diffuse * shadow + specular * shadow);
+	return (ambient + diffuse + specular) * shadow;
 }
 
 //点光源效果计算
@@ -158,9 +142,9 @@ vec3 CalcPoiLight(PoiLight light, vec3 normal, vec3 viewDir, vec3 fragPos, sampl
 
 	float diff = max(dot(-lightDir, normal), 0.0f);
 	vec3 reflectDir = normalize(reflect(lightDir, normal));
-	float spec = pow(max(dot(reflectDir, viewDir), 0.0f), uShininess);
+	float spec = pow(max(dot(reflectDir, viewDir), 0.0f), 32.0f);
 
-	vec3 matColor = vec3(texture(uTexture0, TexCoord) * uHasTex + vec4(uColor, 1.0f) * (1 - uHasTex));
+	vec3 matColor = vec3(texture(uAlbedoSpec, TexCoord));
 	vec3 ambient = light.ambInt * light.color * matColor;
 	vec3 diffuse = light.difInt * diff * light.color * matColor;
 	vec3 specular = light.speInt * spec * light.color * matColor;
@@ -175,11 +159,11 @@ vec3 CalcPoiLight(PoiLight light, vec3 normal, vec3 viewDir, vec3 fragPos, sampl
 	closestDepth *= light.far;
 	float currentDepth = length(lightToFrag);
 	//暂时没考虑阴影失真
-	//float bias = max(0.05f * (1.0f - dot(normal, -lightDir)), 0.005f);
+	float bias = max(0.05f * (1.0f - dot(normal, -lightDir)), 0.005f);
 	//超出光源视锥体的地方需要特殊处理
-	float shadow = (currentDepth > closestDepth && currentDepth <= light.far && uRecieveShadow && light.castShadow) ? 0.0f : 1.0f;
+	float shadow = (currentDepth > closestDepth + bias && currentDepth <= light.far && light.castShadow) ? 0.0f : 1.0f;
 
-	return (ambient + diffuse * shadow + specular * shadow);
+	return (ambient + diffuse + specular) * shadow;
 
 }
 
@@ -189,13 +173,12 @@ vec3 CalcSpoLight(SpoLight light, vec3 normal, vec3 viewDir, vec3 fragPos, sampl
 	float theta = dot(lightDir, normalize(light.direction));
 	float epsilon = light.inner - light.outer;
 	float intensity = clamp((theta - light.outer) / epsilon, 0.0f, 1.0f);
-	//float intensity = (theta - light.outer) / epsilon;
 
 	float diff = max(dot(-lightDir, normal), 0.0f);
 	vec3 reflectDir = normalize(reflect(lightDir, normal));
-	float spec = pow(max(dot(reflectDir, viewDir), 0.0f), uShininess);
+	float spec = pow(max(dot(reflectDir, viewDir), 0.0f), 32.0);
 	
-	vec3 matColor = vec3(texture(uTexture0, TexCoord) * uHasTex + vec4(uColor, 1.0f) * (1 - uHasTex));
+	vec3 matColor = vec3(texture(uAlbedoSpec, TexCoord));
 	vec3 ambient = light.ambInt * light.color * matColor * intensity;
 	vec3 diffuse = light.difInt * diff * light.color * matColor * intensity;
 	vec3 specular = light.speInt * spec * light.color * matColor * intensity;
@@ -206,9 +189,9 @@ vec3 CalcSpoLight(SpoLight light, vec3 normal, vec3 viewDir, vec3 fragPos, sampl
 	float closestDepth = texture(shadowMap, shadowCoord.xy).r;
 	float currentDepth = shadowCoord.z;
 	//暂时没考虑阴影失真
-	//float bias = max(0.05f * (1.0f - dot(normal, -lightDir)), 0.005f);
+	float bias = max(0.05f * (1.0f - dot(normal, -lightDir)), 0.005f);
 	//超出光源视锥体的地方需要特殊处理
-	float shadow = (currentDepth > (closestDepth) && currentDepth <= 1.0f && uRecieveShadow && light.castShadow) ? 0.0f : 1.0f;
+	float shadow = (currentDepth > (closestDepth) && currentDepth <= 1.0f && light.castShadow) ? 0.0f : 1.0f;
 
 	return shadow * (ambient + diffuse + specular);
 }

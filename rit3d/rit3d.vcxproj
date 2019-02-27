@@ -160,7 +160,6 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="BaseBehavior.h" />
     <ClInclude Include="BehaviorSystem.h" />
-    <ClInclude Include="camera.h" />
     <ClInclude Include="CBehavior.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCollider.h" />
@@ -246,6 +245,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="blur.frag" />
+    <None Include="deferGeom.frag" />
+    <None Include="deferGeom.vert" />
+    <None Include="deferLight.frag" />
+    <None Include="deferLight.vert" />
     <None Include="edgedetection.frag" />
     <None Include="environment.frag" />
     <None Include="environment.vert" />

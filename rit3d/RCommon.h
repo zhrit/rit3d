@@ -19,7 +19,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "stb_image.h"
-#include "camera.h"
 using std::cout;
 using std::endl;
 using std::string;

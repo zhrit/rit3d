@@ -8,6 +8,7 @@ class CLight;
 class CTransform;
 class Material;
 class RScene;
+class GLProgram;
 class RFramebuffer {
 public:
 	RFramebuffer() {
@@ -77,14 +78,16 @@ private:
 	void _mainRender(CCamera* camera, RScene* pSce);
 	//后渲染
 	void _postRender(CCamera* camera);
+	//延迟渲染
+	void _defferedRender(CCamera* camera, RScene* pSce);
 	//核心渲染函数
 	void _render();
 
 	//更新uniform变量
-	void _updateUniforms(CRender* pRender, CCamera* camera, CTransform* tran, std::list<CLight*> lights);
+	void _updateUniforms(CRender* pRender, CCamera* camera, CTransform* tran, GLProgram* shader = nullptr);
 
 	//更新光源相关的uniform变量
-	void _updateLightsUniforms(Material* pMat, std::list<CLight*> lights);
+	void _updateLightsUniforms(GLProgram* shader, std::list<CLight*> lights);
 
 	//vao对象供后处理使用
 	RUInt m_rectVAO;

@@ -201,9 +201,9 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 	}
 
 	std::list<CLight*> lightList = pSce->getLightList();
+	_resetTexAlloc();
 	for (auto it : pSce->getGameObjectList()) {
 		if ((it->getLayer() & camera->getCullMask()) == 0) continue;
-		_resetTexAlloc();
 		CTransform* trans = it->transform;
 		CRender* rend = (CRender*)it->getComponent(RENDER);
 		if (rend != nullptr) {
@@ -221,9 +221,9 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 			}
 			rend->m_mat->getShader()->use();
 			if (rend->m_mat->isUseLight()) {
-				_updateLightsUniforms(rend->m_mat, lightList);
+				_updateLightsUniforms(rend->m_mat->getShader(), lightList);
 			}
-			_updateUniforms(rend, camera, trans, lightList);
+			_updateUniforms(rend, camera, trans);
 			glBindVertexArray(rend->m_mesh->getVAO());
 
 			//glDrawArrays(GL_TRIANGLES, 0, rend->m_mesh->getVertexCount());
@@ -323,24 +323,87 @@ void RenderSystem::_postRender(CCamera* camera) {
 
 }
 
+//延迟渲染
+void RenderSystem::_defferedRender(CCamera* camera, RScene* pSce) {
+	//几何信息获取阶段
+	_resetTexAlloc();
+	glBindFramebuffer(GL_FRAMEBUFFER, camera->getGBuffer());
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glViewport(0, 0, 1024, 1024);
+	glEnable(GL_DEPTH_TEST);
+	GLProgram* shaderGeo = Application::Instance()->resourceMng->getShader("deferGeom");
+	shaderGeo->use();
+	//shaderGeo->setMat4("uView", camera->getViewMatrix());
+	//shaderGeo->setMat4("uProjection", camera->getProjMatrix());
+	for (auto it : pSce->getGameObjectList()) {
+		if ((it->getLayer() & camera->getCullMask()) == 0) continue;
+		CTransform* trans = it->transform;
+		CRender* rend = (CRender*)it->getComponent(RENDER);
+		if (rend != nullptr) {
+			_updateUniforms(rend, camera, trans, shaderGeo);
+			//shaderGeo->setMat4("uModel", trans->getModelMatrix());
+			//shaderGeo->setMat4("uNModel", glm::inverse(glm::transpose(trans->getModelMatrix())));
+			glBindVertexArray(rend->m_mesh->getVAO());
+			glDrawElements(GL_TRIANGLES, rend->m_mesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
+		}
+	}
+	//光照计算阶段
+	_resetTexAlloc();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	Viewport viewport = camera->getViewport();
+	glViewport(viewport.x, viewport.y, viewport.w, viewport.h);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
+	GLProgram* shaderLight = Application::Instance()->resourceMng->getShader("deferLight");
+
+	//使用后处理shader
+	shaderLight->use();
+	std::list<CLight*> lightList = pSce->getLightList();
+	_updateLightsUniforms(shaderLight, lightList);
+	shaderLight->setFloat("uExposure", camera->getExposure());
+	shaderLight->setVec3("uViewPos", camera->gameObject->transform->getPosition());
+	//绑定主渲染得到的texture
+	RUInt ind = _allocTexture();
+	shaderLight->setInt("uPosition", ind);
+	glActiveTexture(0x84C0 + ind);
+	glBindTexture(GL_TEXTURE_2D, camera->getGTexture(0));
+	ind = _allocTexture();
+	shaderLight->setInt("uNormal", ind);
+	glActiveTexture(0x84C0 + ind);
+	glBindTexture(GL_TEXTURE_2D, camera->getGTexture(1));
+	ind = _allocTexture();
+	shaderLight->setInt("uAlbedoSpec", ind);
+	glActiveTexture(0x84C0 + ind);
+	glBindTexture(GL_TEXTURE_2D, camera->getGTexture(2));
+	glBindVertexArray(m_rectVAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
 //核心渲染函数
 void RenderSystem::_render() {
 	Application* app = Application::Instance();
 	RScene* pSce = app->sceneMng->getAllScene().front();
 	std::list<CCamera*> cameraList = pSce->getCameraList();
-	//std::list<CLight*> lightList = pSce->getLightList();
-	//_preRender(pSce);
+
 	for (auto camera : cameraList) {
-		_preRender(camera, pSce);
-		_mainRender(camera, pSce);
-		_postRender(camera);
+		if (RENDERMODEL::FORWARD == camera->getRenderModel()) {
+			_preRender(camera, pSce);
+			_mainRender(camera, pSce);
+			_postRender(camera);
+		}
+		else {
+			_preRender(camera, pSce);
+			_defferedRender(camera, pSce);
+		}
 	}
 }
 
 //更新uniform变量
-void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform* tran, std::list<CLight*> lights) {
+void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform* tran, GLProgram* shader) {
 	Material* pMat = pRender->m_mat;
-	GLProgram* shader = pMat->getShader();
+	if (nullptr == shader) {
+		shader = pMat->getShader();
+	}
 	RInt maxUniformLen;//uniform名称最大长度
 	RInt numUniforms;//保存uniform的数量
 
@@ -359,17 +422,17 @@ void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform
 		glGetActiveUniform(shader->ID, i, maxUniformLen, NULL, &size, &type, uniformName);
 
 		RString sName = (RString)uniformName;
-		if (sName == "projection") {
+		if (sName == "uProjection") {
 			shader->setMat4(sName, camera->getProjMatrix());
 		}
-		else if(sName == "view")
+		else if(sName == "uView")
 		{
 			shader->setMat4(sName, camera->getViewMatrix());
 		}
-		else if (sName == "model") {
+		else if (sName == "uModel") {
 			shader->setMat4(sName, tran->getModelMatrix());
 		}
-		else if (sName == "nmodel") {
+		else if (sName == "uNModel") {
 			shader->setMat4(sName, glm::inverse(glm::transpose(tran->getModelMatrix())));
 		}
 		else if (sName == "uColor") {
@@ -456,9 +519,7 @@ void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform
 }
 
 //更新光源相关的uniform变量
-void RenderSystem::_updateLightsUniforms(Material* pMat, std::list<CLight*> lights) {
-	GLProgram* shader = pMat->getShader();
-
+void RenderSystem::_updateLightsUniforms(GLProgram* shader, std::list<CLight*> lights) {
 	RUInt i = 0, j = 0, k = 0;
 
 	for (auto light : lights) {

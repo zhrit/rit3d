@@ -117,9 +117,6 @@
     <ClInclude Include="stb_image.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -335,6 +332,18 @@
       <Filter>src\asset\shader</Filter>
     </None>
     <None Include="environment.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="deferGeom.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="deferGeom.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="deferLight.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="deferLight.frag">
       <Filter>src\asset\shader</Filter>
     </None>
   </ItemGroup>

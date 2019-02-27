@@ -9,6 +9,11 @@ struct Viewport {
 	int h;
 };
 
+enum RENDERMODEL {
+	FORWARD = 0,
+	DEFER,
+};
+
 class CCamera : public IComponent
 {
 private:
@@ -40,6 +45,12 @@ private:
 	//HDR参数
 	RFloat m_exposure{ 1.0f };//曝光参数
 	RFloat m_bloom{ 0.0f };//泛光阈值
+
+	//渲染方式，正向渲染或延迟渲染
+	RENDERMODEL m_renderModel{ RENDERMODEL::FORWARD };
+	RUInt m_gBuffer;//延迟渲染用到的framebuffer
+	RUInt m_gTextures[3];//延迟渲染用到的纹理 位置 法线 颜色
+	RUInt m_rboDepth;//延迟渲染用到的深度缓冲
 
 public:
 	RUInt getCullMask() const;
@@ -75,6 +86,13 @@ public:
 
 	RFloat getBloom() const;
 	void setBloom(RFloat _b);
+
+	//设置渲染模式
+	RENDERMODEL getRenderModel() const;
+	void setRenderModel(RENDERMODEL _m);
+	//获取gBuffer和gTexture
+	RUInt getGBuffer() const;
+	RUInt getGTexture(RInt ind) const;
 
 	//设置视锥体
 	void setOrthoFrustum(RFloat _fov, RFloat _asp, RFloat _near, RFloat _far);

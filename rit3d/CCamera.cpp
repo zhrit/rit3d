@@ -158,6 +158,58 @@ RUInt CCamera::getColorTex(RUInt ind) {
 	return m_colorTexs[ind];
 }
 
+//设置渲染模式
+RENDERMODEL CCamera::getRenderModel() const {
+	return m_renderModel;
+}
+void CCamera::setRenderModel(RENDERMODEL _m) {
+	if (m_renderModel == _m) return;
+	if (_m = RENDERMODEL::DEFER) {
+		//如果设置渲染模式为延迟渲染，需要创建gbuffer
+		glGenFramebuffers(1, &m_gBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_gBuffer);
+
+		glGenTextures(3, m_gTextures);
+		for (int i = 0; i < 3; i++) {
+			glBindTexture(GL_TEXTURE_2D, m_gTextures[i]);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1024, 1024, 0, GL_RGBA, GL_FLOAT, NULL);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, m_gTextures[i], 0);
+		}
+
+		glGenRenderbuffers(1, &m_rboDepth);
+		glBindRenderbuffer(GL_RENDERBUFFER, m_rboDepth);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 1024);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_rboDepth);
+
+		//打印错误信息
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+			std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+		}
+		//恢复默认framebuffer
+		GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+		glDrawBuffers(3, attachments);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	else {
+		//如果设置渲染模式为正向渲染，需要销毁之前创建的gbuffer
+		glDeleteRenderbuffers(1, &m_rboDepth);
+		glDeleteTextures(3, m_gTextures);
+		glDeleteFramebuffers(1, &m_gBuffer);
+
+	}
+	m_renderModel = _m;
+}
+
+//获取gBuffer和gTexture
+RUInt CCamera::getGBuffer() const {
+	return m_gBuffer;
+}
+RUInt CCamera::getGTexture(RInt ind) const {
+	return m_gTextures[ind];
+}
+
 RFloat CCamera::getExposure() const {
 	return m_exposure;
 }

@@ -12,10 +12,10 @@ out vec3 fragPos;
 out mat3 TBN;
 #endif
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-uniform mat4 nmodel;
+uniform mat4 uModel;
+uniform mat4 uView;
+uniform mat4 uProjection;
+uniform mat4 uNModel;
 
 //#ifdef DIR_LIGHT_NUM
 //uniform mat4 uLightSpaceMatrixDir[DIR_LIGHT_NUM];
@@ -29,13 +29,13 @@ uniform mat4 nmodel;
 
 void main()
 {
-	gl_Position = projection * view * model * vec4(aPos, 1.0f);
-	fragNormal = vec3(nmodel * vec4(aNor, 0.0f));//可能有问题
-	fragPos = vec3(model * vec4(aPos, 1.0f));
+	gl_Position = uProjection * uView * uModel * vec4(aPos, 1.0f);
+	fragNormal = vec3(uNModel * vec4(aNor, 0.0f));//可能有问题
+	fragPos = vec3(uModel * vec4(aPos, 1.0f));
 	TexCoord = aTexCoord;
 
 	#ifdef NORMALMAP
-	vec3 TBN_T = normalize(vec3(model * vec4(aTangent, 0.0f)));
+	vec3 TBN_T = normalize(vec3(uModel * vec4(aTangent, 0.0f)));
 	vec3 TBN_N = fragNormal;
 	vec3 TBN_B = cross(TBN_N, TBN_T);
 	TBN = mat3(TBN_T, TBN_B, TBN_N);
