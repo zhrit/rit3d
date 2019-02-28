@@ -17,8 +17,8 @@ CRender* CRender::CreateInstance() {
 	return new CRender();
 }
 
-void CRender::setMesh(Mesh* _mesh) {
-	m_mesh = _mesh;
+void CRender::addMesh(Mesh* _mesh) {
+	m_meshs.push_back(_mesh);
 }
 
 void CRender::setMaterial(Material* _mat) {

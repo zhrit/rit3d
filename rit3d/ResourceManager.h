@@ -5,6 +5,9 @@ class Mesh;
 class Material;
 class Texture;
 class GLProgram;
+class RGameObject;
+class RScene;
+class CRender;
 
 class ResourceManager
 {
@@ -29,6 +32,10 @@ private:
 	void _calcNormal(RFloat* vs, RInt vSize, RUInt* id, RInt iSize, RFloat* nm);
 	//根据vertices和indices计算tangents
 	void _calcTangent(RFloat* vs, RInt vSize, RUInt* id, RInt iSize, RFloat* uv, RFloat* tg);
+	//加载模型时处理节点
+	void _processNode(aiNode* node, const aiScene* scene, CRender* render);
+	//加载模型时处理网格
+	void _processMesh(aiMesh* mesh, const aiScene* scene, CRender* render);
 public:
 	//创建新网格
 	Mesh* createMesh(const RString& _name, RFloat* verArray, RInt verSize, RUInt* indArray, RInt indSize);
@@ -75,5 +82,8 @@ public:
 	void clearShader();
 	//清空所有资源
 	void clearAll();
+
+	//加载模型
+	RGameObject* loadModel(RString path, RScene* sce);
 };
 

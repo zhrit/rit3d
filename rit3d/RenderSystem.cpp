@@ -137,10 +137,12 @@ void RenderSystem::_preRender(CCamera* camera, RScene* pSce) {
 						shader->setMat4("uModel", trans->getModelMatrix());
 						shader->setMat4("uLightSpaceMatrix", light->getLightSpaceMatrix());
 
-						glBindVertexArray(rend->m_mesh->getVAO());
+						for (auto submesh : rend->m_meshs) {
+							glBindVertexArray(submesh->getVAO());
 
-						//glDrawArrays(GL_TRIANGLES, 0, rend->m_mesh->getVertexCount());
-						glDrawElements(GL_TRIANGLES, rend->m_mesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
+							//glDrawArrays(GL_TRIANGLES, 0, rend->m_mesh->getVertexCount());
+							glDrawElements(GL_TRIANGLES, submesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
+						}
 					}
 				}
 				glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -168,9 +170,11 @@ void RenderSystem::_preRender(CCamera* camera, RScene* pSce) {
 						for (int i = 0; i < 6; i++) {
 							shader->setMat4("uShadowMatrices[" + util::num2str(i) + "]", lightSpace[i]);
 						}
-						glBindVertexArray(rend->m_mesh->getVAO());
 
-						glDrawElements(GL_TRIANGLES, rend->m_mesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
+						for (auto submesh : rend->m_meshs) {
+							glBindVertexArray(submesh->getVAO());
+							glDrawElements(GL_TRIANGLES, submesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
+						}
 					}
 				}
 				glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -224,10 +228,11 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 				_updateLightsUniforms(rend->m_mat->getShader(), lightList);
 			}
 			_updateUniforms(rend, camera, trans);
-			glBindVertexArray(rend->m_mesh->getVAO());
 
-			//glDrawArrays(GL_TRIANGLES, 0, rend->m_mesh->getVertexCount());
-			glDrawElements(GL_TRIANGLES, rend->m_mesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
+			for (auto submesh : rend->m_meshs) {
+				glBindVertexArray(submesh->getVAO());
+				glDrawElements(GL_TRIANGLES, submesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
+			}
 		}
 	}
 	//检查是否有天空盒组件,有则渲染天空盒
@@ -344,8 +349,10 @@ void RenderSystem::_defferedRender(CCamera* camera, RScene* pSce) {
 			_updateUniforms(rend, camera, trans, shaderGeo);
 			//shaderGeo->setMat4("uModel", trans->getModelMatrix());
 			//shaderGeo->setMat4("uNModel", glm::inverse(glm::transpose(trans->getModelMatrix())));
-			glBindVertexArray(rend->m_mesh->getVAO());
-			glDrawElements(GL_TRIANGLES, rend->m_mesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
+			for (auto submesh : rend->m_meshs) {
+				glBindVertexArray(submesh->getVAO());
+				glDrawElements(GL_TRIANGLES, submesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
+			}
 		}
 	}
 	//光照计算阶段

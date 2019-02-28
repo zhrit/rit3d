@@ -45,7 +45,7 @@ void Mesh::_setVertices(RFloat* pData, RInt size) {
 	for (int i = 0; i < size; i++) {
 		m_vertices[i] = pData[i];
 	}
-	m_vertexCount = size / 11;
+	m_vertexCount = size / 14;
 }
 void Mesh::_setIndices(RUInt* pData, RInt size) {
 	if (m_indices != nullptr) {
@@ -77,7 +77,7 @@ void Mesh::_createBuffer() {
 
 	glBindVertexArray(m_vertexArray);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, m_vertexCount * 11 * sizeof(float), m_vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_vertexCount * 14 * sizeof(float), m_vertices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_faceCount * 3 * sizeof(unsigned int), m_indices, GL_STATIC_DRAW);
 	//attribute

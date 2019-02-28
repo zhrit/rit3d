@@ -120,7 +120,7 @@ void example_light_shadow_1() {
 	RGameObject* plane = pSce->addGameObject();
 	plane->transform->setLocalScale(0.7f, 1.0f, 0.7f);
 	CRender* planerender = (CRender*)plane->addComponent(RENDER);
-	planerender->setMesh(app->resourceMng->getMesh("plane"));
+	planerender->addMesh(app->resourceMng->getMesh("plane"));
 	planerender->setMaterial(mat2);
 	planerender->recieveShadow(true);
 	//立方体
@@ -129,7 +129,7 @@ void example_light_shadow_1() {
 	cube->transform->setLocalScale(0.7f, 0.7f, 0.7f);
 	cube->transform->setLocalFrontDir(0.2f, 0.0f, 0.9f);
 	CRender* cuberender = (CRender*)cube->addComponent(RENDER);
-	cuberender->setMesh(app->resourceMng->getMesh("cube"));
+	cuberender->addMesh(app->resourceMng->getMesh("cube"));
 	cuberender->setMaterial(mat2);
 	cuberender->castShadow(true);
 	//球
@@ -138,7 +138,7 @@ void example_light_shadow_1() {
 	sphere->transform->setLocalScale(0.7f, 0.7f, 0.7f);
 	sphere->transform->setLocalFrontDir(1.0f, 0.0f, 0.0f);
 	CRender* sphererender = (CRender*)sphere->addComponent(RENDER);
-	sphererender->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender->setMaterial(mat2);
 	sphererender->castShadow(true);
 
@@ -216,7 +216,7 @@ void example_light_shadow_2() {
 	sphere->transform->setLocalScale(1.0f, 1.0f, 1.0f);
 	sphere->transform->setLocalFrontDir(1.0f, 0.0f, 0.0f);
 	CRender* sphererender = (CRender*)sphere->addComponent(RENDER);
-	sphererender->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender->setMaterial(mat);
 	sphererender->castShadow(true);
 
@@ -255,7 +255,7 @@ void example_light_shadow_2() {
 	light1->setColor(1.0f, 1.0f, 1.0f);
 	light1->setLightType(LIGHTTYPE::LPOINT);
 	CRender* lo1render = (CRender*)LO1->addComponent(RENDER);
-	lo1render->setMesh(app->resourceMng->getMesh("sphere"));
+	lo1render->addMesh(app->resourceMng->getMesh("sphere"));
 	lo1render->setMaterial(mat1);
 
 	RGameObject* LO2 = pSce->addGameObject();
@@ -270,7 +270,7 @@ void example_light_shadow_2() {
 	light2->setCutOff(10, 15);
 	light2->setLightType(LIGHTTYPE::SPOT);
 	CRender* lo2render = (CRender*)LO2->addComponent(RENDER);
-	lo2render->setMesh(app->resourceMng->getMesh("sphere"));
+	lo2render->addMesh(app->resourceMng->getMesh("sphere"));
 	lo2render->setMaterial(mat2);
 }
 
@@ -373,7 +373,7 @@ void example_light_shadow_3() {
 	RGameObject* sphere1 = pSce->addGameObject();
 	sphere1->transform->setLocalPosition(-1.5f, 1.0f, 0.0f);
 	CRender* sphererender1 = (CRender*)sphere1->addComponent(RENDER);
-	sphererender1->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender1->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender1->setMaterial(mat1);
 	sphererender1->castShadow(false);
 	CBehavior* sphereBehavior1 = (CBehavior*)sphere1->addComponent(BEHAVIOR);
@@ -383,7 +383,7 @@ void example_light_shadow_3() {
 	RGameObject* sphere2 = pSce->addGameObject();
 	sphere2->transform->setLocalPosition(-.0f, 1.0f, 0.0f);
 	CRender* sphererender2 = (CRender*)sphere2->addComponent(RENDER);
-	sphererender2->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender2->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender2->setMaterial(mat2);
 	sphererender2->castShadow(false);
 	CBehavior* sphereBehavior2 = (CBehavior*)sphere2->addComponent(BEHAVIOR);
@@ -393,7 +393,7 @@ void example_light_shadow_3() {
 	RGameObject* sphere3 = pSce->addGameObject();
 	sphere3->transform->setLocalPosition(1.5f, 1.0f, 0.0f);
 	CRender* sphererender3 = (CRender*)sphere3->addComponent(RENDER);
-	sphererender3->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender3->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender3->setMaterial(mat3);
 	sphererender3->castShadow(false);
 	CBehavior* sphereBehavior3 = (CBehavior*)sphere3->addComponent(BEHAVIOR);
@@ -403,7 +403,7 @@ void example_light_shadow_3() {
 	RGameObject* sphere4 = pSce->addGameObject();
 	sphere4->transform->setLocalPosition(-1.5f, -1.0f, 0.0f);
 	CRender* sphererender4 = (CRender*)sphere4->addComponent(RENDER);
-	sphererender4->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender4->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender4->setMaterial(mat4);
 	sphererender4->castShadow(false);
 	CBehavior* sphereBehavior4 = (CBehavior*)sphere4->addComponent(BEHAVIOR);
@@ -413,7 +413,7 @@ void example_light_shadow_3() {
 	RGameObject* sphere5 = pSce->addGameObject();
 	sphere5->transform->setLocalPosition(0.0f, -1.0f, 0.0f);
 	CRender* sphererender5 = (CRender*)sphere5->addComponent(RENDER);
-	sphererender5->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender5->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender5->setMaterial(mat5);
 	sphererender5->castShadow(false);
 	CBehavior* sphereBehavior5 = (CBehavior*)sphere5->addComponent(BEHAVIOR);
@@ -423,7 +423,7 @@ void example_light_shadow_3() {
 	RGameObject* sphere6 = pSce->addGameObject();
 	sphere6->transform->setLocalPosition(1.5f, -1.0f, 0.0f);
 	CRender* sphererender6 = (CRender*)sphere6->addComponent(RENDER);
-	sphererender6->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender6->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender6->setMaterial(mat6);
 	sphererender6->castShadow(false);
 	CBehavior* sphereBehavior6 = (CBehavior*)sphere6->addComponent(BEHAVIOR);
@@ -499,7 +499,7 @@ void example_light_shadow_4() {
 	plane1->transform->setLocalUpDir(0.0f, 0.0f, 1.0f);
 	plane1->transform->setLocalFrontDir(0.0f, -1.0f, 0.0f);
 	CRender* planerender1 = (CRender*)plane1->addComponent(RENDER);
-	planerender1->setMesh(app->resourceMng->getMesh("plane"));
+	planerender1->addMesh(app->resourceMng->getMesh("plane"));
 	planerender1->setMaterial(mat);
 
 	RGameObject* plane2 = pSce->addGameObject();
@@ -508,7 +508,7 @@ void example_light_shadow_4() {
 	plane2->transform->setLocalUpDir(0.0f, 0.0f, 1.0f);
 	plane2->transform->setLocalFrontDir(0.0f, -1.0f, 0.0f);
 	CRender* planerender2 = (CRender*)plane2->addComponent(RENDER);
-	planerender2->setMesh(app->resourceMng->getMesh("plane"));
+	planerender2->addMesh(app->resourceMng->getMesh("plane"));
 	planerender2->setMaterial(mat1);
 
 	//相机
@@ -566,7 +566,7 @@ void example_light_shadow_5() {
 	RGameObject* plane = pSce->addGameObject();
 	plane->transform->setLocalScale(0.7f, 1.0f, 0.7f);
 	CRender* planerender = (CRender*)plane->addComponent(RENDER);
-	planerender->setMesh(app->resourceMng->getMesh("plane"));
+	planerender->addMesh(app->resourceMng->getMesh("plane"));
 	planerender->setMaterial(mat2);
 	planerender->recieveShadow(true);
 	//立方体
@@ -575,7 +575,7 @@ void example_light_shadow_5() {
 	cube->transform->setLocalScale(0.7f, 0.7f, 0.7f);
 	cube->transform->setLocalFrontDir(0.2f, 0.0f, 0.9f);
 	CRender* cuberender = (CRender*)cube->addComponent(RENDER);
-	cuberender->setMesh(app->resourceMng->getMesh("cube"));
+	cuberender->addMesh(app->resourceMng->getMesh("cube"));
 	cuberender->setMaterial(mat2);
 	cuberender->castShadow(true);
 	//球
@@ -584,7 +584,7 @@ void example_light_shadow_5() {
 	sphere->transform->setLocalScale(0.7f, 0.7f, 0.7f);
 	sphere->transform->setLocalFrontDir(1.0f, 0.0f, 0.0f);
 	CRender* sphererender = (CRender*)sphere->addComponent(RENDER);
-	sphererender->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender->setMaterial(mat2);
 	sphererender->castShadow(true);
 
@@ -665,7 +665,7 @@ void example_light_shadow_6() {
 	RGameObject* plane = pSce->addGameObject();
 	plane->transform->setLocalScale(0.7f, 1.0f, 0.7f);
 	CRender* planerender = (CRender*)plane->addComponent(RENDER);
-	planerender->setMesh(app->resourceMng->getMesh("plane"));
+	planerender->addMesh(app->resourceMng->getMesh("plane"));
 	planerender->setMaterial(mat2);
 	planerender->recieveShadow(true);
 	//立方体
@@ -674,7 +674,7 @@ void example_light_shadow_6() {
 	cube->transform->setLocalScale(0.7f, 0.7f, 0.7f);
 	cube->transform->setLocalFrontDir(0.2f, 0.0f, 0.9f);
 	CRender* cuberender = (CRender*)cube->addComponent(RENDER);
-	cuberender->setMesh(app->resourceMng->getMesh("cube"));
+	cuberender->addMesh(app->resourceMng->getMesh("cube"));
 	cuberender->setMaterial(mat2);
 	cuberender->castShadow(true);
 	//球
@@ -683,7 +683,7 @@ void example_light_shadow_6() {
 	sphere->transform->setLocalScale(0.7f, 0.7f, 0.7f);
 	sphere->transform->setLocalFrontDir(1.0f, 0.0f, 0.0f);
 	CRender* sphererender = (CRender*)sphere->addComponent(RENDER);
-	sphererender->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender->setMaterial(mat2);
 	sphererender->castShadow(true);
 
@@ -772,7 +772,7 @@ void example_skybox_1() {
 	sphere->transform->setLocalScale(1.0f, 1.0f, 1.0f);
 	sphere->transform->setLocalFrontDir(1.0f, 0.0f, 0.0f);
 	CRender* sphererender = (CRender*)sphere->addComponent(RENDER);
-	sphererender->setMesh(app->resourceMng->getMesh("sphere"));
+	sphererender->addMesh(app->resourceMng->getMesh("sphere"));
 	sphererender->setMaterial(mat2);
 	sphererender->castShadow(true);
 
@@ -834,4 +834,71 @@ void example_skybox_1() {
 	light2->setColor(1.0f, 0.0f, 0.0f);
 	light2->setCutOff(10, 15);
 	light2->setLightType(LIGHTTYPE::SPOT);
+}
+/**
+ *模型加载
+ */
+void example_model_load_1() {
+	cout << "load model" << endl;
+	Application* app = Application::Instance();
+	app->showFPS();
+	RScene* pSce = app->sceneMng->createScene();
+
+	//纹理和材质
+	Material* mat1 = app->resourceMng->createMaterial("mat1");
+	mat1->setShader("phong");
+	mat1->setColor(1.0f, 1.0f, 1.0f);
+
+	//平面
+	RGameObject* nunosuit = pSce->loadGameObject("resources/nanosuit/nanosuit.obj");
+	nunosuit->transform->setLocalPosition(0.0f, 0.0f, 0.0f);
+	nunosuit->transform->setLocalScale(0.5f, 0.5f, 0.5f);
+	CRender* nunosuitrender = (CRender*)nunosuit->getComponent(RENDER);
+	nunosuitrender->setMaterial(mat1);
+
+	//相机
+	RGameObject* CO = pSce->addGameObject();
+	CO->transform->setLocalPosition(0.0f, 0.0f, 20.0f);
+	CO->transform->setLocalFrontDir(0.0f, 0.0f, -1.0f);
+	CO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CCamera* cam = (CCamera*)CO->addComponent(COMPTYPE::CAMERA);
+	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
+	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+	cam->setViewport(0, 0, 1000, 800);
+	CBehavior* cameraBehavior1 = (CBehavior*)CO->addComponent(BEHAVIOR);
+	cameraBehavior1->setBehavior(new CameraScript());
+
+	//平行光
+	RGameObject* LO = pSce->addGameObject();
+	LO->transform->setLocalPosition(3.0f, 1.5f, 0.0f);
+	LO->transform->setLocalFrontDir(-1.0f, -0.5f, 0.0f);
+	LO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CLight* light = (CLight*)LO->addComponent(COMPTYPE::LIGHT);
+	light->castShadow(true);
+	light->setColor(1.0f, 1.0f, 1.0f);
+	light->setLightType(LIGHTTYPE::DIRECTION);
+	light->setEnabled(true);
+
+	////点光源
+	//RGameObject* LO1 = pSce->addGameObject();
+	//LO1->transform->setLocalPosition(0.0f, 2.0f, 0.0f);
+	//LO1->transform->setLocalFrontDir(1.0f, -0.5f, 0.0f);
+	//LO1->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	//CLight* light1 = (CLight*)LO1->addComponent(COMPTYPE::LIGHT);
+	//light1->castShadow(true);
+	//light1->setIntensity(0.1f, 1.0f, 1.0f);
+	//light1->setColor(1.0f, 1.0f, 1.0f);
+	//light1->setLightType(LIGHTTYPE::LPOINT);
+
+	////聚光灯
+	//RGameObject* LO2 = pSce->addGameObject();
+	//LO2->transform->setLocalPosition(2.0f, 3.0f, -1.0f);
+	//LO2->transform->setLocalFrontDir(-2.0f, -2.5f, 1.0f);
+	//LO2->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	//CLight* light2 = (CLight*)LO2->addComponent(COMPTYPE::LIGHT);
+	//light2->castShadow(true);
+	//light2->setIntensity(0.1f, 1.0f, 1.0f);
+	//light2->setColor(1.0f, 0.0f, 0.0f);
+	//light2->setCutOff(10, 15);
+	//light2->setLightType(LIGHTTYPE::SPOT);
 }

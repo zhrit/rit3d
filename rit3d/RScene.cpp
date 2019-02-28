@@ -4,6 +4,8 @@
 #include "CCamera.h"
 #include "CLight.h"
 #include "CTransform.h"
+#include "Application.h"
+#include "ResourceManager.h"
 
 //创建场景
 RScene* RScene::CreateScene(RString name) {
@@ -57,6 +59,17 @@ void RScene::setLayer(RUInt l) {
 RGameObject* RScene::addGameObject(RString n, RString t, LAYER l) {
 	RGameObject* go = new RGameObject(this, n, t, l);
 	m_GameObjectList.push_back(go);
+	return go;
+}
+//从模型文件中加载游戏对象到场景中
+RGameObject* RScene::loadGameObject(RString _path, RString _n, RString _t, LAYER _l) {
+	RGameObject* go = Application::Instance()->resourceMng->loadModel(_path, this);
+	if (go != nullptr) {
+		go->name = _n;
+		go->tag = _t;
+		go->setLayer(_l);
+		m_GameObjectList.push_back(go);
+	}
 	return go;
 }
 //删除游戏对象

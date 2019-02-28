@@ -10,7 +10,7 @@ private:
 	virtual ~CRender();
 
 public:
-	Mesh* m_mesh;
+	std::vector<Mesh*> m_meshs;
 
 	Material* m_mat;
 
@@ -22,7 +22,7 @@ public:
 public:
 	static CRender* CreateInstance();
 
-	void setMesh(Mesh* _mesh);
+	void addMesh(Mesh* _mesh);
 
 	void setMaterial(Material* _mat);
 

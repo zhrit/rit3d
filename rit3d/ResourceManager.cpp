@@ -4,6 +4,8 @@
 #include "Material.h"
 #include "Texture.h"
 #include "GLProgram.h"
+#include "CRender.h"
+#include "RGameObject.h"
 
 ResourceManager *ResourceManager::Instance() {
 	if (m_instance == nullptr) {
@@ -669,4 +671,103 @@ void ResourceManager::clearAll() {
 	clearMaterial();
 	clearTexture();
 	clearShader();
+}
+
+//加载模型
+RGameObject* ResourceManager::loadModel(RString path, RScene* sce) {
+	Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile(path, aiProcess_GenNormals | aiProcess_Triangulate | aiProcess_FlipUVs);
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+		cout << "ERROR::ASSIMP::" << importer.GetErrorString() << endl;
+		return nullptr;
+	}
+	RGameObject* go = new RGameObject(sce);
+	CRender* render = (CRender*)go->addComponent(RENDER);
+	_processNode(scene->mRootNode, scene, render);
+	return go;
+}
+
+//加载模型时处理节点
+void ResourceManager::_processNode(aiNode* node, const aiScene* scene, CRender* render) {
+	for (RUInt i = 0; i < node->mNumMeshes; i++) {
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		_processMesh(mesh, scene, render);
+	}
+	for (RUInt i = 0; i < node->mNumChildren; i++) {
+		_processNode(node->mChildren[i], scene, render);
+	}
+}
+
+//加载模型时处理网格
+void ResourceManager::_processMesh(aiMesh* mesh, const aiScene* scene, CRender* render) {
+	//读取vertex position normal tangant color uv
+	int pointCount = mesh->mNumVertices;
+	RInt verSize = 14 * pointCount;
+	RFloat* verArray = new RFloat[verSize];
+	for (int i = 0; i < pointCount; i++) {
+		//position
+		verArray[14 * i] = mesh->mVertices[i].x;
+		verArray[14 * i + 1] = mesh->mVertices[i].y;
+		verArray[14 * i + 2] = mesh->mVertices[i].z;
+		//normal
+		verArray[14 * i + 3] = mesh->mNormals[i].x;
+		verArray[14 * i + 4] = mesh->mNormals[i].y;
+		verArray[14 * i + 5] = mesh->mNormals[i].z;
+	}
+	//tangent
+	if (mesh->mTangents) {
+		for (int i = 0; i < pointCount; i++) {
+			verArray[14 * i + 6] = mesh->mTangents[i].x;
+			verArray[14 * i + 7] = mesh->mTangents[i].y;
+			verArray[14 * i + 8] = mesh->mTangents[i].z;
+		}
+	}
+	else {
+		for (int i = 0; i < pointCount; i++) {
+			verArray[14 * i + 6] = 0.0f;
+			verArray[14 * i + 7] = 0.0f;
+			verArray[14 * i + 8] = 0.0f;
+		}
+	}
+	//uv
+	if (mesh->mTextureCoords[0]) {
+		for (int i = 0; i < pointCount; i++) {
+			verArray[14 * i + 12] = mesh->mTextureCoords[0][i].x;
+			verArray[14 * i + 13] = mesh->mTextureCoords[0][i].y;
+		}
+	}
+	else {
+		for (int i = 0; i < pointCount; i++) {
+			verArray[14 * i + 12] = 0.0f;
+			verArray[14 * i + 13] = 0.0f;
+		}
+	}
+	//color
+	if (mesh->mColors[0]) {
+		for (int i = 0; i < pointCount; i++) {
+			verArray[14 * i + 9] = mesh->mColors[i]->r;
+			verArray[14 * i + 10] = mesh->mColors[i]->g;
+			verArray[14 * i + 11] = mesh->mColors[i]->b;
+		}
+	}
+	else {
+		for (int i = 0; i < pointCount; i++) {
+			verArray[14 * i + 9] = 0.0f;
+			verArray[14 * i + 10] = 0.0f;
+			verArray[14 * i + 11] = 0.0f;
+		}
+	}
+	//读取indices
+	RUInt faceCount = mesh->mNumFaces;
+	RInt indSize = 3 * faceCount;
+	RUInt* indArray = new RUInt[indSize];
+	for (RUInt i = 0; i < faceCount; i++) {
+		aiFace face = mesh->mFaces[i];
+		indArray[3 * i] = face.mIndices[0];
+		indArray[3 * i + 1] = face.mIndices[1];
+		indArray[3 * i + 2] = face.mIndices[2];
+	}
+	RString meshName = mesh->mName.C_Str();
+	render->addMesh(createMesh(meshName, verArray, verSize, indArray, indSize));
+	//render->setMesh(getMesh("plane"));
 }
