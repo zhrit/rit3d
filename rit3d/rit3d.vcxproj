@@ -166,6 +166,7 @@
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCollider.h" />
     <ClInclude Include="CLight.h" />
+    <ClInclude Include="CollideSystem.h" />
     <ClInclude Include="CPostProcess.h" />
     <ClInclude Include="CRender.h" />
     <ClInclude Include="CSkybox.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCollider.cpp" />
     <ClCompile Include="CLight.cpp" />
+    <ClCompile Include="CollideSystem.cpp" />
     <ClCompile Include="CPostProcess.cpp" />
     <ClCompile Include="CRender.cpp" />
     <ClCompile Include="CSkybox.cpp" />

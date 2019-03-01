@@ -97,7 +97,8 @@ void Application::_initApp() {
 	//注册必要系统
 	systemMng->registSystem(STARTSYSTEM, 1);
 	systemMng->registSystem(BEHAVIORSYSTEM, 2);
-	systemMng->registSystem(RENDERSYSTEM, 3);
+	systemMng->registSystem(COLLIDESYSTEM, 3);
+	systemMng->registSystem(RENDERSYSTEM, 4);
 
 	//获取窗口环境
 	GLFWwindow* wd = m_window->getWindowContext();

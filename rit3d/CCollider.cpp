@@ -2,11 +2,15 @@
 #include "CCollider.h"
 
 
-CCollider::CCollider()
-{
+CCollider::CCollider() {
+	m_type = COMPTYPE::COLLIDER;
 }
 
 
-CCollider::~CCollider()
-{
+CCollider::~CCollider() {
+
 }
+
+CCollider* CCollider::CreateInstance() {
+	return new CCollider();
+};

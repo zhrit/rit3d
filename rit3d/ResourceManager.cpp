@@ -769,5 +769,7 @@ void ResourceManager::_processMesh(aiMesh* mesh, const aiScene* scene, CRender* 
 	}
 	RString meshName = mesh->mName.C_Str();
 	render->addMesh(createMesh(meshName, verArray, verSize, indArray, indSize));
+	delete[] verArray;
+	delete[] indArray;
 	//render->setMesh(getMesh("plane"));
 }

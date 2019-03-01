@@ -111,9 +111,6 @@
     <ClInclude Include="CBehavior.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="CCollider.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -151,6 +148,12 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="BaseBehavior.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CollideSystem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="CCollider.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -262,6 +265,9 @@
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="CollideSystem.cpp">
+      <Filter>src\systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

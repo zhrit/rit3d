@@ -8,8 +8,10 @@
 #include "CPostProcess.h"
 #include "CSkybox.h"
 #include "CBehavior.h"
+#include "CCollider.h"
 #include "RenderSystem.h"
 #include "BehaviorSystem.h"
+#include "CollideSystem.h"
 
 /*
  * 系统管理单例类
@@ -39,6 +41,7 @@ void SystemManager::registSystemCreateFunc() {
 	ISystem::systemMap[STARTSYSTEM] = StartSystem::CreateInstance;
 	ISystem::systemMap[RENDERSYSTEM] = RenderSystem::CreateInstance;
 	ISystem::systemMap[BEHAVIORSYSTEM] = BehaviorSystem::CreateInstance;
+	ISystem::systemMap[COLLIDESYSTEM] = CollideSystem::CreateInstance;
 }
 
 //注册各个组件的创建函数，组件只能通过创建函数创建，不能直接new
@@ -51,6 +54,7 @@ void SystemManager::registCompCreateFunc() {
 	IComponent::compMap[LIGHT] = CLight::CreateInstance;
 	IComponent::compMap[POSTPROCESS] = CPostProcess::CreateInstance;
 	IComponent::compMap[SKYBOX] = CSkybox::CreateInstance;
+	IComponent::compMap[COLLIDER] = CCollider::CreateInstance;
 }
 
 //为程序注册一个制定的系统
