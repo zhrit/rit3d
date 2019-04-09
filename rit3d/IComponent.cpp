@@ -30,6 +30,11 @@ RBool IComponent::allowMultiple() const {
 	return m_allowMultiple;
 }
 
+//是否是单例组件
+RBool IComponent::isSingleton() const {
+	return m_isSingleton;
+}
+
 //是否可用
 RBool IComponent::isEnabled() const {
 	return m_enabled;

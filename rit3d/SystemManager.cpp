@@ -9,9 +9,11 @@
 #include "CSkybox.h"
 #include "CBehavior.h"
 #include "CCollider.h"
+#include "SCLightCameraCollecter.h"
 #include "RenderSystem.h"
 #include "BehaviorSystem.h"
 #include "CollideSystem.h"
+#include "LightAndCameraSystem.h"
 
 /*
  * 系统管理单例类
@@ -21,6 +23,8 @@ SystemManager::SystemManager() {
 	registSystemCreateFunc();
 	//注册组件创建函数
 	registCompCreateFunc();
+	//初始化必要的单例组件
+	registSingltonComp();
 	//清空系统列表
 	m_systemList.clear();
 };
@@ -42,6 +46,7 @@ void SystemManager::registSystemCreateFunc() {
 	ISystem::systemMap[RENDERSYSTEM] = RenderSystem::CreateInstance;
 	ISystem::systemMap[BEHAVIORSYSTEM] = BehaviorSystem::CreateInstance;
 	ISystem::systemMap[COLLIDESYSTEM] = CollideSystem::CreateInstance;
+	ISystem::systemMap[LIGHTANDCAMERA] = LightAndCameraSystem::CreateInstance;
 }
 
 //注册各个组件的创建函数，组件只能通过创建函数创建，不能直接new
@@ -54,7 +59,12 @@ void SystemManager::registCompCreateFunc() {
 	IComponent::compMap[LIGHT] = CLight::CreateInstance;
 	IComponent::compMap[POSTPROCESS] = CPostProcess::CreateInstance;
 	IComponent::compMap[SKYBOX] = CSkybox::CreateInstance;
-	IComponent::compMap[COLLIDER] = CCollider::CreateInstance;
+	IComponent::compMap[SPHERECOLLIDER] = CSphereCollider::CreateInstance;
+}
+
+//初始化必要的单例组件
+void SystemManager::registSingltonComp() {
+	SCLightCameraCollecter::Instance();//灯光相机收集组件
 }
 
 //为程序注册一个制定的系统
@@ -198,5 +208,18 @@ void SystemManager::onKeyUp(int key) {
 		if (st->isEnabled()) {
 			st->onKeyUp(key);
 		}
+	}
+}
+
+//添加新的组件时调用
+void SystemManager::onAddComponent(COMPTYPE type, IComponent* pComp) {
+	for (auto st : m_systemList) {
+		st->onAddComponent(type, pComp);
+	}
+}
+//移除组件时调用
+void SystemManager::onRemoveComponent(COMPTYPE type, IComponent* pComp) {
+	for (auto st : m_systemList) {
+		st->onRemoveComponent(type, pComp);
 	}
 }

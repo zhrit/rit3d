@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RCommon.h"
+#include "IComponent.h"
 
 //系统类型
 typedef enum {
@@ -9,6 +10,7 @@ typedef enum {
 	COLLIDESYSTEM,
 	RENDERSYSTEM,
 	ENDSYSTEM,
+	LIGHTANDCAMERA,
 } SYSTEMTYPE;
 
 /*
@@ -80,10 +82,10 @@ public:
 	virtual void onAddGameObject() = 0;
 
 	//组件添加到实体时调用
-	virtual void onAddComponent() = 0;
+	virtual void onAddComponent(COMPTYPE type, IComponent* pComp) = 0;
 
 	//组件从实体移除时调用
-	virtual void onRemoveComponent() = 0;
+	virtual void onRemoveComponent(COMPTYPE type, IComponent* pComp) = 0;
 
 	//实体从系统中移除时调用
 	virtual void onRemoveGameObject() = 0;
@@ -134,10 +136,10 @@ public:
 	virtual void onAddGameObject();
 
 	//组件添加到实体时调用
-	virtual void onAddComponent();
+	virtual void onAddComponent(COMPTYPE type, IComponent* pComp);
 
 	//组件从实体移除时调用
-	virtual void onRemoveComponent();
+	virtual void onRemoveComponent(COMPTYPE type, IComponent* pComp);
 
 	//实体从系统中移除时调用
 	virtual void onRemoveGameObject();

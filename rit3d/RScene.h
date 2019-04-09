@@ -17,11 +17,6 @@ private:
 	virtual ~RScene();
 
 	std::list<RGameObject*> m_GameObjectList;//场景中对象列表
-	std::list<CCamera*> m_cameraList;//相机列表
-	std::list<CLight*> m_lightList;//光源列表
-	RUInt m_dirLightNum{ 0 };//平行光数量
-	RUInt m_poiLightNum{ 0 };//点光源数量
-	RUInt m_spoLightNum{ 0 };//聚光灯数量
 	RBool m_active{ true };//场景是否激活 
 	RString m_name;//场景名称
 
@@ -60,24 +55,6 @@ public:
 	RUInt getGameObjectCount();
 	//获取游戏对象列表
 	std::list<RGameObject*> getGameObjectList() const;
-
-	//添加相机组件
-	void addCamera(CCamera* camera);
-	//移除相机组件
-	void removeCamera(CCamera* camera);
-	//获取相机列表
-	std::list<CCamera*> getCameraList() const;
-
-	//添加灯光组件
-	void addLight(CLight* light);
-	//移除灯光组件
-	void removeLight(CLight* light);
-	//获取灯光列表
-	std::list<CLight*> getLightList() const;
-	//获取光源数量
-	RUInt getLightNum(LIGHTTYPE _type) const;
-	//修正光源数量
-	void resetLightNum(LIGHTTYPE _type, RInt delta);
 
 private:
 	//递归删除游戏对象

@@ -2,13 +2,15 @@
 #include "RCommon.h"
 #include "IComponent.h"
 
-class CCollider : public IComponent {
+class CSphereCollider : public IComponent {
 private:
-	CCollider();
-	virtual ~CCollider();
+	CSphereCollider();
+	virtual ~CSphereCollider();
 
 public:
-	static CCollider* CreateInstance();
+	static CSphereCollider* CreateInstance();
 
+	glm::vec3 center{ 0.0f, 0.0f, 0.0f };//局部坐标系中心
+	RFloat radius;//半径
 };
 

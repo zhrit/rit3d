@@ -51,10 +51,10 @@ public:
 	virtual void onAddGameObject();
 
 	//组件添加到实体时调用
-	virtual void onAddComponent();
+	virtual void onAddComponent(COMPTYPE type, IComponent* pComp);
 
 	//组件从实体移除时调用
-	virtual void onRemoveComponent();
+	virtual void onRemoveComponent(COMPTYPE type, IComponent* pComp);
 
 	//实体从系统中移除时调用
 	virtual void onRemoveGameObject();

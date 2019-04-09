@@ -46,118 +46,133 @@
     <Filter Include="src\example">
       <UniqueIdentifier>{71fc4efd-af4f-4d91-85c2-31cc623887bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\components\ordinary">
+      <UniqueIdentifier>{21950aee-ad16-4c0f-bd9d-b037dd41fc68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\components\singleton">
+      <UniqueIdentifier>{a62f1d52-4cdf-4b5c-8707-beb3b15a3353}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="RWindow.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="RCommon.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="RVector.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="RMath.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="RColor.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="RMatrix.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemManager.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="ISystem.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="GLProgram.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="RScene.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="RGameObject.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="IComponent.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="CTransform.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="CLight.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="CCamera.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="CRender.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="CBehavior.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderSystem.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="fps.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="RTimer.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="CPostProcess.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="CSkybox.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="declare.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="BehaviorSystem.h">
-      <Filter>include</Filter>
+    <ClInclude Include="util.h">
+      <Filter>src\tools</Filter>
     </ClInclude>
-    <ClInclude Include="BaseBehavior.h">
-      <Filter>include</Filter>
+    <ClInclude Include="Texture.h">
+      <Filter>src\asset\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemManager.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="RWindow.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="RVector.h">
+      <Filter>src\math</Filter>
+    </ClInclude>
+    <ClInclude Include="RTimer.h">
+      <Filter>src\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="RScene.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="RMatrix.h">
+      <Filter>src\math</Filter>
+    </ClInclude>
+    <ClInclude Include="RMath.h">
+      <Filter>src\math</Filter>
+    </ClInclude>
+    <ClInclude Include="RGameObject.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="RColor.h">
+      <Filter>src\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>src\asset\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>src\asset\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="GLProgram.h">
+      <Filter>src\asset\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorSystem.h">
+      <Filter>src\systems</Filter>
     </ClInclude>
     <ClInclude Include="CollideSystem.h">
-      <Filter>include</Filter>
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ISystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="fps.h">
+      <Filter>src\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseBehavior.h">
+      <Filter>src\components\ordinary</Filter>
+    </ClInclude>
+    <ClInclude Include="CBehavior.h">
+      <Filter>src\components\ordinary</Filter>
+    </ClInclude>
+    <ClInclude Include="CCamera.h">
+      <Filter>src\components\ordinary</Filter>
     </ClInclude>
     <ClInclude Include="CCollider.h">
-      <Filter>include</Filter>
+      <Filter>src\components\ordinary</Filter>
     </ClInclude>
-    <ClInclude Include="util.h">
-      <Filter>include</Filter>
+    <ClInclude Include="CLight.h">
+      <Filter>src\components\ordinary</Filter>
+    </ClInclude>
+    <ClInclude Include="CPostProcess.h">
+      <Filter>src\components\ordinary</Filter>
+    </ClInclude>
+    <ClInclude Include="CRender.h">
+      <Filter>src\components\ordinary</Filter>
+    </ClInclude>
+    <ClInclude Include="CSkybox.h">
+      <Filter>src\components\ordinary</Filter>
+    </ClInclude>
+    <ClInclude Include="CTransform.h">
+      <Filter>src\components\ordinary</Filter>
+    </ClInclude>
+    <ClInclude Include="IComponent.h">
+      <Filter>src\components\ordinary</Filter>
+    </ClInclude>
+    <ClInclude Include="ISingletonComponent.h">
+      <Filter>src\components\singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="SCLightCameraCollecter.h">
+      <Filter>src\components\singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="LightAndCameraSystem.h">
+      <Filter>src\systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -200,27 +215,6 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="IComponent.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="CTransform.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="CBehavior.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="CCamera.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="CCollider.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="CLight.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="CRender.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>src\asset\resource</Filter>
     </ClCompile>
@@ -248,17 +242,8 @@
     <ClCompile Include="RTimer.cpp">
       <Filter>src\tools</Filter>
     </ClCompile>
-    <ClCompile Include="CPostProcess.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="CSkybox.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
     <ClCompile Include="BehaviorSystem.cpp">
       <Filter>src\systems</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseBehavior.cpp">
-      <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="rit3d.cpp">
       <Filter>src\example</Filter>
@@ -270,6 +255,45 @@
       <Filter>src\core</Filter>
     </ClCompile>
     <ClCompile Include="CollideSystem.cpp">
+      <Filter>src\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseBehavior.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="CBehavior.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="CCamera.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="CCollider.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="CPostProcess.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="CRender.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="CSkybox.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="CTransform.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="IComponent.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="ISingletonComponent.cpp">
+      <Filter>src\components\singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="SCLightCameraCollecter.cpp">
+      <Filter>src\components\singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="LightAndCameraSystem.cpp">
       <Filter>src\systems</Filter>
     </ClCompile>
   </ItemGroup>

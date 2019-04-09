@@ -23,6 +23,9 @@ private:
 
 	//注册各个组件的创建函数，组件只能通过创建函数创建，不能直接new
 	void registCompCreateFunc();
+
+	//初始化必要的单例组件
+	void registSingltonComp();
 public:
 	//为程序注册一个制定的系统
 	void registSystem(SYSTEMTYPE type, RInt od);
@@ -34,6 +37,10 @@ public:
 	RBool hasSystem(SYSTEMTYPE type);
 	//窗口大小变化时回调函数
 	void onChangeSize(int _w, int _h);
+	//添加新的组件时调用
+	void onAddComponent(COMPTYPE type, IComponent* pComp);
+	//移除组件时调用
+	void onRemoveComponent(COMPTYPE type, IComponent* pComp);
 
 	//鼠标事件
 	virtual void onLeftButtonDown();

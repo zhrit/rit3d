@@ -16,6 +16,7 @@
 #include "CSkybox.h"
 #include "CPostProcess.h"
 #include "util.h"
+#include "SCLightCameraCollecter.h"
 
 RenderSystem::RenderSystem(RInt od) : ISystem(od) {
 	m_type = RENDERSYSTEM;
@@ -76,12 +77,12 @@ void RenderSystem::onAddGameObject() {
 }
 
 //组件添加到实体时调用
-void RenderSystem::onAddComponent() {
+void RenderSystem::onAddComponent(COMPTYPE type, IComponent* pComp) {
 
 }
 
 //组件从实体移除时调用
-void RenderSystem::onRemoveComponent() {
+void RenderSystem::onRemoveComponent(COMPTYPE type, IComponent* pComp) {
 
 }
 
@@ -114,7 +115,7 @@ void RenderSystem::onDestroy() {
 void RenderSystem::_preRender(CCamera* camera, RScene* pSce) {
 	//shadow map
 	glEnable(GL_DEPTH_TEST);
-	std::list<CLight*> lightList = pSce->getLightList();
+	std::list<CLight*> lightList = SCLightCameraCollecter::Instance()->getLightList();
 	for (auto light : lightList) {
 		if (light->isActiveAndEnabled() && light->isCastShadow()) {
 			LIGHTTYPE lightType = light->getLightType();
@@ -205,7 +206,7 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 		glDrawBuffers(2, attachments);
 	}
 
-	std::list<CLight*> lightList = pSce->getLightList();
+	std::list<CLight*> lightList = SCLightCameraCollecter::Instance()->getLightList();
 	_resetTexAlloc();
 	for (auto it : pSce->getGameObjectList()) {
 		if ((it->getLayer() & camera->getCullMask()) == 0) continue;
@@ -217,12 +218,12 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 				Material* submat = rend->m_mats[i];
 				//材质中添加灯光define
 				if (submat->isUseLight()) {
-					if (pSce->getLightNum(LIGHTTYPE::DIRECTION) > 0)
-						submat->addDefine("DIR_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::DIRECTION)));
-					if (pSce->getLightNum(LIGHTTYPE::LPOINT) > 0)
-						submat->addDefine("POI_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::LPOINT)));
-					if (pSce->getLightNum(LIGHTTYPE::SPOT) > 0)
-						submat->addDefine("SPO_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::SPOT)));
+					if (SCLightCameraCollecter::Instance()->getLightNum(LIGHTTYPE::DIRECTION) > 0)
+						submat->addDefine("DIR_LIGHT_NUM", util::num2str(SCLightCameraCollecter::Instance()->getLightNum(LIGHTTYPE::DIRECTION)));
+					if (SCLightCameraCollecter::Instance()->getLightNum(LIGHTTYPE::LPOINT) > 0)
+						submat->addDefine("POI_LIGHT_NUM", util::num2str(SCLightCameraCollecter::Instance()->getLightNum(LIGHTTYPE::LPOINT)));
+					if (SCLightCameraCollecter::Instance()->getLightNum(LIGHTTYPE::SPOT) > 0)
+						submat->addDefine("SPO_LIGHT_NUM", util::num2str(SCLightCameraCollecter::Instance()->getLightNum(LIGHTTYPE::SPOT)));
 				}
 				if (camera->getBloom() >= 1.0f) {
 					submat->addDefine("BLOOM", "1");
@@ -372,7 +373,7 @@ void RenderSystem::_defferedRender(CCamera* camera, RScene* pSce) {
 
 	//使用后处理shader
 	shaderLight->use();
-	std::list<CLight*> lightList = pSce->getLightList();
+	std::list<CLight*> lightList = SCLightCameraCollecter::Instance()->getLightList();
 	_updateLightsUniforms(shaderLight, lightList);
 	shaderLight->setFloat("uExposure", camera->getExposure());
 	shaderLight->setVec3("uViewPos", camera->gameObject->transform->getPosition());
@@ -397,7 +398,7 @@ void RenderSystem::_defferedRender(CCamera* camera, RScene* pSce) {
 void RenderSystem::_render() {
 	Application* app = Application::Instance();
 	RScene* pSce = app->sceneMng->getAllScene().front();
-	std::list<CCamera*> cameraList = pSce->getCameraList();
+	std::list<CCamera*> cameraList = SCLightCameraCollecter::Instance()->getCameraList();
 
 	for (auto camera : cameraList) {
 		if (RENDERMODEL::FORWARD == camera->getRenderModel()) {

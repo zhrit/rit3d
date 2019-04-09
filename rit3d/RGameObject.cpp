@@ -35,22 +35,18 @@ void RGameObject::setLayer(LAYER _layer) {
 
 //添加组件
 IComponent* RGameObject::addComponent(COMPTYPE type) {
+	if (m_compMap.find(type) != m_compMap.end()) {
+		return m_compMap[type];
+	}
 	IComponent* pComp = IComponent::CreateComponent(type);
 	pComp->gameObject = this;
 
-	std::pair<std::map<COMPTYPE, IComponent*>::iterator, bool> Insert_Pair;
+	//std::pair<std::map<COMPTYPE, IComponent*>::iterator, bool> Insert_Pair;
+	//Insert_Pair = 
 
-	Insert_Pair = m_compMap.insert(std::map<COMPTYPE, IComponent*>::value_type(type, pComp));
+	m_compMap.insert(std::map<COMPTYPE, IComponent*>::value_type(type, pComp));
 
-	if (type == COMPTYPE::CAMERA && Insert_Pair.second) {
-		this->getScene()->addCamera((CCamera*)pComp);
-	}
-	if (type == COMPTYPE::LIGHT && Insert_Pair.second) {
-		this->getScene()->addLight((CLight*)pComp);
-	}
-	if (type == COMPTYPE::BEHAVIOR && Insert_Pair.second) {
-		((BehaviorSystem*)Application::Instance()->systemMng->getSystem(BEHAVIORSYSTEM))->addBehavior((CBehavior*)pComp);
-	}
+	Application::Instance()->systemMng->onAddComponent(type, pComp);
 
 	return pComp;
 }
@@ -59,16 +55,8 @@ IComponent* RGameObject::addComponent(COMPTYPE type) {
 void RGameObject::removeComponent(COMPTYPE type) {
 	auto iter = m_compMap.find(type);
 	if (iter != m_compMap.end()) {
-		
-		if (type == COMPTYPE::CAMERA) {
-			this->getScene()->removeCamera((CCamera*)iter->second);
-		}
-		if (type == COMPTYPE::LIGHT) {
-			this->getScene()->removeLight((CLight*)iter->second);
-		}
-
-		delete iter->second;
-		iter->second = nullptr;
+		Application::Instance()->systemMng->onRemoveComponent(type, iter->second);
+		SafeDelete(iter->second);
 		m_compMap.erase(iter);
 	}
 }
@@ -81,14 +69,7 @@ void RGameObject::removeComponents(COMPTYPE type) {
 //移除所有组件
 void RGameObject::removeAllComponent() {
 	for (auto iter = m_compMap.begin(); iter != m_compMap.end(); iter++) {
-		if (iter->second->getType() == COMPTYPE::CAMERA) {
-			this->getScene()->removeCamera((CCamera*)iter->second);
-		}
-		if (iter->second->getType() == COMPTYPE::LIGHT) {
-			this->getScene()->removeLight((CLight*)iter->second);
-		}
-		delete iter->second;
-		iter->second = nullptr;
+		removeComponent(iter->first);
 	}
 	m_compMap.clear();
 }

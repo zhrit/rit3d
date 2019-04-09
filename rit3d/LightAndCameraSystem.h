@@ -2,15 +2,13 @@
 #include "RCommon.h"
 #include "ISystem.h"
 
-class CCollider;
-class CollideSystem : public ISystem {
+class LightAndCameraSystem : public ISystem {
 private:
-	CollideSystem(RInt od);
-	virtual ~CollideSystem();
+	LightAndCameraSystem(RInt od);
+	virtual ~LightAndCameraSystem();
 
-	std::vector<CCollider*> m_colliderPool;
 public:
-	static CollideSystem* CreateInstance(RInt od);
+	static LightAndCameraSystem* CreateInstance(RInt od);
 
 	//系统初始化时调用
 	virtual void onAwake();
@@ -45,4 +43,6 @@ public:
 	//系统被注销时调用
 	virtual void onDestroy();
 };
+
+
 

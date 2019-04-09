@@ -3,6 +3,7 @@
 #include "RGameObject.h"
 #include "RScene.h"
 #include "CTransform.h"
+#include "SCLightCameraCollecter.h"
 
 
 CLight::CLight() {
@@ -60,9 +61,9 @@ void CLight::setLightType(LIGHTTYPE _type) {
 	if (this->gameObject == nullptr || this->gameObject->getScene() == nullptr) {
 		return;
 	}
-	this->gameObject->getScene()->resetLightNum(m_lightType, -1);
+	SCLightCameraCollecter::Instance()->resetLightNum(m_lightType, -1);
 	m_lightType = _type;
-	this->gameObject->getScene()->resetLightNum(m_lightType, 1);
+	SCLightCameraCollecter::Instance()->resetLightNum(m_lightType, 1);
 
 	m_projDirty = true;//Í¶Ó°¾ØÕó±êÔà
 
@@ -119,10 +120,10 @@ void CLight::setEnabled(RBool value) {
 	}
 	m_enabled = value;
 	if (m_enabled) {
-		this->gameObject->getScene()->resetLightNum(m_lightType, 1);
+		SCLightCameraCollecter::Instance()->resetLightNum(m_lightType, 1);
 	}
 	else {
-		this->gameObject->getScene()->resetLightNum(m_lightType, -1);
+		SCLightCameraCollecter::Instance()->resetLightNum(m_lightType, -1);
 	}
 }
 

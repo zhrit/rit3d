@@ -98,7 +98,8 @@ void Application::_initApp() {
 	systemMng->registSystem(STARTSYSTEM, 1);
 	systemMng->registSystem(BEHAVIORSYSTEM, 2);
 	systemMng->registSystem(COLLIDESYSTEM, 3);
-	systemMng->registSystem(RENDERSYSTEM, 4);
+	systemMng->registSystem(LIGHTANDCAMERA, 4);
+	systemMng->registSystem(RENDERSYSTEM, 5);
 
 	//获取窗口环境
 	GLFWwindow* wd = m_window->getWindowContext();

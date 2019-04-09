@@ -175,7 +175,10 @@
     <ClInclude Include="fps.h" />
     <ClInclude Include="GLProgram.h" />
     <ClInclude Include="IComponent.h" />
+    <ClInclude Include="ISingletonComponent.h" />
     <ClInclude Include="ISystem.h" />
+    <ClInclude Include="LightAndCameraSystem.h" />
+    <ClInclude Include="SCLightCameraCollecter.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="RColor.h" />
@@ -222,7 +225,10 @@
     </ClCompile>
     <ClCompile Include="GLProgram.cpp" />
     <ClCompile Include="IComponent.cpp" />
+    <ClCompile Include="ISingletonComponent.cpp" />
     <ClCompile Include="ISystem.cpp" />
+    <ClCompile Include="LightAndCameraSystem.cpp" />
+    <ClCompile Include="SCLightCameraCollecter.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Object.cpp" />

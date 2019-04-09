@@ -2,15 +2,15 @@
 #include "CCollider.h"
 
 
-CCollider::CCollider() {
-	m_type = COMPTYPE::COLLIDER;
+CSphereCollider::CSphereCollider() {
+	m_type = COMPTYPE::SPHERECOLLIDER;
 }
 
 
-CCollider::~CCollider() {
+CSphereCollider::~CSphereCollider() {
 
 }
 
-CCollider* CCollider::CreateInstance() {
-	return new CCollider();
+CSphereCollider* CSphereCollider::CreateInstance() {
+	return new CSphereCollider();
 };

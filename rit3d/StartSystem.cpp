@@ -33,12 +33,12 @@ void StartSystem::onAddGameObject() {
 }
 
 //组件添加到实体时调用
-void StartSystem::onAddComponent() {
+void StartSystem::onAddComponent(COMPTYPE type, IComponent* pComp) {
 
 }
 
 //组件从实体移除时调用
-void StartSystem::onRemoveComponent() {
+void StartSystem::onRemoveComponent(COMPTYPE type, IComponent* pComp) {
 
 }
 

@@ -35,13 +35,17 @@ void BehaviorSystem::onAddGameObject() {
 }
 
 //组件添加到实体时调用
-void BehaviorSystem::onAddComponent() {
-
+void BehaviorSystem::onAddComponent(COMPTYPE type, IComponent* pComp) {
+	if (type == COMPTYPE::BEHAVIOR) {
+		addBehavior((CBehavior*)pComp);
+	}
 }
 
 //组件从实体移除时调用
-void BehaviorSystem::onRemoveComponent() {
-
+void BehaviorSystem::onRemoveComponent(COMPTYPE type, IComponent* pComp) {
+	if (type == COMPTYPE::BEHAVIOR) {
+		removeBehavior((CBehavior*)pComp);
+	}
 }
 
 //实体从系统中移除时调用

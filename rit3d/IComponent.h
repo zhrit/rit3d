@@ -5,14 +5,20 @@
 //组件类型
 typedef enum {
 	TRANFORM = 0,
+	//渲染相关组件
 	MESH,
 	RENDER,
-	COLLIDER,
-	BEHAVIOR,
 	CAMERA,
 	LIGHT,
 	POSTPROCESS,
 	SKYBOX,
+	//脚本相关组件
+	BEHAVIOR,
+	//物理相关组件
+	SPHERECOLLIDER,
+
+	//单例组件
+	LIGHTCAMERACOLLECTER,
 } COMPTYPE;
 
 class RGameObject;
@@ -34,6 +40,8 @@ protected:
 
 	RBool m_allowMultiple{ false };//是否允许在同一实体上添加多个该组件的实例
 
+	RBool m_isSingleton{ false };//是否是单例组件
+
 	COMPTYPE m_type;
 
 public:
@@ -42,6 +50,9 @@ public:
 
 	//是否允许在同一实体上添加多个该组件的实例
 	RBool allowMultiple() const;
+
+	//是否是单例组件
+	RBool isSingleton() const;
 
 	//是否可用
 	RBool isEnabled() const;
