@@ -2,6 +2,14 @@
 #include "RCommon.h"
 #include "IComponent.h"
 
+//π‚’’¿‡–Õ
+typedef enum {
+	NONE = 0,
+	DIRECTION,
+	LPOINT,
+	SPOT,
+} LIGHTTYPE;
+
 class CLight : public IComponent {
 
 private:

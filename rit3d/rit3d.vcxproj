@@ -195,6 +195,7 @@
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="RTimer.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />

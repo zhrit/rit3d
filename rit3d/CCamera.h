@@ -9,10 +9,17 @@ struct Viewport {
 	int h;
 };
 
+//渲染方式
 enum RENDERMODEL {
 	FORWARD = 0,
 	DEFER,
 };
+
+//相机类型
+typedef enum {
+	ORTHO = 0,
+	PERSPECTIVE = 1,
+} CAMERATYPE;
 
 class CCamera : public IComponent
 {

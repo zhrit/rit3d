@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "RCommon.h"
 
+#include "util.h"
+
 RString util::num2str(RUInt num) {
 	RString str = "";
 	do {

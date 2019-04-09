@@ -2,7 +2,6 @@
 #include "IComponent.h"
 #include "RGameObject.h"
 
-
 IComponent::IComponent() {
 
 }

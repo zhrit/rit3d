@@ -45,8 +45,6 @@ typedef RUInt          EBO;
 typedef RUInt          GLTexture;
 
 //默认值
-const RInt DEFAULT_WIDTH = 800;
-const RInt DEFAULT_HEIGHT = 600;
 const RString DEFAULT_NAMW = "Rit3D";
 const RString DEFAULT_SCENE_NAME = "SCENE";
 const RString DEFAULT_GAMEOBJECT_NAME = "GameObject";
@@ -78,71 +76,4 @@ const RString DEFAULT_GAMEOBJECT_NAME = "GameObject";
 #define SHADOW_WIDTH 1024
 #define SHADOW_HEIGHT 1024
 
-//系统类型
-typedef enum {
-	STARTSYSTEM = 0,
-	BEHAVIORSYSTEM,
-	COLLIDESYSTEM,
-	RENDERSYSTEM,
-	ENDSYSTEM,
-} SYSTEMTYPE;
-
-//组件类型
-typedef enum {
-	TRANFORM = 0,
-	MESH,
-	RENDER,
-	COLLIDER,
-	BEHAVIOR,
-	CAMERA,
-	LIGHT,
-	POSTPROCESS,
-	SKYBOX,
-} COMPTYPE;
-
-//游戏对象所在的图层
-typedef enum {
-	CullingMaskNothing = 0x0000,
-	CullingMaskEverything = 0xFFFF,
-
-	BuiltinLayer0 = 0x0001,
-	BuiltinLayer1 = 0x0002,
-	BuiltinLayer2 = 0x0004,
-	BuiltinLayer3 = 0x0008,
-	BuiltinLayer4 = 0x0010,
-	BuiltinLayer5 = 0x0020,
-	BuiltinLayer6 = 0x0040,
-	BuiltinLayer7 = 0x0080,
-
-	UserLayer0 = 0x0100,
-	UserLayer1 = 0x0200,
-	UserLayer2 = 0x0400,
-	UserLayer3 = 0x0800,
-	UserLayer4 = 0x1000,
-	UserLayer5 = 0x2000,
-	UserLayer6 = 0x4000,
-	UserLayer7 = 0x8000,
-
-	Default = BuiltinLayer0,
-} LAYER;
-
-
-//相机类型
-typedef enum {
-	ORTHO = 0,
-	PERSPECTIVE = 1,
-} CAMERATYPE;
-
-//光照类型
-typedef enum {
-	NONE = 0,
-	DIRECTION,
-	LPOINT,
-	SPOT,
-} LIGHTTYPE;
-
-namespace util {
-	RString num2str(RUInt num);
-	RString num2str(RInt num);
-};
 

@@ -3,6 +3,9 @@
 #include "RCommon.h"
 #include "fps.h"
 
+const RInt DEFAULT_WIDTH = 800;
+const RInt DEFAULT_HEIGHT = 600;
+
 class SystemManager;
 class SceneManager;
 class ResourceManager;

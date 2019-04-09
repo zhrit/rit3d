@@ -2,6 +2,19 @@
 #include "RCommon.h"
 #include "Object.h"
 
+//组件类型
+typedef enum {
+	TRANFORM = 0,
+	MESH,
+	RENDER,
+	COLLIDER,
+	BEHAVIOR,
+	CAMERA,
+	LIGHT,
+	POSTPROCESS,
+	SKYBOX,
+} COMPTYPE;
+
 class RGameObject;
 class IComponent : public Object {
 public:

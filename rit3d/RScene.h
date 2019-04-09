@@ -2,10 +2,11 @@
 
 #include "RCommon.h"
 #include "Object.h"
+#include "CLight.h"
 
 class RGameObject;
 class CCamera;
-class CLight;
+
 class RScene : public Object {
 public:
 	//´´½¨³¡¾°

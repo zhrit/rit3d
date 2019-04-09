@@ -826,11 +826,6 @@ void example_model_load_1() {
 	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
-	//纹理和材质
-	//Material* mat1 = app->resourceMng->createMaterial("mat1");
-	//mat1->setShader("phong");
-	//mat1->setColor(1.0f, 1.0f, 1.0f);
-
 	//obj模型
 	RGameObject* nunosuit = pSce->loadGameObject("resources/nanosuit/nanosuit.obj");
 	nunosuit->transform->setLocalPosition(0.0f, -4.0f, 0.0f);

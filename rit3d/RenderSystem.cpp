@@ -15,6 +15,7 @@
 #include "CRender.h"
 #include "CSkybox.h"
 #include "CPostProcess.h"
+#include "util.h"
 
 RenderSystem::RenderSystem(RInt od) : ISystem(od) {
 	m_type = RENDERSYSTEM;

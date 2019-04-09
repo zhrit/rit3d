@@ -2,6 +2,15 @@
 
 #include "RCommon.h"
 
+//系统类型
+typedef enum {
+	STARTSYSTEM = 0,
+	BEHAVIORSYSTEM,
+	COLLIDESYSTEM,
+	RENDERSYSTEM,
+	ENDSYSTEM,
+} SYSTEMTYPE;
+
 /*
  * 全部系统的基类，所有系统必须继承于此类，并实现其中的纯虚函数
  * 所有系统类，必须含有自己的静态创建方法，并在systemmanager中注册
