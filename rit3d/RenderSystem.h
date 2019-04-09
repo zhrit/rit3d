@@ -84,7 +84,7 @@ private:
 	void _render();
 
 	//更新uniform变量
-	void _updateUniforms(CRender* pRender, CCamera* camera, CTransform* tran, GLProgram* shader = nullptr);
+	void _updateUniforms(CRender* pRender, CCamera* camera, CTransform* tran, Material* pMat, GLProgram* shader = nullptr);
 
 	//更新光源相关的uniform变量
 	void _updateLightsUniforms(GLProgram* shader, std::list<CLight*> lights);

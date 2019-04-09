@@ -12,7 +12,7 @@ private:
 public:
 	std::vector<Mesh*> m_meshs;
 
-	Material* m_mat;
+	std::vector<Material*> m_mats;
 
 	RBool m_castShadow{ false };
 
@@ -24,7 +24,7 @@ public:
 
 	void addMesh(Mesh* _mesh);
 
-	void setMaterial(Material* _mat);
+	void addMaterial(Material* _mat);
 
 	RBool isCastShadow() const;
 	void castShadow(RBool _cast);

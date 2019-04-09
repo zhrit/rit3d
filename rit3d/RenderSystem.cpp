@@ -211,25 +211,27 @@ void RenderSystem::_mainRender(CCamera* camera, RScene* pSce) {
 		CTransform* trans = it->transform;
 		CRender* rend = (CRender*)it->getComponent(RENDER);
 		if (rend != nullptr) {
-			//材质中添加灯光define
-			if (rend->m_mat->isUseLight()) {
-				if (pSce->getLightNum(LIGHTTYPE::DIRECTION) > 0)
-					rend->m_mat->addDefine("DIR_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::DIRECTION)));
-				if (pSce->getLightNum(LIGHTTYPE::LPOINT) > 0)
-					rend->m_mat->addDefine("POI_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::LPOINT)));
-				if (pSce->getLightNum(LIGHTTYPE::SPOT) > 0)
-					rend->m_mat->addDefine("SPO_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::SPOT)));
-			}
-			if (camera->getBloom() >= 1.0f) {
-				rend->m_mat->addDefine("BLOOM", "1");
-			}
-			rend->m_mat->getShader()->use();
-			if (rend->m_mat->isUseLight()) {
-				_updateLightsUniforms(rend->m_mat->getShader(), lightList);
-			}
-			_updateUniforms(rend, camera, trans);
+			for (std::vector<Mesh*>::size_type i = 0; i < rend->m_meshs.size(); i++) {
+				Mesh* submesh = rend->m_meshs[i];
+				Material* submat = rend->m_mats[i];
+				//材质中添加灯光define
+				if (submat->isUseLight()) {
+					if (pSce->getLightNum(LIGHTTYPE::DIRECTION) > 0)
+						submat->addDefine("DIR_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::DIRECTION)));
+					if (pSce->getLightNum(LIGHTTYPE::LPOINT) > 0)
+						submat->addDefine("POI_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::LPOINT)));
+					if (pSce->getLightNum(LIGHTTYPE::SPOT) > 0)
+						submat->addDefine("SPO_LIGHT_NUM", util::num2str(pSce->getLightNum(LIGHTTYPE::SPOT)));
+				}
+				if (camera->getBloom() >= 1.0f) {
+					submat->addDefine("BLOOM", "1");
+				}
+				submat->getShader()->use();
+				if (submat->isUseLight()) {
+					_updateLightsUniforms(submat->getShader(), lightList);
+				}
+				_updateUniforms(rend, camera, trans, submat);
 
-			for (auto submesh : rend->m_meshs) {
 				glBindVertexArray(submesh->getVAO());
 				glDrawElements(GL_TRIANGLES, submesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
 			}
@@ -346,10 +348,14 @@ void RenderSystem::_defferedRender(CCamera* camera, RScene* pSce) {
 		CTransform* trans = it->transform;
 		CRender* rend = (CRender*)it->getComponent(RENDER);
 		if (rend != nullptr) {
-			_updateUniforms(rend, camera, trans, shaderGeo);
 			//shaderGeo->setMat4("uModel", trans->getModelMatrix());
 			//shaderGeo->setMat4("uNModel", glm::inverse(glm::transpose(trans->getModelMatrix())));
-			for (auto submesh : rend->m_meshs) {
+			for (std::vector<Mesh*>::size_type i = 0; i < rend->m_meshs.size(); i++) {
+				Mesh* submesh = rend->m_meshs[i];
+				Material* submat = rend->m_mats[i];
+
+				_updateUniforms(rend, camera, trans, submat, shaderGeo);
+
 				glBindVertexArray(submesh->getVAO());
 				glDrawElements(GL_TRIANGLES, submesh->getFaceCount() * 3, GL_UNSIGNED_INT, 0);
 			}
@@ -406,8 +412,7 @@ void RenderSystem::_render() {
 }
 
 //更新uniform变量
-void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform* tran, GLProgram* shader) {
-	Material* pMat = pRender->m_mat;
+void RenderSystem::_updateUniforms(CRender* pRender, CCamera* camera, CTransform* tran, Material* pMat, GLProgram* shader) {
 	if (nullptr == shader) {
 		shader = pMat->getShader();
 	}

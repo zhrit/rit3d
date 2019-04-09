@@ -21,8 +21,8 @@ void CRender::addMesh(Mesh* _mesh) {
 	m_meshs.push_back(_mesh);
 }
 
-void CRender::setMaterial(Material* _mat) {
-	m_mat = _mat;
+void CRender::addMaterial(Material* _mat) {
+	m_mats.push_back(_mat);
 }
 
 RBool CRender::isCastShadow() const {

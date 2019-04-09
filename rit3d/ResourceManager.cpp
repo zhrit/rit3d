@@ -63,15 +63,18 @@ Mesh* ResourceManager::getMesh(const RString& _name) {
 
 //创建新材质
 Material* ResourceManager::createMaterial(const RString& _name) {
-	Material* mat = Material::Create(_name);
-	std::pair<std::map<RString, Material*>::iterator, bool> Insert_Pair;
+	Material* mat = getMaterial(_name);
+	if (!mat) {
+		mat = Material::Create(_name);
+		std::pair<std::map<RString, Material*>::iterator, bool> Insert_Pair;
 
-	Insert_Pair = materialPool.insert(std::pair<RString, Material*>(_name, mat));
+		Insert_Pair = materialPool.insert(std::pair<RString, Material*>(_name, mat));
 
-	if (Insert_Pair.second == false) {
-		Material::Destroy(mat);
-		cout << "已有同名材质，创建失败" << endl;
-		return nullptr;
+		if (Insert_Pair.second == false) {
+			Material::Destroy(mat);
+			cout << "已有同名材质，创建失败" << endl;
+			return nullptr;
+		}
 	}
 
 	return mat;
@@ -93,22 +96,24 @@ Material* ResourceManager::getMaterial(const RString& _name) {
 		return iter->second;
 	}
 	else {
-		cout << "材质资源不存在！" << endl;
 		return nullptr;
 	}
 }
 
 //创建新纹理
 Texture* ResourceManager::createTexture(const RString& imagePath) {
-	Texture* tex = Texture::Create(imagePath);
-	std::pair<std::map<RString, Texture*>::iterator, bool> Insert_Pair;
+	Texture* tex = getTexture(imagePath);
+	if (!tex) {
+		tex = Texture::Create(imagePath);
+		std::pair<std::map<RString, Texture*>::iterator, bool> Insert_Pair;
 
-	Insert_Pair = texturePool.insert(std::pair<RString, Texture*>(imagePath, tex));
+		Insert_Pair = texturePool.insert(std::pair<RString, Texture*>(imagePath, tex));
 
-	if (Insert_Pair.second == false) {
-		Texture::Destroy(tex);
-		cout << "已有同名纹理，创建失败" << endl;
-		return nullptr;
+		if (Insert_Pair.second == false) {
+			Texture::Destroy(tex);
+			cout << "已有同名纹理，创建失败" << endl;
+			return nullptr;
+		}
 	}
 
 	return tex;
@@ -129,7 +134,6 @@ Texture* ResourceManager::getTexture(const RString& _name) {
 		return iter->second;
 	}
 	else {
-		cout << "纹理资源不存在！" << endl;
 		return nullptr;
 	}
 }
@@ -683,23 +687,30 @@ RGameObject* ResourceManager::loadModel(RString path, RScene* sce) {
 	}
 	RGameObject* go = new RGameObject(sce);
 	CRender* render = (CRender*)go->addComponent(RENDER);
-	_processNode(scene->mRootNode, scene, render);
+
+	//获取文件目录
+	int n;
+	RString modelDir;
+	if ((n = path.find_last_of('/')) != RString::npos) {
+		modelDir = path.substr(0, n + 1);
+	}
+	_processNode(scene->mRootNode, scene, render, modelDir);
 	return go;
 }
 
 //加载模型时处理节点
-void ResourceManager::_processNode(aiNode* node, const aiScene* scene, CRender* render) {
+void ResourceManager::_processNode(aiNode* node, const aiScene* scene, CRender* render, RString modelDir) {
 	for (RUInt i = 0; i < node->mNumMeshes; i++) {
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		_processMesh(mesh, scene, render);
+		_processMesh(mesh, scene, render, modelDir);
 	}
 	for (RUInt i = 0; i < node->mNumChildren; i++) {
-		_processNode(node->mChildren[i], scene, render);
+		_processNode(node->mChildren[i], scene, render, modelDir);
 	}
 }
 
 //加载模型时处理网格
-void ResourceManager::_processMesh(aiMesh* mesh, const aiScene* scene, CRender* render) {
+void ResourceManager::_processMesh(aiMesh* mesh, const aiScene* scene, CRender* render, RString modelDir) {
 	//读取vertex position normal tangant color uv
 	int pointCount = mesh->mNumVertices;
 	RInt verSize = 14 * pointCount;
@@ -768,8 +779,30 @@ void ResourceManager::_processMesh(aiMesh* mesh, const aiScene* scene, CRender* 
 		indArray[3 * i + 2] = face.mIndices[2];
 	}
 	RString meshName = mesh->mName.C_Str();
+
 	render->addMesh(createMesh(meshName, verArray, verSize, indArray, indSize));
+
+	Material* mat = createMaterial(meshName + "_mat");
+	mat->setShader("phong");
+	mat->setColor(1.0f, 1.0f, 1.0f);
+	if (mesh->mMaterialIndex >= 0) {
+		aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
+		_loadMaterialTexture(mat, aiMat, modelDir);
+	}
+	render->addMaterial(mat);
+
 	delete[] verArray;
 	delete[] indArray;
 	//render->setMesh(getMesh("plane"));
+}
+
+//加载模型得材质纹理
+void ResourceManager::_loadMaterialTexture(Material* mat, aiMaterial* aiMat, RString modelDir) {
+	for (unsigned int i = 0; i < aiMat->GetTextureCount(aiTextureType_DIFFUSE); i++)
+	{
+		aiString str;
+		aiMat->GetTexture(aiTextureType_DIFFUSE, i, &str);
+		Texture* tex = createTexture(modelDir + str.C_Str());
+		mat->addTexture(tex);
+	}
 }

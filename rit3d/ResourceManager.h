@@ -33,9 +33,11 @@ private:
 	//根据vertices和indices计算tangents
 	void _calcTangent(RFloat* vs, RInt vSize, RUInt* id, RInt iSize, RFloat* uv, RFloat* tg);
 	//加载模型时处理节点
-	void _processNode(aiNode* node, const aiScene* scene, CRender* render);
+	void _processNode(aiNode* node, const aiScene* scene, CRender* render, RString modelDir);
 	//加载模型时处理网格
-	void _processMesh(aiMesh* mesh, const aiScene* scene, CRender* render);
+	void _processMesh(aiMesh* mesh, const aiScene* scene, CRender* render, RString modelDir);
+	//加载模型得材质纹理
+	void _loadMaterialTexture(Material* mat, aiMaterial* aiMat, RString modelDir);
 public:
 	//创建新网格
 	Mesh* createMesh(const RString& _name, RFloat* verArray, RInt verSize, RUInt* indArray, RInt indSize);
