@@ -118,8 +118,9 @@ glm::vec3 CTransform::getAngle() {
 	return m_localAngle;
 }
 glm::vec3 CTransform::getScale() {
-	//todo
-	return m_localScale;
+	getModelMatrix();
+	glm::vec3 scale(glm::length(m_modelMatrix[0]), glm::length(m_modelMatrix[1]), glm::length(m_modelMatrix[2]));
+	return scale;
 }
 
 //局部获取模型矩阵

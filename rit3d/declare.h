@@ -16,4 +16,5 @@
 #include "CSkybox.h"
 #include "CPostProcess.h"
 #include "CBehavior.h"
+#include "CCollider.h"
 #include "BaseBehavior.h"

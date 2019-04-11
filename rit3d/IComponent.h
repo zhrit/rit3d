@@ -16,6 +16,7 @@ typedef enum {
 	BEHAVIOR,
 	//物理相关组件
 	SPHERECOLLIDER,
+	BOXCOLLIDER,
 
 	//单例组件
 	LIGHTCAMERACOLLECTER,

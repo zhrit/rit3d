@@ -1,6 +1,7 @@
 #include "pch.h"
 #include <iostream>
 #include "declare.h"
+#include <time.h>
 
 class CameraScript : public BaseBehavior {
 private:
@@ -879,4 +880,71 @@ void example_model_load_1() {
 	//light2->setColor(1.0f, 0.0f, 0.0f);
 	//light2->setCutOff(10, 15);
 	//light2->setLightType(LIGHTTYPE::SPOT);
+}
+
+/**
+ *碰撞检测
+ */
+void example_collide_1() {
+	cout << "collide test" << endl;
+	Application* app = Application::Instance();
+	app->showFPS();
+	RScene* pSce = app->sceneMng->createScene();
+
+	Material* mat2 = app->resourceMng->createMaterial("mat2");
+	mat2->setShader("phong");
+	mat2->setColor(1.0f, 1.0f, 1.0f);
+
+	//球1
+	RGameObject* sphere1 = pSce->addGameObject();
+	sphere1->transform->setLocalPosition(-1.0f, 0.5f, 0.5f);
+	sphere1->transform->setLocalScale(1.0f, 1.0f, 1.0f);
+	CRender* sphererender1 = (CRender*)sphere1->addComponent(RENDER);
+	sphererender1->addMesh(app->resourceMng->getMesh("sphere"));
+	sphererender1->addMaterial(mat2);
+	CSphereCollider* coll1 = (CSphereCollider*)sphere1->addComponent(SPHERECOLLIDER);
+	//球2
+	RGameObject* sphere2 = pSce->addGameObject();
+	sphere2->transform->setLocalPosition(0.3f, 0.5f, 0.5f);
+	sphere2->transform->setLocalScale(2.0f, 1.0f, 1.0f);
+	CRender* sphererender2 = (CRender*)sphere2->addComponent(RENDER);
+	sphererender2->addMesh(app->resourceMng->getMesh("sphere"));
+	sphererender2->addMaterial(mat2);
+	CSphereCollider* coll2 = (CSphereCollider*)sphere2->addComponent(SPHERECOLLIDER);
+
+	srand((unsigned)time(NULL));
+	for (int i = 0; i < 50; i++) {
+		RGameObject* sphere = pSce->addGameObject();
+		RFloat x = (float)rand() / (float)RAND_MAX * 5.0f - 2.5f;
+		RFloat y = (float)rand() / (float)RAND_MAX * 5.0f - 2.5f;
+		RFloat z = (float)rand() / (float)RAND_MAX * 5.0f - 2.5f;
+		sphere->transform->setLocalPosition(x, y, z);
+		sphere->transform->setLocalScale(0.5f, 0.5f, 0.5f);
+		CRender* sphererender = (CRender*)sphere->addComponent(RENDER);
+		sphererender->addMesh(app->resourceMng->getMesh("sphere"));
+		sphererender->addMaterial(mat2);
+		CSphereCollider* coll = (CSphereCollider*)sphere->addComponent(SPHERECOLLIDER);
+	}
+
+	//相机
+	RGameObject* CO = pSce->addGameObject();
+	CO->transform->setLocalPosition(0.0f, 0.0f, 6.0f);
+	CO->transform->setLocalFrontDir(0.0f, 0.0f, -3.0f);
+	CO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CCamera* cam = (CCamera*)CO->addComponent(COMPTYPE::CAMERA);
+	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
+	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+	cam->setViewport(0, 0, 1000, 800);
+	CBehavior* cameraBehavior1 = (CBehavior*)CO->addComponent(BEHAVIOR);
+	cameraBehavior1->setBehavior(new CameraScript());
+
+	//平行光
+	RGameObject* LO = pSce->addGameObject();
+	LO->transform->setLocalPosition(3.0f, 1.5f, 0.0f);
+	LO->transform->setLocalFrontDir(-1.0f, -0.5f, 0.0f);
+	LO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CLight* light = (CLight*)LO->addComponent(COMPTYPE::LIGHT);
+	light->setColor(1.0f, 1.0f, 1.0f);
+	light->setLightType(LIGHTTYPE::DIRECTION);
+	light->setEnabled(true);
 }

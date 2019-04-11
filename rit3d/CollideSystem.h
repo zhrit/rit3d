@@ -1,14 +1,15 @@
 #pragma once
 #include "RCommon.h"
 #include "ISystem.h"
+#include "CCollider.h"
 
-class CCollider;
 class CollideSystem : public ISystem {
 private:
 	CollideSystem(RInt od);
 	virtual ~CollideSystem();
 
 	std::vector<CCollider*> m_colliderPool;
+	std::function<RBool(CCollider*, CCollider*)> m_intersectionMethod[2][2];
 public:
 	static CollideSystem* CreateInstance(RInt od);
 
@@ -44,5 +45,13 @@ public:
 
 	//系统被注销时调用
 	virtual void onDestroy();
+
+private:
+	//相交检测
+	RBool _intersectionTest(CCollider* c1, CCollider* c2);
+	static RBool _intersectionTest_sphere2sphere(CCollider* c1, CCollider* c2);
+	static RBool _intersectionTest_sphere2box(CCollider* c1, CCollider* c2);
+	static RBool _intersectionTest_box2sphere(CCollider* c1, CCollider* c2);
+	static RBool _intersectionTest_box2box(CCollider* c1, CCollider* c2);
 };
 

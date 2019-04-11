@@ -60,6 +60,7 @@ void SystemManager::registCompCreateFunc() {
 	IComponent::compMap[POSTPROCESS] = CPostProcess::CreateInstance;
 	IComponent::compMap[SKYBOX] = CSkybox::CreateInstance;
 	IComponent::compMap[SPHERECOLLIDER] = CSphereCollider::CreateInstance;
+	IComponent::compMap[BOXCOLLIDER] = CBoxCollider::CreateInstance;
 }
 
 //初始化必要的单例组件

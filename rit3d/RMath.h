@@ -17,3 +17,10 @@ namespace RMath {
 		return Abs(x - y) < EPSILON_E6;
 	}
 }
+
+namespace glmp {
+	inline RFloat max(glm::vec3 v3) {
+		RFloat m = (v3.x > v3.y) ? v3.x : v3.y;
+		return (m > v3.z) ? m : v3.z;
+	}
+}
