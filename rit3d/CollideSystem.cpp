@@ -69,8 +69,8 @@ void CollideSystem::onRemoveGameObject() {
 
 //系统更新时调用
 void CollideSystem::onUpdate() {
-	static int counts_intersect = 0, counts_calc1 = 0, counts_calc2 = 0;
-	int count_intersect = 0, count_calc1 = 0, count_calc2 = 0;
+	static int counts_intersect1 = 0, counts_intersect2 = 0, counts_calc1 = 0, counts_calc2 = 0;
+	int count_intersect1 = 0, count_intersect2 = 0, count_calc1 = 0, count_calc2 = 0;
 	//计算所有碰撞组件在世界坐标系下的几何信息
 	calcGeomInfoInWorld();
 	std::vector<CCollider*>::size_type i, j;
@@ -78,8 +78,8 @@ void CollideSystem::onUpdate() {
 	for (i = 0; i < l; i++) {
 		for (j = i + 1; j < l; j++) {
 			count_calc1++;
-			if (_intersectionTest(m_colliderPool[i], m_colliderPool[j])) {
-				count_intersect++;
+			if (_intersectionTest(m_colliderPool[i]->wBV, m_colliderPool[j]->wBV)) {
+				count_intersect1++;
 			}
 		}
 	}
@@ -90,9 +90,8 @@ void CollideSystem::onUpdate() {
 	for (i = 0; i < l; i++) {
 		std::queue<BVHNode*> qNode;
 		qNode.push(m_BHVTree);
-		CSphereCollider* sc = (CSphereCollider*)m_colliderPool[i];
-		glm::vec3 c1 = sc->wCenter;
-		RFloat r1 = sc->wRadius;
+		CCollider* sc = m_colliderPool[i];
+		IBV* bv = sc->wBV;
 		while (!qNode.empty()) {
 			BVHNode* currNode = qNode.front();
 			qNode.pop();
@@ -100,11 +99,8 @@ void CollideSystem::onUpdate() {
 			if (currNode->pLeft) {
 				if (currNode->pLeft->nodeType == BVHNODETYPE::NODE) {
 					//不是叶子节点
-					glm::vec3 d = c1 - currNode->pLeft->bv.center;
-					RFloat r2 = currNode->pLeft->bv.radius;
-					RFloat dis2 = glm::dot(d, d);
 					count_calc2++;
-					if (dis2 <= (r1 + r2) * (r1 + r2)) {
+					if (_intersectionTest(bv, currNode->pLeft->bv)) {
 						qNode.push(currNode->pLeft);
 					}
 				}
@@ -114,12 +110,9 @@ void CollideSystem::onUpdate() {
 						currNode->pLeft->active = false;
 					}
 					if (currNode->pLeft->active) {
-						glm::vec3 d = c1 - currNode->pLeft->bv.center;
-						RFloat r2 = currNode->pLeft->bv.radius;
-						RFloat dis2 = glm::dot(d, d);
 						count_calc2++;
-						if (dis2 <= (r1 + r2) * (r1 + r2)) {
-							
+						if (_intersectionTest(bv, currNode->pLeft->bv)) {
+							count_intersect2++;
 						}
 					}
 				}
@@ -128,11 +121,8 @@ void CollideSystem::onUpdate() {
 			if (currNode->pRight) {
 				if (currNode->pRight->nodeType == BVHNODETYPE::NODE) {
 					//不是叶子节点
-					glm::vec3 d = c1 - currNode->pRight->bv.center;
-					RFloat r2 = currNode->pRight->bv.radius;
-					RFloat dis2 = glm::dot(d, d);
 					count_calc2++;
-					if (dis2 <= (r1 + r2) * (r1 + r2)) {
+					if (_intersectionTest(bv, currNode->pRight->bv)) {
 						qNode.push(currNode->pRight);
 					}
 				}
@@ -143,11 +133,8 @@ void CollideSystem::onUpdate() {
 					}
 					if (currNode->pRight->active) {
 						count_calc2++;
-						glm::vec3 d = c1 - currNode->pRight->bv.center;
-						RFloat r2 = currNode->pRight->bv.radius;
-						RFloat dis2 = glm::dot(d, d);
-						if (dis2 <= (r1 + r2) * (r1 + r2)) {
-							
+						if (_intersectionTest(bv, currNode->pRight->bv)) {
+							count_intersect2++;
 						}
 					}
 				}
@@ -155,9 +142,13 @@ void CollideSystem::onUpdate() {
 		}
 	}
 
-	if (count_intersect != counts_intersect) {
-		counts_intersect = count_intersect;
-		cout << "counts_intersect:" << counts_intersect << endl;
+	if (count_intersect1 != counts_intersect1) {
+		counts_intersect1 = count_intersect1;
+		cout << "counts_intersect1:" << counts_intersect1 << endl;
+	}
+	if (count_intersect2 != counts_intersect2) {
+		counts_intersect2 = count_intersect2;
+		cout << "counts_intersect2:" << counts_intersect2 << endl;
 	}
 	if (count_calc1 != counts_calc1) {
 		counts_calc1 = count_calc1;
@@ -188,41 +179,37 @@ void CollideSystem::onDestroy() {
 void CollideSystem::calcGeomInfoInWorld() {
 	for (auto c : m_colliderPool) {
 		CSphereCollider* sc = (CSphereCollider*)c;
-		sc->wCenter = glm::vec3(sc->gameObject->transform->getModelMatrix() * glm::vec4(sc->center, 1.0f));
-		sc->wRadius = glmp::max(sc->gameObject->transform->getScale()) * sc->radius;
+		((SphereBV*)sc->wBV)->c = glm::vec3(sc->gameObject->transform->getModelMatrix() * glm::vec4(sc->center, 1.0f));
+		((SphereBV*)sc->wBV)->r = glmp::max(sc->gameObject->transform->getScale()) * sc->radius;
 	}
 }
 
 //相交检测
-RBool CollideSystem::_intersectionTest(CCollider* c1, CCollider* c2) {
-	return m_intersectionMethod[c1->getType() - SPHERECOLLIDER][c2->getType() - SPHERECOLLIDER](c1, c2);
+RBool CollideSystem::_intersectionTest(IBV* _bv1, IBV* _bv2) {
+	return m_intersectionMethod[_bv1->type][_bv2->type](_bv1, _bv2);
 }
 
 //相交检测，球和球
-RBool CollideSystem::_intersectionTest_sphere2sphere(CCollider* c1, CCollider* c2) {
-	CSphereCollider* collider1 = (CSphereCollider*)c1;
-	CSphereCollider* collider2 = (CSphereCollider*)c2;
-	glm::vec3 center1 = collider1->wCenter;
-	glm::vec3 center2 = collider2->wCenter;
-	RFloat radius1 = collider1->wRadius;
-	RFloat radius2 = collider2->wRadius;
-	glm::vec3 d = center1 - center2;
+RBool CollideSystem::_intersectionTest_sphere2sphere(IBV* _bv1, IBV* _bv2) {
+	SphereBV* bv1 = (SphereBV*)_bv1;
+	SphereBV* bv2 = (SphereBV*)_bv2;
+	glm::vec3 d = bv1->c - bv2->c;
 	RFloat dis2 = glm::dot(d, d);
-	return dis2 <= (radius1 + radius2) * (radius1 + radius2);
+	return dis2 <= (bv1->r + bv2->r) * (bv1->r + bv2->r);
 }
 
 //相交检测，球和立方体
-RBool CollideSystem::_intersectionTest_sphere2box(CCollider* c1, CCollider* c2) {
+RBool CollideSystem::_intersectionTest_sphere2box(IBV* _bv1, IBV* _bv2) {
 	return true;
 }
 
 //相交检测，立方体和球
-RBool CollideSystem::_intersectionTest_box2sphere(CCollider* c1, CCollider* c2) {
-	return _intersectionTest_sphere2box(c2, c1);
+RBool CollideSystem::_intersectionTest_box2sphere(IBV* _bv1, IBV* _bv2) {
+	return _intersectionTest_sphere2box(_bv2, _bv1);
 }
 
 //相交检测，立方体和立方体
-RBool CollideSystem::_intersectionTest_box2box(CCollider* c1, CCollider* c2) {
+RBool CollideSystem::_intersectionTest_box2box(IBV* _bv1, IBV* _bv2) {
 	return true;
 }
 
@@ -252,7 +239,7 @@ void CollideSystem::_buildBVHTreeCore(BVHNode** tree, int start, int end) {
 	else {
 		//剩多个节点时继续划分
 		pNode->nodeType = BVHNODETYPE::NODE;
-		int k = _partition(start, end, separatDir, pNode->bv.center);
+		int k = _partition(start, end, separatDir, ((SphereBV*)pNode->bv)->c);
 		_buildBVHTreeCore(&(pNode->pLeft), start, k);
 		_buildBVHTreeCore(&(pNode->pRight), k + 1, end);
 	}
@@ -267,30 +254,30 @@ void CollideSystem::_deleteBVHTree(BVHNode* pNode) {
 }
 
 //计算m_colliderPool中start到end碰撞组件的总包围盒
-BV CollideSystem::_computeBoundingVolumn(int start, int end, glm::vec3& separating_axis) {
-	BV bv;
+IBV* CollideSystem::_computeBoundingVolumn(int start, int end, glm::vec3& separating_axis) {
+	SphereBV* bv = new SphereBV;
 	if (start == end) {
 		//只有一个节点
-		CSphereCollider* collider = (CSphereCollider*)m_colliderPool[start];
-		bv.center = collider->wCenter;
-		bv.radius = collider->wRadius;
+		CCollider* collider = m_colliderPool[start];
+		bv->c = ((SphereBV*)collider->wBV)->c;
+		bv->r = ((SphereBV*)collider->wBV)->r;
 	}
 	else {
 		//有多个节点
 		//所有sphere包围盒的圆心的几何中心点为圆心
-		bv.center = glm::vec3(0.0f, 0.0f, 0.0f);
-		bv.radius = 0.0f;
+		bv->c = glm::vec3(0.0f, 0.0f, 0.0f);
+		bv->r = 0.0f;
 		for (int i = start; i <= end; i++) {
-			CSphereCollider* collider = (CSphereCollider*)m_colliderPool[i];
-			bv.center += collider->wCenter;
+			CCollider* collider = m_colliderPool[i];
+			bv->c += ((SphereBV*)collider->wBV)->c;
 		}
-		bv.center /= (end - start + 1.0f);
+		bv->c /= (end - start + 1.0f);
 		for (int i = start; i <= end; i++) {
-			CSphereCollider* collider = (CSphereCollider*)m_colliderPool[i];
-			RFloat nr = glm::length(bv.center - collider->wCenter) + collider->wRadius;
-			if (nr > bv.radius) {
-				bv.radius = nr;
-				separating_axis = collider->wCenter - bv.center;
+			CCollider* collider = m_colliderPool[i];
+			RFloat nr = glm::length(bv->c - ((SphereBV*)collider->wBV)->c) + ((SphereBV*)collider->wBV)->r;
+			if (nr > bv->r) {
+				bv->r = nr;
+				separating_axis = ((SphereBV*)collider->wBV)->c - bv->c;
 			}
 		}
 	}
@@ -302,10 +289,10 @@ int CollideSystem::_partition(int start, int end, glm::vec3 dir, glm::vec3 point
 	int i = start, j = end;
 	if (j - i < 2) return i;
 	while (i < j) {
-		while (glm::dot(((CSphereCollider*)m_colliderPool[i])->wCenter - point, dir) >= 0.0f && i < end) {
+		while (glm::dot(((SphereBV*)m_colliderPool[i]->wBV)->c - point, dir) >= 0.0f && i < end) {
 			i++;
 		}
-		while (glm::dot(((CSphereCollider*)m_colliderPool[j])->wCenter - point, dir) < 0.0f && j > start) {
+		while (glm::dot(((SphereBV*)m_colliderPool[j]->wBV)->c - point, dir) < 0.0f && j > start) {
 			j--;
 		}
 		if (i < j) {

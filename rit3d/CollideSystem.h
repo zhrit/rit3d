@@ -8,14 +8,16 @@ enum BVHNODETYPE {
 	NODE,
 	LEAF,
 };
-//sphere bounding volume
-struct BV {
-	glm::vec3 center;
-	RFloat radius;
-};
 //BVH树节点
-struct BVHNode {
-	BV bv;//节点对应的包围盒
+class BVHNode {
+public:
+	BVHNode() {};
+	~BVHNode() {
+		if (bv) {
+			SafeDelete(bv);
+		}
+	};
+	IBV* bv;//节点对应的包围盒,创建节点时，必须重新new一个bv出来，不能把碰撞组件中的IBV指针直接赋值
 	BVHNODETYPE nodeType;//节点类型
 	int nums;//包含的碰撞组件的数量
 	CCollider* pc;//节点所对应的碰撞组件
@@ -30,7 +32,7 @@ private:
 	virtual ~CollideSystem();
 
 	std::vector<CCollider*> m_colliderPool;
-	std::function<RBool(CCollider*, CCollider*)> m_intersectionMethod[2][2];
+	std::function<RBool(IBV*, IBV*)> m_intersectionMethod[2][2];
 public:
 	static CollideSystem* CreateInstance(RInt od);
 
@@ -69,11 +71,11 @@ public:
 
 private:
 	//相交检测
-	RBool _intersectionTest(CCollider* c1, CCollider* c2);
-	static RBool _intersectionTest_sphere2sphere(CCollider* c1, CCollider* c2);
-	static RBool _intersectionTest_sphere2box(CCollider* c1, CCollider* c2);
-	static RBool _intersectionTest_box2sphere(CCollider* c1, CCollider* c2);
-	static RBool _intersectionTest_box2box(CCollider* c1, CCollider* c2);
+	RBool _intersectionTest(IBV* _bv1, IBV* _bv2);
+	static RBool _intersectionTest_sphere2sphere(IBV* _bv1, IBV* _bv2);
+	static RBool _intersectionTest_sphere2box(IBV* _bv1, IBV* _bv2);
+	static RBool _intersectionTest_box2sphere(IBV* _bv1, IBV* _bv2);
+	static RBool _intersectionTest_box2box(IBV* _bv1, IBV* _bv2);
 
 	//计算所有碰撞组件在世界坐标系下的几何信息
 	void calcGeomInfoInWorld();
@@ -87,7 +89,7 @@ private:
 	//删除BVH树
 	void _deleteBVHTree(BVHNode* pNode);
 	//计算m_colliderPool中start到end碰撞组件的总包围盒,并返回一个分割轴的方向
-	BV _computeBoundingVolumn(int start, int end, glm::vec3& separating_axis);
+	IBV* _computeBoundingVolumn(int start, int end, glm::vec3& separating_axis);
 	//划分节点
 	int _partition(int start, int end, glm::vec3 dir, glm::vec3 point);
 };

@@ -8,18 +8,20 @@ CCollider::CCollider() {
 
 
 CCollider::~CCollider() {
-
+	if (wBV) {
+		SafeDelete(wBV);
+	}
 }
 
 
 
 CSphereCollider::CSphereCollider() {
 	m_type = COMPTYPE::SPHERECOLLIDER;
+	wBV = new SphereBV;
 }
 
 
 CSphereCollider::~CSphereCollider() {
-
 }
 
 CSphereCollider* CSphereCollider::CreateInstance() {
