@@ -3,6 +3,27 @@
 #include "ISystem.h"
 #include "CCollider.h"
 
+//BVH树节点类型，叶子节点和非叶子节点
+enum BVHNODETYPE {
+	NODE,
+	LEAF,
+};
+//sphere bounding volume
+struct BV {
+	glm::vec3 center;
+	RFloat radius;
+};
+//BVH树节点
+struct BVHNode {
+	BV bv;//节点对应的包围盒
+	BVHNODETYPE nodeType;//节点类型
+	int nums;//包含的碰撞组件的数量
+	CCollider* pc;//节点所对应的碰撞组件
+	RBool active;//节点是否活跃（是否需要进行碰撞检测）
+	BVHNode* pLeft;
+	BVHNode* pRight;
+};
+
 class CollideSystem : public ISystem {
 private:
 	CollideSystem(RInt od);
@@ -53,5 +74,21 @@ private:
 	static RBool _intersectionTest_sphere2box(CCollider* c1, CCollider* c2);
 	static RBool _intersectionTest_box2sphere(CCollider* c1, CCollider* c2);
 	static RBool _intersectionTest_box2box(CCollider* c1, CCollider* c2);
+
+	//计算所有碰撞组件在世界坐标系下的几何信息
+	void calcGeomInfoInWorld();
+
+	//----关于BVH树-----
+	//BVH树
+	BVHNode* m_BHVTree{ nullptr };
+	//构建BVH树
+	void _buildBVHTree();
+	void _buildBVHTreeCore(BVHNode** tree, int start, int end);
+	//删除BVH树
+	void _deleteBVHTree(BVHNode* pNode);
+	//计算m_colliderPool中start到end碰撞组件的总包围盒,并返回一个分割轴的方向
+	BV _computeBoundingVolumn(int start, int end, glm::vec3& separating_axis);
+	//划分节点
+	int _partition(int start, int end, glm::vec3 dir, glm::vec3 point);
 };
 

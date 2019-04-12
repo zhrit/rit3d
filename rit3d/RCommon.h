@@ -6,6 +6,7 @@
 #include <vector>
 #include <list>
 #include <deque>
+#include <queue>
 #include <map>
 #include <functional>
 #include <iostream>

@@ -913,7 +913,7 @@ void example_collide_1() {
 	CSphereCollider* coll2 = (CSphereCollider*)sphere2->addComponent(SPHERECOLLIDER);
 
 	srand((unsigned)time(NULL));
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 200; i++) {
 		RGameObject* sphere = pSce->addGameObject();
 		RFloat x = (float)rand() / (float)RAND_MAX * 5.0f - 2.5f;
 		RFloat y = (float)rand() / (float)RAND_MAX * 5.0f - 2.5f;
