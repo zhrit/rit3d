@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RCommon.h"
-#include "fps.h"
 
 const RInt DEFAULT_WIDTH = 800;
 const RInt DEFAULT_HEIGHT = 600;
@@ -32,9 +31,6 @@ private:
 	//游戏入口函数，在主循环前的预编辑，游戏开发者需要实现此函数
 	std::function<void()> m_gameEntry;
 
-	//fps工具
-	FPS m_fps;
-
 	//当前产生过的对象总数
 	RUInt m_objectCounter{ 0 };
 
@@ -49,10 +45,6 @@ public:
 	void runRit3d(RString _title = "Rit3D", int _w = DEFAULT_WIDTH, int _h = DEFAULT_HEIGHT);
 	//设置游戏入口函数
 	void setGameEntry(std::function<void()> _gameEntry);
-	//显示fps
-	void showFPS();
-	//隐藏fps
-	void hideFPS();
 	//id分配器初始化
 	void initIDAllocator();
 	//id分配器

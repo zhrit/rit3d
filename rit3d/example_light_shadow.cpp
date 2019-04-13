@@ -122,7 +122,6 @@ public:
 void example_light_shadow_1() {
 	cout << "light and shadow" << endl;
 	Application* app = Application::Instance();
-	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
 	//纹理和材质
@@ -214,7 +213,6 @@ void example_light_shadow_1() {
 void example_light_shadow_2() {
 	cout << "bloom" << endl;
 	Application* app = Application::Instance();
-	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
 	//纹理和材质
@@ -299,7 +297,6 @@ void example_light_shadow_2() {
 void example_light_shadow_3() {
 	cout << "pbr" << endl;
 	Application* app = Application::Instance();
-	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
 	//创建纹理
@@ -474,7 +471,6 @@ void example_light_shadow_3() {
 void example_light_shadow_4() {
 	cout << "normal map" << endl;
 	Application* app = Application::Instance();
-	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
 	//纹理和材质
@@ -550,7 +546,6 @@ void example_light_shadow_4() {
 void example_light_shadow_5() {
 	cout << "post process" << endl;
 	Application* app = Application::Instance();
-	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
 	//纹理和材质
@@ -649,7 +644,6 @@ void example_light_shadow_5() {
 void example_light_shadow_6() {
 	cout << "light and shadow" << endl;
 	Application* app = Application::Instance();
-	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
 	//纹理和材质
@@ -741,7 +735,6 @@ void example_light_shadow_6() {
 void example_skybox_1() {
 	cout << "skybox" << endl;
 	Application* app = Application::Instance();
-	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
 	//纹理和材质
@@ -824,7 +817,6 @@ void example_skybox_1() {
 void example_model_load_1() {
 	cout << "load model" << endl;
 	Application* app = Application::Instance();
-	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
 	//obj模型
@@ -888,7 +880,6 @@ void example_model_load_1() {
 void example_collide_1() {
 	cout << "collide test" << endl;
 	Application* app = Application::Instance();
-	app->showFPS();
 	RScene* pSce = app->sceneMng->createScene();
 
 	Material* mat2 = app->resourceMng->createMaterial("mat2");

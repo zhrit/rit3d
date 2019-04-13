@@ -175,6 +175,7 @@
     <ClInclude Include="CRender.h" />
     <ClInclude Include="CSkybox.h" />
     <ClInclude Include="CTransform.h" />
+    <ClInclude Include="DebugSystem.h" />
     <ClInclude Include="declare.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="GLProgram.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="CRender.cpp" />
     <ClCompile Include="CSkybox.cpp" />
     <ClCompile Include="CTransform.cpp" />
+    <ClCompile Include="DebugSystem.cpp" />
     <ClCompile Include="example_light_shadow.cpp" />
     <ClCompile Include="fps.cpp" />
     <ClCompile Include="glad.c">

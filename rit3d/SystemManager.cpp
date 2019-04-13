@@ -14,6 +14,7 @@
 #include "BehaviorSystem.h"
 #include "CollideSystem.h"
 #include "LightAndCameraSystem.h"
+#include "DebugSystem.h"
 
 /*
  * 系统管理单例类
@@ -47,6 +48,7 @@ void SystemManager::registSystemCreateFunc() {
 	ISystem::systemMap[BEHAVIORSYSTEM] = BehaviorSystem::CreateInstance;
 	ISystem::systemMap[COLLIDESYSTEM] = CollideSystem::CreateInstance;
 	ISystem::systemMap[LIGHTANDCAMERA] = LightAndCameraSystem::CreateInstance;
+	ISystem::systemMap[DEBUGSYSTEM] = DebugSystem::CreateInstance;
 }
 
 //注册各个组件的创建函数，组件只能通过创建函数创建，不能直接new
@@ -87,7 +89,8 @@ void SystemManager::registSystem(SYSTEMTYPE type, RInt od) {
 	if (it == m_systemList.end()) {
 		m_systemList.push_back(st);
 	}
-
+	//记录系统的运行时间
+	m_elapsedTime.insert(std::map<SYSTEMTYPE, DWORD>::value_type(type, 0));
 	st->initSystem();
 }
 
@@ -103,7 +106,9 @@ void SystemManager::update() {
 	//update
 	for (auto st : m_systemList) {
 		if (st->isEnabled()) {
+			DWORD t1 = ::GetTickCount();
 			st->update();
+			m_elapsedTime[st->getType()] += ::GetTickCount() - t1;
 		}
 	}
 	//lateUpdate
@@ -111,6 +116,13 @@ void SystemManager::update() {
 		if (st->isEnabled()) {
 			st->lateUpdate();
 		}
+	}
+	if (clock_display.isInterval()) {
+		for (auto& iter : m_elapsedTime) {
+			cout << "system_" << iter.first << ": " << iter.second << "\n";
+			iter.second = 0;
+		}
+		cout << endl;
 	}
 }
 

@@ -2,6 +2,7 @@
 
 #include "RCommon.h"
 #include "ISystem.h"
+#include "RTimer.h"
 
 /*
  * 系统管理单例类
@@ -17,6 +18,11 @@ private:
 
 	//已注册的所有系统的实例
 	std::list<ISystem*> m_systemList;
+
+	//记录各个系统的运行时间
+	std::map<SYSTEMTYPE, DWORD> m_elapsedTime;
+
+	RTimer clock_display{ 1000, 1000 };
 
 	//注册各个系统的创建函数，系统只能通过创建函数创建，不能直接new
 	void registSystemCreateFunc();

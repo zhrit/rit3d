@@ -64,15 +64,6 @@ void Application::runRit3d(RString _title, int _w, int _h) {
 	return;
 }
 
-//显示fps
-void Application::showFPS() {
-	m_fps.show();
-}
-//隐藏fps
-void Application::hideFPS() {
-	m_fps.hide();
-}
-
 //id分配器初始化
 void Application::initIDAllocator() {
 	m_objectCounter = 0;
@@ -96,10 +87,11 @@ void Application::_initApp() {
 	resourceMng->createDefaultShader();
 	//注册必要系统
 	systemMng->registSystem(STARTSYSTEM, 1);
-	systemMng->registSystem(BEHAVIORSYSTEM, 2);
-	systemMng->registSystem(COLLIDESYSTEM, 3);
-	systemMng->registSystem(LIGHTANDCAMERA, 4);
-	systemMng->registSystem(RENDERSYSTEM, 5);
+	systemMng->registSystem(DEBUGSYSTEM, 2);
+	systemMng->registSystem(BEHAVIORSYSTEM, 3);
+	systemMng->registSystem(COLLIDESYSTEM, 4);
+	systemMng->registSystem(LIGHTANDCAMERA, 5);
+	systemMng->registSystem(RENDERSYSTEM, 6);
 
 	//获取窗口环境
 	GLFWwindow* wd = m_window->getWindowContext();
@@ -115,9 +107,6 @@ void Application::_initApp() {
 }
 //引擎驱动
 void Application::_updateApp() {
-	if (m_fps.isShowed()) {
-		m_fps.update();
-	}
 	systemMng->update();
 }
 
