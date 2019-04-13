@@ -11,6 +11,7 @@ rit3d采用类似Unity3D的组件实体系统架构。
 * behavior：行为脚本
 * post process：后处理
 * skybox：天空盒
+* collider：碰撞
 
 ## 已实现的主要功能
 ### 光照和阴影
@@ -74,4 +75,18 @@ skybox组件负责天空盒，该组件必须和camera组件挂在同一个gameO
 
 <img src="doc/demo_image/skybox_1.png"  height="300" width="400">
 
+### 延迟渲染
+deferred rendering 适用于多光源渲染。左图采用forward rendering，右图采用deferred rendering。目前deferred rendering在渲染阴影时有错位的问题。
+<img src="doc/demo_image/light_shadow_1.png"  height="300" width="400"><img src="doc/demo_image/deffer_renddering.png"  height="300" width="400">
+
+### 碰撞
+目前使用sphere包围盒做碰撞检测，之后会提供OBB等包围盒。
+
+目前采用了BVH技术经行碰撞检测优化。下图是一个包含202个球体的场景，球体位置随机生成，采用sphere包围盒。每一帧要检测所有球体间的碰撞关系。检测结果是有89对碰撞。
+
+<img src="doc/demo_image/collider_1.png"  height="300" width="400">
+
+经过对一帧的观察发现。暴力方法中，基础检测算法共执行20301，耗时17ms；采用BVH后，基础检测算法共执行7992次，减少了60.6%，耗时12ms，减少了29.4%。
+
+目前BVH存在的问题是，当需要碰撞检测的物体数量较少时，构建、维护和遍历BVH树所花费的时间超过了其节省的时间，因此还需要一些其它手段优化。
 

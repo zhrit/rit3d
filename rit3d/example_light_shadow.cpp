@@ -718,7 +718,7 @@ void example_light_shadow_6() {
 	LO1->transform->setLocalFrontDir(1.0f, -0.5f, 0.0f);
 	LO1->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
 	CLight* light1 = (CLight*)LO1->addComponent(COMPTYPE::LIGHT);
-	light1->castShadow(false);
+	light1->castShadow(true);
 	light1->setIntensity(0.1f, 1.0f, 1.0f);
 	light1->setColor(1.0f, 1.0f, 1.0f);
 	light1->setLightType(LIGHTTYPE::LPOINT);
