@@ -77,6 +77,7 @@ skybox组件负责天空盒，该组件必须和camera组件挂在同一个gameO
 
 ### 延迟渲染
 deferred rendering 适用于多光源渲染。左图采用forward rendering，右图采用deferred rendering。目前deferred rendering在渲染阴影时有错位的问题。
+
 <img src="doc/demo_image/light_shadow_1.png"  height="300" width="400"><img src="doc/demo_image/deffer_renddering.png"  height="300" width="400">
 
 ### 碰撞
