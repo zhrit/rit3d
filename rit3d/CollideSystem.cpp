@@ -9,7 +9,7 @@ CollideSystem::CollideSystem(RInt od) : ISystem(od) {
 }
 
 CollideSystem::~CollideSystem() {
-
+	_deleteBVHTree(m_BHVTree);
 }
 
 CollideSystem* CollideSystem::CreateInstance(RInt od) {
@@ -88,58 +88,36 @@ void CollideSystem::onUpdate() {
 	_buildBVHTree();
 	//每个碰撞组件和BVH树做碰撞检测
 	for (i = 0; i < l; i++) {
-		std::queue<BVHNode*> qNode;
-		qNode.push(m_BHVTree);
 		CCollider* sc = m_colliderPool[i];
 		IBV* bv = sc->wBV;
-		while (!qNode.empty()) {
-			BVHNode* currNode = qNode.front();
-			qNode.pop();
-			//左子节点
-			if (currNode->pLeft) {
-				if (currNode->pLeft->nodeType == BVHNODETYPE::NODE) {
-					//不是叶子节点
-					count_calc2++;
-					if (_intersectionTest(bv, currNode->pLeft->bv)) {
-						qNode.push(currNode->pLeft);
-					}
+		std::vector<BVHNode*>::size_type k = 1;
+		while (k < m_BHVArray.size()) {
+			BVHNode* curr = m_BHVArray[k];
+			if (curr->nodeType == BVHNODETYPE::LEAF) {
+				//是叶子节点
+				if (curr->pc == sc) {
+					curr->active = false;
 				}
-				else {
-					//是叶子节点
-					if (currNode->pLeft->pc == sc) {
-						currNode->pLeft->active = false;
-					}
-					if (currNode->pLeft->active) {
-						count_calc2++;
-						if (_intersectionTest(bv, currNode->pLeft->bv)) {
-							count_intersect2++;
-						}
+				if (curr->active) {
+					count_calc2++;
+					if (_intersectionTest(bv, curr->bv)) {
+						count_intersect2++;
 					}
 				}
 			}
-			//右子结点
-			if (currNode->pRight) {
-				if (currNode->pRight->nodeType == BVHNODETYPE::NODE) {
-					//不是叶子节点
-					count_calc2++;
-					if (_intersectionTest(bv, currNode->pRight->bv)) {
-						qNode.push(currNode->pRight);
-					}
-				}
-				else {
-					//是叶子节点
-					if (currNode->pRight->pc == sc) {
-						currNode->pRight->active = false;
-					}
-					if (currNode->pRight->active) {
-						count_calc2++;
-						if (_intersectionTest(bv, currNode->pRight->bv)) {
-							count_intersect2++;
-						}
+			else {
+				//不是叶子节点
+				count_calc2++;
+				if (!_intersectionTest(bv, curr->bv)) {
+					while (curr->nodeType == BVHNODETYPE::NODE) {
+						k = curr->offset;
+						curr = m_BHVArray[k];
 					}
 				}
 			}
+			k++;
 		}
+	
 	}
 
 	if (count_intersect1 != counts_intersect1) {
@@ -218,6 +196,7 @@ void CollideSystem::_buildBVHTree() {
 	//删除原来的BVHTree
 	_deleteBVHTree(m_BHVTree);
 	_buildBVHTreeCore(&m_BHVTree, 0, m_colliderPool.size() - 1);
+	_tree2array();
 }
 void CollideSystem::_buildBVHTreeCore(BVHNode** tree, int start, int end) {
 	int nums = end - start + 1;
@@ -242,6 +221,26 @@ void CollideSystem::_buildBVHTreeCore(BVHNode** tree, int start, int end) {
 		int k = _partition(start, end, separatDir, ((SphereBV*)pNode->bv)->c);
 		_buildBVHTreeCore(&(pNode->pLeft), start, k);
 		_buildBVHTreeCore(&(pNode->pRight), k + 1, end);
+	}
+}
+void CollideSystem::_tree2array() {
+	m_BHVArray.clear();
+	std::stack<BVHNode*> s;
+	BVHNode* p = m_BHVTree;
+	while (p != nullptr || !s.empty()) {
+		if (p != nullptr) {
+			m_BHVArray.push_back(p);
+			s.push(p);
+			p = p->pLeft;
+		}
+		else {
+			p = s.top();
+			s.pop();
+			if (p->nodeType == BVHNODETYPE::NODE) {
+				p->offset = m_BHVArray.size();
+			}
+			p = p->pRight;
+		}
 	}
 }
 

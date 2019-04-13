@@ -8,6 +8,7 @@
 #include <deque>
 #include <queue>
 #include <map>
+#include <stack>
 #include <functional>
 #include <iostream>
 #include <fstream>

@@ -24,6 +24,7 @@ public:
 	RBool active;//节点是否活跃（是否需要进行碰撞检测）
 	BVHNode* pLeft;
 	BVHNode* pRight;
+	int offset{ -1 };
 };
 
 class CollideSystem : public ISystem {
@@ -83,9 +84,12 @@ private:
 	//----关于BVH树-----
 	//BVH树
 	BVHNode* m_BHVTree{ nullptr };
+	std::vector<BVHNode*> m_BHVArray;
+
 	//构建BVH树
 	void _buildBVHTree();
 	void _buildBVHTreeCore(BVHNode** tree, int start, int end);
+	void _tree2array();
 	//删除BVH树
 	void _deleteBVHTree(BVHNode* pNode);
 	//计算m_colliderPool中start到end碰撞组件的总包围盒,并返回一个分割轴的方向
