@@ -20,6 +20,7 @@ Application* Application::Instance() {
 	return m_instance;
 }
 
+/*-------------------------核心过程-----------------------------*/
 //引擎入口
 void Application::runRit3d(RString _title, int _w, int _h) {
 	if (m_isRunning) {
@@ -115,6 +116,8 @@ void Application::setGameEntry(std::function<void()> _gameEntry) {
 	m_gameEntry = _gameEntry;
 }
 
+
+/*-------------------------input派发-----------------------------*/
 //窗口大小变化时回调函数
 void Application::_framebuffer_size_callback(GLFWwindow* window, int w, int h) {
 	SystemManager::Instance()->onChangeSize(w, h);
@@ -175,4 +178,11 @@ void Application::_key_callback(GLFWwindow* window, int key, int scancode, int a
 	default:
 		break;
 	}
+}
+
+
+/*-------------------------引擎关键参数设置-----------------------------*/
+//设置碰撞检测策略
+void Application::setCollisionDetectionStrategy(int _cdt) {
+	systemMng->setCollisionDetectionStrategy(_cdt);
 }

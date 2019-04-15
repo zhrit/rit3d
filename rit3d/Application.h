@@ -49,6 +49,8 @@ public:
 	void initIDAllocator();
 	//id分配器
 	RUInt IDAllocator();
+	//设置碰撞检测策略
+	void setCollisionDetectionStrategy(int _cdt);
 private:
 	//引擎初始化
 	void _initApp();

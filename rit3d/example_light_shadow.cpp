@@ -881,6 +881,7 @@ void example_collide_1() {
 	cout << "collide test" << endl;
 	Application* app = Application::Instance();
 	RScene* pSce = app->sceneMng->createScene();
+	app->setCollisionDetectionStrategy(4);
 
 	Material* mat2 = app->resourceMng->createMaterial("mat2");
 	mat2->setShader("phong");
@@ -904,7 +905,7 @@ void example_collide_1() {
 	CSphereCollider* coll2 = (CSphereCollider*)sphere2->addComponent(SPHERECOLLIDER);
 
 	srand((unsigned)time(NULL));
-	for (int i = 0; i < 200; i++) {
+	for (int i = 0; i <200; i++) {
 		RGameObject* sphere = pSce->addGameObject();
 		RFloat x = (float)rand() / (float)RAND_MAX * 5.0f - 2.5f;
 		RFloat y = (float)rand() / (float)RAND_MAX * 5.0f - 2.5f;

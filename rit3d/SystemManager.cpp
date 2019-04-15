@@ -236,3 +236,11 @@ void SystemManager::onRemoveComponent(COMPTYPE type, IComponent* pComp) {
 		st->onRemoveComponent(type, pComp);
 	}
 }
+
+//ÉèÖÃÅö×²¼ì²â²ßÂÔ
+void SystemManager::setCollisionDetectionStrategy(int _cdt) {
+	CollideSystem* cs = (CollideSystem*)getSystem(SYSTEMTYPE::COLLIDESYSTEM);
+	if (cs) {
+		cs->setCollisionDetectionStrategy(_cdt);
+	}
+}

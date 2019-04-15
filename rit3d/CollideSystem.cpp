@@ -10,6 +10,7 @@ CollideSystem::CollideSystem(RInt od) : ISystem(od) {
 
 CollideSystem::~CollideSystem() {
 	_deleteBVHTree(m_BHVTree);
+	_deleteOctree(m_octree);
 }
 
 CollideSystem* CollideSystem::CreateInstance(RInt od) {
@@ -69,72 +70,72 @@ void CollideSystem::onRemoveGameObject() {
 
 //系统更新时调用
 void CollideSystem::onUpdate() {
-	static int counts_intersect1 = 0, counts_intersect2 = 0, counts_calc1 = 0, counts_calc2 = 0;
-	int count_intersect1 = 0, count_intersect2 = 0, count_calc1 = 0, count_calc2 = 0;
 	//计算所有碰撞组件在世界坐标系下的几何信息
 	calcGeomInfoInWorld();
-	std::vector<CCollider*>::size_type i, j;
-	std::vector<CCollider*>::size_type l = m_colliderPool.size();
-	for (i = 0; i < l; i++) {
-		for (j = i + 1; j < l; j++) {
-			count_calc1++;
-			if (_intersectionTest(m_colliderPool[i]->wBV, m_colliderPool[j]->wBV)) {
-				count_intersect1++;
+	if(m_cdt & CDT::TRAVERSAL) {
+		m_cc1 = m_ci1 = 0;
+		std::vector<CCollider*>::size_type i, j;
+		std::vector<CCollider*>::size_type l = m_colliderPool.size();
+		for (i = 0; i < l; i++) {
+			for (j = i + 1; j < l; j++) {
+				m_cc1++;
+				if (_intersectionTest(m_colliderPool[i]->wBV, m_colliderPool[j]->wBV)) {
+					m_ci1++;
+				}
 			}
 		}
 	}
+	if(m_cdt & CDT::BVH) {
+		m_cc2 = m_ci2 = 0;
+		std::vector<CCollider*>::size_type i;
+		std::vector<CCollider*>::size_type l = m_colliderPool.size();
+		//构建BVH树
+		_buildBVHTree();
+		//每个碰撞组件和BVH树做碰撞检测
+		for (i = 0; i < l; i++) {
+			CCollider* sc = m_colliderPool[i];
+			IBV* bv = sc->wBV;
+			std::vector<BVHNode*>::size_type k = 1;
+			while (k < m_BHVArray.size()) {
+				BVHNode* curr = m_BHVArray[k];
+				if (curr->nodeType == BVHNODETYPE::LEAF) {
+					//是叶子节点
+					if (curr->pc == sc) {
+						curr->active = false;
+					}
+					if (curr->active) {
+						m_cc2++;
+						if (_intersectionTest(bv, curr->bv)) {
+							m_ci2++;
+						}
+					}
+				}
+				else {
+					//不是叶子节点
+					m_cc2++;
+					if (!_intersectionTest(bv, curr->bv)) {
+						while (curr->nodeType == BVHNODETYPE::NODE) {
+							k = curr->offset;
+							curr = m_BHVArray[k];
+						}
+					}
+				}
+				k++;
+			}
 
-	//构建BVH树
-	_buildBVHTree();
-	//每个碰撞组件和BVH树做碰撞检测
-	for (i = 0; i < l; i++) {
-		CCollider* sc = m_colliderPool[i];
-		IBV* bv = sc->wBV;
-		std::vector<BVHNode*>::size_type k = 1;
-		while (k < m_BHVArray.size()) {
-			BVHNode* curr = m_BHVArray[k];
-			if (curr->nodeType == BVHNODETYPE::LEAF) {
-				//是叶子节点
-				if (curr->pc == sc) {
-					curr->active = false;
-				}
-				if (curr->active) {
-					count_calc2++;
-					if (_intersectionTest(bv, curr->bv)) {
-						count_intersect2++;
-					}
-				}
-			}
-			else {
-				//不是叶子节点
-				count_calc2++;
-				if (!_intersectionTest(bv, curr->bv)) {
-					while (curr->nodeType == BVHNODETYPE::NODE) {
-						k = curr->offset;
-						curr = m_BHVArray[k];
-					}
-				}
-			}
-			k++;
 		}
-	
 	}
 
-	if (count_intersect1 != counts_intersect1) {
-		counts_intersect1 = count_intersect1;
-		cout << "counts_intersect1:" << counts_intersect1 << endl;
+	if (m_cdt & CDT::OCTREE) {
+		m_cc3 = m_ci3 = 0;
+		//构建Octree
+		_buildOctree();
+		//所有对象的碰撞检测
+		_testAllCollisionsInOctree(m_octree);
 	}
-	if (count_intersect2 != counts_intersect2) {
-		counts_intersect2 = count_intersect2;
-		cout << "counts_intersect2:" << counts_intersect2 << endl;
-	}
-	if (count_calc1 != counts_calc1) {
-		counts_calc1 = count_calc1;
-		cout << "counts_calc1:" << counts_calc1 << endl;
-	}
-	if (count_calc2 != counts_calc2) {
-		counts_calc2 = count_calc2;
-		cout << "counts_calc2:" << counts_calc2 << endl;
+
+	if (m_cdt & CDT::BST) {
+
 	}
 }
 
@@ -151,6 +152,12 @@ void CollideSystem::onDisable() {
 //系统被注销时调用
 void CollideSystem::onDestroy() {
 
+}
+
+//设置碰撞检测策略
+void CollideSystem::setCollisionDetectionStrategy(int _cdt) {
+	if (m_cdt == _cdt) return;
+	m_cdt = _cdt;
 }
 
 //计算所有碰撞组件在世界坐标系下的几何信息
@@ -301,4 +308,121 @@ int CollideSystem::_partition(int start, int end, glm::vec3 dir, glm::vec3 point
 		}
 	}
 	return j;
+}
+
+//构建octree
+void CollideSystem::_buildOctree() {
+	//清除原有的树
+	_deleteOctree(m_octree);
+	//计算octree根节点的中心和半径
+	int l = m_colliderPool.size();
+	if (l == 0) return;
+	glm::vec3 c = glm::vec3(0.0f, 0.0f, 0.0f);//根节点中心
+	RFloat hw = 0.0f;//根节点立方体宽度的一半
+	for (int i = 0; i < l; i++) {
+		c += ((SphereBV*)m_colliderPool[i]->wBV)->c;
+	}
+	c /= l;
+	for (int i = 0; i < l; i++) {
+		CCollider* collider = m_colliderPool[i];
+		glm::vec3 deltaC = glm::abs(c - ((SphereBV*)collider->wBV)->c) + ((SphereBV*)collider->wBV)->r;
+		RFloat nhw = glmp::max(deltaC);
+		if (nhw > hw) hw = nhw;
+	}
+	//初始化一颗指定深度的octree
+	m_octree = _buildOctreeCore(c, hw, m_octreeDepth);
+
+	//在octree中插入碰撞组件
+	for (int i = 0; i < l; i++) {
+		_insertCollider(m_octree, m_colliderPool[i]);
+	}
+}
+
+OctreeNode* CollideSystem::_buildOctreeCore(glm::vec3 center, RFloat halfWidth, int stopDepth) {
+	if (stopDepth <= 0) return nullptr;
+
+	OctreeNode* pNode = new OctreeNode;
+	pNode->center = center;
+	pNode->halfWidth = halfWidth;
+
+	glm::vec3 offset;
+	RFloat step = halfWidth * 0.5f;
+	for (int i = 0; i < 8; i++) {
+		offset.x = ((i & 1) ? step : -step);
+		offset.y = ((i & 2) ? step : -step);
+		offset.z = ((i & 4) ? step : -step);
+		pNode->pChild[i] = _buildOctreeCore(center + offset, step, stopDepth - 1);
+	}
+	/*
+	挂限号   i(2)   i(10)
+	I       111    7
+	II      011    3
+	III     010    2
+	IV      110    6
+	V       101    5
+	VI      001    1
+	VII     000    0
+	VIII    100    4
+	*/
+	return pNode;
+}
+
+//在octree中插入碰撞组件
+void CollideSystem::_insertCollider(OctreeNode* pTree, CCollider* pC) {
+	RInt index = 0;//挂限标识
+	RBool straddle = false;//是否同时与多个子挂限相交
+	for (int i = 0; i < 3; i++) {
+		float delta = ((SphereBV*)pC->wBV)->c[i] - pTree->center[i];
+		if (abs(delta) < ((SphereBV*)pC->wBV)->r) {
+			straddle = true;
+			break;
+		}
+		if (delta > 0.0f) {
+			index |= (1 << i);
+		}
+	}
+	if (!straddle && pTree->pChild[index]) {
+		//不同时与多个子挂限相交，同时存在子挂限，插入到子挂限中
+		_insertCollider(pTree->pChild[index], pC);
+	}
+	else {
+		//否则(同时与多个子挂限相交，或不存在子挂限)，插入到当前节点中
+		pTree->cList.push_back(pC);
+	}
+}
+
+//删除octree
+void CollideSystem::_deleteOctree(OctreeNode* pNode) {
+	if (nullptr == pNode) return;
+	for (int i = 0; i < 8; i++) {
+		_deleteOctree(pNode->pChild[i]);
+	}
+	SafeDelete(pNode);
+}
+
+//octree中对象碰撞检测
+void CollideSystem::_testAllCollisionsInOctree(OctreeNode* pTree) {
+	//不仅要和本节点中的对象碰撞检测，还要和所有祖先结点中的所有对象碰撞检测
+	static OctreeNode* ancestorStack[MAX_OCTREE_DEPTH];
+	static int depth = 0;
+	ancestorStack[depth++] = pTree;
+	for (int n = 0; n < depth; n++) {
+		for (auto pC1 : ancestorStack[n]->cList) {
+			for (auto pC2 : pTree->cList) {
+				if (pC1 == pC2) break;
+				m_cc3++;
+				if (_intersectionTest(pC1->wBV, pC2->wBV)) {
+					m_ci3++;
+				}
+			}
+		}
+	}
+
+	//遍历子树
+	for (int i = 0; i < 8; i++) {
+		if (pTree->pChild[i])
+			_testAllCollisionsInOctree(pTree->pChild[i]);
+	}
+
+	depth--;
 }

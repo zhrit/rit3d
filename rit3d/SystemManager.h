@@ -59,4 +59,7 @@ public:
 	virtual void onKeyDown(int key);
 	virtual void onKeyKeep(int key);
 	virtual void onKeyUp(int key);
+
+	//ÉèÖÃÅö×²¼ì²â²ßÂÔ
+	void setCollisionDetectionStrategy(int _cdt);
 };

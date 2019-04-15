@@ -3,11 +3,31 @@
 #include "ISystem.h"
 #include "CCollider.h"
 
+//碰撞检测策略 Collision detection strategy
+enum CDT {
+	TRAVERSAL = 1,//暴力遍历法
+	BVH = 2,//层次包围盒
+	OCTREE = 4,//八叉树
+	BST = 8,//二分空间划分树
+};
+
 //BVH树节点类型，叶子节点和非叶子节点
 enum BVHNODETYPE {
 	NODE,
 	LEAF,
 };
+
+//Octree节点
+class OctreeNode {
+public:
+	glm::vec3 center;
+	RFloat halfWidth;
+	OctreeNode* pChild[8]{ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	std::list<CCollider*> cList;
+};
+
+const int MAX_OCTREE_DEPTH = 5;
+
 //BVH树节点
 class BVHNode {
 public:
@@ -34,6 +54,8 @@ private:
 
 	std::vector<CCollider*> m_colliderPool;
 	std::function<RBool(IBV*, IBV*)> m_intersectionMethod[2][2];
+	int m_cdt{ CDT::TRAVERSAL };
+	int m_cc1, m_ci1, m_cc2, m_ci2, m_cc3, m_ci3;
 public:
 	static CollideSystem* CreateInstance(RInt od);
 
@@ -70,6 +92,9 @@ public:
 	//系统被注销时调用
 	virtual void onDestroy();
 
+	//设置碰撞检测策略
+	void setCollisionDetectionStrategy(int _cdt);
+
 private:
 	//相交检测
 	RBool _intersectionTest(IBV* _bv1, IBV* _bv2);
@@ -96,5 +121,19 @@ private:
 	IBV* _computeBoundingVolumn(int start, int end, glm::vec3& separating_axis);
 	//划分节点
 	int _partition(int start, int end, glm::vec3 dir, glm::vec3 point);
+
+	//----关于八叉树-----
+	RInt m_octreeDepth{ 2 };//树深度
+	OctreeNode* m_octree{ nullptr };//八叉树
+
+	//构建octree
+	void _buildOctree();
+	OctreeNode* _buildOctreeCore(glm::vec3 center, RFloat halfWidth, int stopDepth);
+	//在octree中插入碰撞组件
+	void _insertCollider(OctreeNode* pTree, CCollider* pC);
+	//删除octree
+	void _deleteOctree(OctreeNode* pNode);
+	//octree中对象碰撞检测
+	void _testAllCollisionsInOctree(OctreeNode* pTree);
 };
 
