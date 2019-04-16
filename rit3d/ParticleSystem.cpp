@@ -22,33 +22,19 @@ ParticleSystem* ParticleSystem::CreateInstance(RInt od) {
 //系统初始化时调用
 void ParticleSystem::onAwake() {
 	RFloat vertices[] = {
-		-0.1f, 0.1f, 0.0f, 0.0f, 1.0f,
-		-0.1f, -0.1f, 0.0f, 0.0f, 0.0f,
-		0.1f, -0.1f, 0.0f, 1.0f, 0.0f,
-		0.1f, 0.1f, 0.0f, 1.0f, 1.0f
-	};
-	RUInt indices[] = {
-		0, 1, 2,
-		0, 2, 3
+		0.0f, 0.0f, 0.0f
 	};
 	//创建attay buffer
-	RUInt vbo, ebo;
-	glGenVertexArrays(1, &m_rectVAO);
+	RUInt vbo;
+	glGenVertexArrays(1, &m_VAO);
 	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
 
-	glBindVertexArray(m_rectVAO);
+	glBindVertexArray(m_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 20 * sizeof(float), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-	//attribute
+	glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(float), vertices, GL_STATIC_DRAW);
 	//position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	//uv
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
 }
 
 //系统被激活时调用
@@ -158,7 +144,7 @@ void ParticleSystem::_updateParticles(DWORD deltaT) {
 void ParticleSystem::_drawParticles() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glBindVertexArray(m_rectVAO);
+	glBindVertexArray(m_VAO);
 	std::list<CCamera*> cameraList = SCLightCameraCollecter::Instance()->getCameraList();
 	for (auto camera : cameraList) {
 		for (auto cp : m_particlePool) {
@@ -172,7 +158,7 @@ void ParticleSystem::_drawParticles() {
 			for (auto par : cp->particles) {
 				if (par.life > 0.0f) {
 					cp->shader->setVec3("uOffset", par.position);
-					glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+					glDrawArrays(GL_POINTS, 0, 1);
 				}
 			}
 		}

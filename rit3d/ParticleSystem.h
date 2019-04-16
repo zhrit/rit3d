@@ -11,7 +11,7 @@ private:
 
 	std::vector<CParticle*> m_particlePool;
 
-	RUInt m_rectVAO;
+	RUInt m_VAO;
 public:
 	void addParticle(CParticle* _b);
 	void removeParticle(CParticle* _b);

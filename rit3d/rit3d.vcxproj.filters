@@ -403,5 +403,8 @@
     <None Include="particle_simple.frag">
       <Filter>src\asset\shader</Filter>
     </None>
+    <None Include="particle_simple.geom">
+      <Filter>src\asset\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -277,6 +277,7 @@
     <None Include="grayscale.frag" />
     <None Include="inversion.frag" />
     <None Include="particle_simple.frag" />
+    <None Include="particle_simple.geom" />
     <None Include="particle_simple.vert" />
     <None Include="pbr.frag" />
     <None Include="pbr.vert" />

@@ -981,7 +981,7 @@ void example_particle_1() {
 
 	//Çò1
 	RGameObject* sphere1 = pSce->addGameObject();
-	sphere1->transform->setLocalPosition(0.0f, 0.0f, 0.0f);
+	sphere1->transform->setLocalPosition(1.5f, 0.0f, 0.0f);
 	sphere1->transform->setLocalScale(1.0f, 1.0f, 1.0f);
 	CRender* sphererender1 = (CRender*)sphere1->addComponent(RENDER);
 	sphererender1->addMesh(app->resourceMng->getMesh("sphere"));
