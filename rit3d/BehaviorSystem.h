@@ -36,7 +36,7 @@ public:
 	virtual void onRemoveGameObject();
 
 	//系统更新时调用
-	virtual void onUpdate();
+	virtual void onUpdate(DWORD deltaT);
 
 	//系统更新时onUpdate之后调用
 	virtual void onLateUpdate();

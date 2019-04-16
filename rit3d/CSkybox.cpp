@@ -5,6 +5,7 @@
 #include "ResourceManager.h"
 
 CSkybox::CSkybox() {
+	m_type = COMPTYPE::SKYBOX;
 	//´´½¨cubetexµÄvao
 	RFloat vertices[] = {
 		-1.0f, -1.0f, -1.0f,

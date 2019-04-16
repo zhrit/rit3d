@@ -51,7 +51,7 @@ void DebugSystem::onRemoveGameObject() {
 }
 
 //系统更新时调用
-void DebugSystem::onUpdate() {
+void DebugSystem::onUpdate(DWORD deltaT) {
 	m_fps.update();
 }
 

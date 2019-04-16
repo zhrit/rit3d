@@ -124,7 +124,6 @@ private:
 public:
 	virtual void onStart() {
 		startTime = ::GetTickCount();
-		srand((unsigned)time(NULL));
 	}
 	virtual void onUpdate() {
 		DWORD delta = ::GetTickCount() - startTime;
@@ -926,7 +925,6 @@ void example_collide_1() {
 	sphererender2->addMaterial(mat2);
 	CSphereCollider* coll2 = (CSphereCollider*)sphere2->addComponent(SPHERECOLLIDER);
 
-	srand((unsigned)time(NULL));
 	for (int i = 0; i <200; i++) {
 		RGameObject* sphere = pSce->addGameObject();
 		RFloat x = (float)rand() / (float)RAND_MAX * 5.0f - 2.5f;
@@ -943,6 +941,54 @@ void example_collide_1() {
 			sphereBehavior->setBehavior(new RandomMove());
 		}
 	}
+
+	//相机
+	RGameObject* CO = pSce->addGameObject();
+	CO->transform->setLocalPosition(0.0f, 0.0f, 6.0f);
+	CO->transform->setLocalFrontDir(0.0f, 0.0f, -3.0f);
+	CO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CCamera* cam = (CCamera*)CO->addComponent(COMPTYPE::CAMERA);
+	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
+	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+	cam->setViewport(0, 0, 1000, 800);
+	CBehavior* cameraBehavior1 = (CBehavior*)CO->addComponent(BEHAVIOR);
+	cameraBehavior1->setBehavior(new CameraScript());
+
+	//平行光
+	RGameObject* LO = pSce->addGameObject();
+	LO->transform->setLocalPosition(3.0f, 1.5f, 0.0f);
+	LO->transform->setLocalFrontDir(-1.0f, -0.5f, 0.0f);
+	LO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
+	CLight* light = (CLight*)LO->addComponent(COMPTYPE::LIGHT);
+	light->setColor(1.0f, 1.0f, 1.0f);
+	light->setLightType(LIGHTTYPE::DIRECTION);
+	light->setEnabled(true);
+}
+
+
+/**
+ *粒子
+ */
+void example_particle_1() {
+	cout << "particle" << endl;
+	Application* app = Application::Instance();
+	RScene* pSce = app->sceneMng->createScene();
+
+	Texture* tex1 = app->resourceMng->createTexture("resources/textures/container.jpg");
+	Material* mat2 = app->resourceMng->createMaterial("mat2");
+	mat2->setShader("phong");
+	mat2->setColor(1.0f, 1.0f, 1.0f);
+
+	//球1
+	RGameObject* sphere1 = pSce->addGameObject();
+	sphere1->transform->setLocalPosition(0.0f, 0.0f, 0.0f);
+	sphere1->transform->setLocalScale(1.0f, 1.0f, 1.0f);
+	CRender* sphererender1 = (CRender*)sphere1->addComponent(RENDER);
+	sphererender1->addMesh(app->resourceMng->getMesh("sphere"));
+	sphererender1->addMaterial(mat2);
+	CParticle* par1 = (CParticle*)sphere1->addComponent(PARTICLE);
+	par1->spirit = tex1;
+	par1->shader = Application::Instance()->resourceMng->getShader("particle_simple");
 
 	//相机
 	RGameObject* CO = pSce->addGameObject();

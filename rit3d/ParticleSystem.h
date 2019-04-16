@@ -2,13 +2,20 @@
 #include "RCommon.h"
 #include "ISystem.h"
 
-class LightAndCameraSystem : public ISystem {
+class CParticle;
+class CCamera;
+class ParticleSystem : public ISystem {
 private:
-	LightAndCameraSystem(RInt od);
-	virtual ~LightAndCameraSystem();
+	ParticleSystem(RInt od);
+	virtual ~ParticleSystem();
 
+	std::vector<CParticle*> m_particlePool;
+
+	RUInt m_rectVAO;
 public:
-	static LightAndCameraSystem* CreateInstance(RInt od);
+	void addParticle(CParticle* _b);
+	void removeParticle(CParticle* _b);
+	static ParticleSystem* CreateInstance(RInt);
 
 	//系统初始化时调用
 	virtual void onAwake();
@@ -42,7 +49,12 @@ public:
 
 	//系统被注销时调用
 	virtual void onDestroy();
+
+private:
+	//更新粒子信息
+	void _updateParticles(DWORD deltaT);
+	//渲染粒子
+	void _drawParticles();
+	//寻找一个没用的粒子
+	RInt _findUnusedParticle(CParticle* cp);
 };
-
-
-

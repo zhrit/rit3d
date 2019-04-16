@@ -35,8 +35,8 @@ void ISystem::uninitSystem() {
 }
 
 //系统更新
-void ISystem::update() {
-	this->onUpdate();
+void ISystem::update(DWORD deltaT) {
+	this->onUpdate(deltaT);
 }
 
 //系统更新2

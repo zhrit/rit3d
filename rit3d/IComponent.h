@@ -17,6 +17,8 @@ typedef enum {
 	//物理相关组件
 	SPHERECOLLIDER,
 	BOXCOLLIDER,
+	//粒子组件
+	PARTICLE,
 
 	//单例组件
 	LIGHTCAMERACOLLECTER,

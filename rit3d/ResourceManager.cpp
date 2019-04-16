@@ -517,6 +517,7 @@ void ResourceManager::createDefaultShader() {
 	createShader("gaussianBlur", "postProcess.vert", "gaussianBlur.frag", "", "");
 	createShader("deferGeom", "deferGeom.vert", "deferGeom.frag", "", "");
 	createShader("deferLight", "deferLight.vert", "deferLight.frag", "", "");
+	createShader("particle_simple", "particle_simple.vert", "particle_simple.frag", "", "");
 }
 
 //根据vertices和indices计算normals

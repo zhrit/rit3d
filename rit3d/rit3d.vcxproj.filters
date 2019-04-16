@@ -177,6 +177,12 @@
     <ClInclude Include="DebugSystem.h">
       <Filter>src\systems</Filter>
     </ClInclude>
+    <ClInclude Include="CParticle.h">
+      <Filter>src\components\ordinary</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -302,6 +308,12 @@
     <ClCompile Include="DebugSystem.cpp">
       <Filter>src\systems</Filter>
     </ClCompile>
+    <ClCompile Include="CParticle.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>src\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="simple.vert">
@@ -383,6 +395,12 @@
       <Filter>src\asset\shader</Filter>
     </None>
     <None Include="deferLight.frag">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="particle_simple.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="particle_simple.frag">
       <Filter>src\asset\shader</Filter>
     </None>
   </ItemGroup>

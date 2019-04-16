@@ -17,4 +17,5 @@
 #include "CPostProcess.h"
 #include "CBehavior.h"
 #include "CCollider.h"
+#include "CParticle.h"
 #include "BaseBehavior.h"

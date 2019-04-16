@@ -76,6 +76,7 @@ RUInt Application::IDAllocator() {
 
 //引擎初始化
 void Application::_initApp() {
+	srand((unsigned)time(NULL));
 	//初始化系统管理类
 	systemMng = SystemManager::Instance();
 	//初始化场景管理器
@@ -93,6 +94,7 @@ void Application::_initApp() {
 	systemMng->registSystem(COLLIDESYSTEM, 4);
 	systemMng->registSystem(LIGHTANDCAMERA, 5);
 	systemMng->registSystem(RENDERSYSTEM, 6);
+	systemMng->registSystem(PARTICLESYSTEM, 7);
 
 	//获取窗口环境
 	GLFWwindow* wd = m_window->getWindowContext();

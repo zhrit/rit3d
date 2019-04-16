@@ -48,7 +48,7 @@ void StartSystem::onRemoveGameObject() {
 }
 
 //系统更新时调用
-void StartSystem::onUpdate() {
+void StartSystem::onUpdate(DWORD deltaT) {
 	
 }
 

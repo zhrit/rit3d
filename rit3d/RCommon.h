@@ -22,6 +22,7 @@
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
+#include <time.h>
 
 #include "stb_image.h"
 using std::cout;

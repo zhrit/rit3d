@@ -92,7 +92,7 @@ void RenderSystem::onRemoveGameObject() {
 }
 
 //系统更新时调用
-void RenderSystem::onUpdate() {
+void RenderSystem::onUpdate(DWORD deltaT) {
 	_render();
 }
 

@@ -171,6 +171,7 @@
     <ClInclude Include="CCollider.h" />
     <ClInclude Include="CLight.h" />
     <ClInclude Include="CollideSystem.h" />
+    <ClInclude Include="CParticle.h" />
     <ClInclude Include="CPostProcess.h" />
     <ClInclude Include="CRender.h" />
     <ClInclude Include="CSkybox.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="ISingletonComponent.h" />
     <ClInclude Include="ISystem.h" />
     <ClInclude Include="LightAndCameraSystem.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="SCLightCameraCollecter.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
@@ -214,6 +216,7 @@
     <ClCompile Include="CCollider.cpp" />
     <ClCompile Include="CLight.cpp" />
     <ClCompile Include="CollideSystem.cpp" />
+    <ClCompile Include="CParticle.cpp" />
     <ClCompile Include="CPostProcess.cpp" />
     <ClCompile Include="CRender.cpp" />
     <ClCompile Include="CSkybox.cpp" />
@@ -234,6 +237,7 @@
     <ClCompile Include="ISingletonComponent.cpp" />
     <ClCompile Include="ISystem.cpp" />
     <ClCompile Include="LightAndCameraSystem.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="SCLightCameraCollecter.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -272,6 +276,8 @@
     <None Include="gaussianBlur.frag" />
     <None Include="grayscale.frag" />
     <None Include="inversion.frag" />
+    <None Include="particle_simple.frag" />
+    <None Include="particle_simple.vert" />
     <None Include="pbr.frag" />
     <None Include="pbr.vert" />
     <None Include="phong.frag" />

@@ -54,7 +54,7 @@ void BehaviorSystem::onRemoveGameObject() {
 }
 
 //系统更新时调用
-void BehaviorSystem::onUpdate() {
+void BehaviorSystem::onUpdate(DWORD deltaT) {
 	for (auto iter : m_behaviorPool) {
 		iter->getBehavior()->update();
 	}

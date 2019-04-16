@@ -110,8 +110,8 @@ void CTransform::setLocalFrontDir(float x, float y, float z) {
 
 //全局获取几何信息
 glm::vec3 CTransform::getPosition() {
-	//todo
-	return m_localPosition;
+	getModelMatrix();
+	return glm::vec3(m_modelMatrix[3]);
 }
 glm::vec3 CTransform::getAngle() {
 	//todo

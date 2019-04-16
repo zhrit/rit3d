@@ -9,10 +9,12 @@
 #include "CSkybox.h"
 #include "CBehavior.h"
 #include "CCollider.h"
+#include "CParticle.h"
 #include "SCLightCameraCollecter.h"
 #include "RenderSystem.h"
 #include "BehaviorSystem.h"
 #include "CollideSystem.h"
+#include "ParticleSystem.h"
 #include "LightAndCameraSystem.h"
 #include "DebugSystem.h"
 
@@ -49,6 +51,7 @@ void SystemManager::registSystemCreateFunc() {
 	ISystem::systemMap[COLLIDESYSTEM] = CollideSystem::CreateInstance;
 	ISystem::systemMap[LIGHTANDCAMERA] = LightAndCameraSystem::CreateInstance;
 	ISystem::systemMap[DEBUGSYSTEM] = DebugSystem::CreateInstance;
+	ISystem::systemMap[PARTICLESYSTEM] = ParticleSystem::CreateInstance;
 }
 
 //注册各个组件的创建函数，组件只能通过创建函数创建，不能直接new
@@ -63,6 +66,7 @@ void SystemManager::registCompCreateFunc() {
 	IComponent::compMap[SKYBOX] = CSkybox::CreateInstance;
 	IComponent::compMap[SPHERECOLLIDER] = CSphereCollider::CreateInstance;
 	IComponent::compMap[BOXCOLLIDER] = CBoxCollider::CreateInstance;
+	IComponent::compMap[PARTICLE] = CParticle::CreateInstance;
 }
 
 //初始化必要的单例组件
@@ -96,6 +100,10 @@ void SystemManager::registSystem(SYSTEMTYPE type, RInt od) {
 
 //系统更新入口
 void SystemManager::update() {
+	static DWORD lastTime = ::GetTickCount();
+	DWORD nowTime = ::GetTickCount();
+	DWORD deltaT = nowTime - lastTime;
+	lastTime = nowTime;
 	//onStart()
 	for (auto st : m_systemList) {
 		if (st->isEnabled() && !st->isStarted()) {
@@ -107,7 +115,7 @@ void SystemManager::update() {
 	for (auto st : m_systemList) {
 		if (st->isEnabled()) {
 			DWORD t1 = ::GetTickCount();
-			st->update();
+			st->update(deltaT);
 			m_elapsedTime[st->getType()] += ::GetTickCount() - t1;
 		}
 	}
@@ -117,6 +125,7 @@ void SystemManager::update() {
 			st->lateUpdate();
 		}
 	}
+
 	if (clock_display.isInterval()) {
 		for (auto& iter : m_elapsedTime) {
 			cout << "system_" << iter.first << ": " << iter.second << "\n";

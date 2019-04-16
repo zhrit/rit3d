@@ -23,4 +23,13 @@ namespace glmp {
 		RFloat m = (v3.x > v3.y) ? v3.x : v3.y;
 		return (m > v3.z) ? m : v3.z;
 	}
+
+	//随机生成单位向量
+	inline glm::vec3 randomVec3() {
+		RFloat x = rand() / static_cast<RFloat>(RAND_MAX) - 0.5f;
+		RFloat y = rand() / static_cast<RFloat>(RAND_MAX) - 0.5f;
+		RFloat z = rand() / static_cast<RFloat>(RAND_MAX) - 0.5f;
+		RFloat l = 1 / sqrt(x * x + y * y + z * z);
+		return glm::vec3(x * l, y * l, z * l);;
+	}
 }

@@ -69,7 +69,7 @@ void CollideSystem::onRemoveGameObject() {
 }
 
 //系统更新时调用
-void CollideSystem::onUpdate() {
+void CollideSystem::onUpdate(DWORD deltaT) {
 	//计算所有碰撞组件在世界坐标系下的几何信息
 	calcGeomInfoInWorld();
 	if(m_cdt & CDT::TRAVERSAL) {

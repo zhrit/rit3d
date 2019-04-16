@@ -60,7 +60,7 @@ void LightAndCameraSystem::onRemoveGameObject() {
 }
 
 //系统更新时调用
-void LightAndCameraSystem::onUpdate() {
+void LightAndCameraSystem::onUpdate(DWORD deltaT) {
 
 }
 

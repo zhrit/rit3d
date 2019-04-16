@@ -12,6 +12,7 @@ typedef enum {
 	ENDSYSTEM,
 	LIGHTANDCAMERA,
 	DEBUGSYSTEM,
+	PARTICLESYSTEM,
 } SYSTEMTYPE;
 
 /*
@@ -51,7 +52,7 @@ public:
 	void uninitSystem();
 
 	//系统更新
-	void update();
+	void update(DWORD deltaT);
 
 	//系统更新2
 	void lateUpdate();
@@ -92,7 +93,7 @@ public:
 	virtual void onRemoveGameObject() = 0;
 
 	//系统更新时调用
-	virtual void onUpdate() = 0;
+	virtual void onUpdate(DWORD deltaT) = 0;
 
 	//系统更新时onUpdate之后调用
 	virtual void onLateUpdate() = 0;
@@ -146,7 +147,7 @@ public:
 	virtual void onRemoveGameObject();
 
 	//系统更新时调用
-	virtual void onUpdate();
+	virtual void onUpdate(DWORD deltaT);
 
 	//系统更新时onUpdate之后调用
 	virtual void onLateUpdate();
