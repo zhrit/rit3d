@@ -164,8 +164,16 @@ void CollideSystem::setCollisionDetectionStrategy(int _cdt) {
 void CollideSystem::calcGeomInfoInWorld() {
 	for (auto c : m_colliderPool) {
 		CSphereCollider* sc = (CSphereCollider*)c;
-		((SphereBV*)sc->wBV)->c = glm::vec3(sc->gameObject->transform->getModelMatrix() * glm::vec4(sc->center, 1.0f));
-		((SphereBV*)sc->wBV)->r = glmp::max(sc->gameObject->transform->getScale()) * sc->radius;
+		glm::vec3 cw = glm::vec3(sc->gameObject->transform->getModelMatrix() * glm::vec4(sc->center, 1.0f));
+		RFloat rw = glmp::max(sc->gameObject->transform->getScale()) * sc->radius;
+		if (sc->wBV && ((SphereBV*)sc->wBV)->c == cw && ((SphereBV*)sc->wBV)->r == rw) {
+			sc->dirty = false;
+		}
+		else {
+			((SphereBV*)sc->wBV)->c = cw;
+			((SphereBV*)sc->wBV)->r = rw;
+			sc->dirty = true;
+		}
 	}
 }
 
@@ -313,28 +321,33 @@ int CollideSystem::_partition(int start, int end, glm::vec3 dir, glm::vec3 point
 //构建octree
 void CollideSystem::_buildOctree() {
 	//清除原有的树
-	_deleteOctree(m_octree);
-	//计算octree根节点的中心和半径
+	//_deleteOctree(m_octree);
+	//如果octree为空，则建立一颗octree
 	int l = m_colliderPool.size();
 	if (l == 0) return;
-	glm::vec3 c = glm::vec3(0.0f, 0.0f, 0.0f);//根节点中心
-	RFloat hw = 0.0f;//根节点立方体宽度的一半
-	for (int i = 0; i < l; i++) {
-		c += ((SphereBV*)m_colliderPool[i]->wBV)->c;
+	if (nullptr == m_octree) {
+		//计算octree根节点的中心和半径
+		glm::vec3 c = glm::vec3(0.0f, 0.0f, 0.0f);//根节点中心
+		RFloat hw = 0.0f;//根节点立方体宽度的一半
+		for (int i = 0; i < l; i++) {
+			c += ((SphereBV*)m_colliderPool[i]->wBV)->c;
+		}
+		c /= l;
+		for (int i = 0; i < l; i++) {
+			CCollider* collider = m_colliderPool[i];
+			glm::vec3 deltaC = glm::abs(c - ((SphereBV*)collider->wBV)->c) + ((SphereBV*)collider->wBV)->r;
+			RFloat nhw = glmp::max(deltaC);
+			if (nhw > hw) hw = nhw;
+		}
+		//初始化一颗指定深度的octree
+		m_octree = _buildOctreeCore(c, hw, m_octreeDepth);
 	}
-	c /= l;
-	for (int i = 0; i < l; i++) {
-		CCollider* collider = m_colliderPool[i];
-		glm::vec3 deltaC = glm::abs(c - ((SphereBV*)collider->wBV)->c) + ((SphereBV*)collider->wBV)->r;
-		RFloat nhw = glmp::max(deltaC);
-		if (nhw > hw) hw = nhw;
-	}
-	//初始化一颗指定深度的octree
-	m_octree = _buildOctreeCore(c, hw, m_octreeDepth);
 
 	//在octree中插入碰撞组件
 	for (int i = 0; i < l; i++) {
-		_insertCollider(m_octree, m_colliderPool[i]);
+		if (m_colliderPool[i]->dirty) {
+			_insertCollider(m_octree, m_colliderPool[i]);
+		}
 	}
 }
 
@@ -387,7 +400,14 @@ void CollideSystem::_insertCollider(OctreeNode* pTree, CCollider* pC) {
 	}
 	else {
 		//否则(同时与多个子挂限相交，或不存在子挂限)，插入到当前节点中
-		pTree->cList.push_back(pC);
+		if (pC->paNode != pTree) {
+			if (pC->paNode) {
+				//从原来的移除
+				pC->paNode->cList.remove(pC);
+			}
+			pTree->cList.push_back(pC);
+			pC->paNode = pTree;
+		}
 	}
 }
 
@@ -407,8 +427,8 @@ void CollideSystem::_testAllCollisionsInOctree(OctreeNode* pTree) {
 	static int depth = 0;
 	ancestorStack[depth++] = pTree;
 	for (int n = 0; n < depth; n++) {
-		for (auto pC1 : ancestorStack[n]->cList) {
-			for (auto pC2 : pTree->cList) {
+		for (auto pC1 : pTree->cList) {
+			for (auto pC2 : ancestorStack[n]->cList) {
 				if (pC1 == pC2) break;
 				m_cc3++;
 				if (_intersectionTest(pC1->wBV, pC2->wBV)) {

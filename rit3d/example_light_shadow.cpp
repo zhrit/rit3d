@@ -116,6 +116,28 @@ public:
 		//cout << "lateUpdate!" << endl;
 	}
 };
+class RandomMove : public BaseBehavior {
+
+private:
+	DWORD startTime;
+	float speed{ 0.8f };
+public:
+	virtual void onStart() {
+		startTime = ::GetTickCount();
+		srand((unsigned)time(NULL));
+	}
+	virtual void onUpdate() {
+		DWORD delta = ::GetTickCount() - startTime;
+		float dx = (rand() / (float)RAND_MAX - 0.5f) * speed;
+		float dy = (rand() / (float)RAND_MAX - 0.5f) * speed;
+		float dz = (rand() / (float)RAND_MAX - 0.5f) * speed;
+		glm::vec3 oldPos = gameObject->transform->getLocalPosition();
+		gameObject->transform->setLocalPosition(oldPos.x + dx, oldPos.y + dy, oldPos.y + dy);
+	}
+	virtual void onLateUpdate() {
+		//cout << "lateUpdate!" << endl;
+	}
+};
 /**
  *光照和阴影
  */
@@ -916,6 +938,10 @@ void example_collide_1() {
 		sphererender->addMesh(app->resourceMng->getMesh("sphere"));
 		sphererender->addMaterial(mat2);
 		CSphereCollider* coll = (CSphereCollider*)sphere->addComponent(SPHERECOLLIDER);
+		if (i >= 190) {
+			CBehavior* sphereBehavior = (CBehavior*)sphere->addComponent(BEHAVIOR);
+			sphereBehavior->setBehavior(new RandomMove());
+		}
 	}
 
 	//相机

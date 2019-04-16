@@ -135,5 +135,8 @@ private:
 	void _deleteOctree(OctreeNode* pNode);
 	//octreeÖĞ¶ÔÏóÅö×²¼ì²â
 	void _testAllCollisionsInOctree(OctreeNode* pTree);
+
+	//----»º´æ----
+	//std::map<CCollider*, std::map<CCollider*, RBool>> m_cache;
 };
 

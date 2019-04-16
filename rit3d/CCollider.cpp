@@ -13,8 +13,6 @@ CCollider::~CCollider() {
 	}
 }
 
-
-
 CSphereCollider::CSphereCollider() {
 	m_type = COMPTYPE::SPHERECOLLIDER;
 	wBV = new SphereBV;

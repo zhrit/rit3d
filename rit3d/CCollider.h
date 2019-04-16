@@ -2,6 +2,8 @@
 #include "RCommon.h"
 #include "IComponent.h"
 
+class OctreeNode;
+
 //包围盒类型
 typedef enum {
 	SPHEREBV = 0,
@@ -34,6 +36,10 @@ public:
 
 	//世界坐标系下的碰撞盒，引擎内部计算用得数据结构。对外不可见，对外可见得只有上面得属性。
 	IBV* wBV{ nullptr };
+	//相比与上一帧，包围盒是否发生变化。根据此信息决定是否更新在八叉树中的位置
+	RBool dirty{ true };
+	//组件在八叉树所属的节点
+	OctreeNode* paNode;
 };
 
 //球碰撞组件
