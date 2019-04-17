@@ -974,22 +974,47 @@ void example_particle_1() {
 	Application* app = Application::Instance();
 	RScene* pSce = app->sceneMng->createScene();
 
-	Texture* tex1 = app->resourceMng->createTexture("resources/textures/container.jpg");
+	Texture* texs[3] = { app->resourceMng->createTexture("resources/textures/particle1.png"),
+		app->resourceMng->createTexture("resources/textures/particle2.png"),
+		app->resourceMng->createTexture("resources/textures/particle3.png") };
 	Material* mat2 = app->resourceMng->createMaterial("mat2");
 	mat2->setShader("phong");
 	mat2->setColor(1.0f, 1.0f, 1.0f);
-
-	//Çò1
-	RGameObject* sphere1 = pSce->addGameObject();
-	sphere1->transform->setLocalPosition(1.5f, 0.0f, 0.0f);
-	sphere1->transform->setLocalScale(1.0f, 1.0f, 1.0f);
-	CRender* sphererender1 = (CRender*)sphere1->addComponent(RENDER);
-	sphererender1->addMesh(app->resourceMng->getMesh("sphere"));
-	sphererender1->addMaterial(mat2);
-	CParticle* par1 = (CParticle*)sphere1->addComponent(PARTICLE);
-	par1->spirit = tex1;
-	par1->shader = Application::Instance()->resourceMng->getShader("particle_simple");
-
+	//Á£×Ó
+	for (int i = 0; i < 3; i++) {
+		RGameObject* sphere1 = pSce->addGameObject();
+		RFloat rx = rand() / (float)RAND_MAX * 6.0f - 3.0f;
+		RFloat ry = rand() / (float)RAND_MAX * 2.0f + 1.0f;
+		sphere1->transform->setLocalPosition(rx, ry, -4.0f);
+		CParticle* par1 = (CParticle*)sphere1->addComponent(PARTICLE);
+		par1->spirit = texs[i];
+		par1->shader = Application::Instance()->resourceMng->getShader("particle_simple");
+		par1->emissionFunc = [](CParticle* cp, Particle& par) -> void {
+			par.position = glm::vec3(0.0f, 0.0f, 0.0f);
+			par.velocity = glmp::randomVec3() * cp->startSpeed;
+			par.size = cp->startSize;
+			par.brightness = 0.5f;
+		};
+		par1->updateFunc = [](CParticle* cp, Particle& par, DWORD deltaT) -> void {
+			par.velocity += cp->accelerat * (deltaT / 1000.0f);
+			par.velocity += par.velocity * (-0.4f * deltaT / 1000.0f);
+			par.position += par.velocity * (deltaT / 1000.0f);
+			par.size += (cp->endSize - cp->startSize) * (deltaT / 1000.0f / cp->lifeTime);
+			if (par.life <= cp->lifeTime / 4.0f) {
+				par.brightness = 4.0f / cp->lifeTime * par.life;
+			}
+			else {
+				par.brightness = -0.67f / cp->lifeTime * par.life + 1.17f;
+			}
+		};
+		par1->emissionType = ET_PILSING;
+		par1->rateOnce = 50;
+		par1->lifeTime = 1.8f;
+		par1->duration = 2.0f;
+		par1->accelerat = glm::vec3(0.0f, -0.8f, 0.0f);
+		par1->startSpeed = 2.0f;
+		//par1->loop = false;
+	}
 	//Ïà»ú
 	RGameObject* CO = pSce->addGameObject();
 	CO->transform->setLocalPosition(0.0f, 0.0f, 6.0f);

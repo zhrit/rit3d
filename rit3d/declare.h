@@ -19,3 +19,4 @@
 #include "CCollider.h"
 #include "CParticle.h"
 #include "BaseBehavior.h"
+#include "RMath.h"

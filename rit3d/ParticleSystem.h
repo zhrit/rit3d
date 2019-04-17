@@ -53,6 +53,8 @@ public:
 private:
 	//更新粒子信息
 	void _updateParticles(DWORD deltaT);
+	//生成粒子
+	void _emissionParticles(CParticle* cp, RInt addNums);
 	//渲染粒子
 	void _drawParticles();
 	//寻找一个没用的粒子

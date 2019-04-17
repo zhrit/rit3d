@@ -115,31 +115,65 @@ void ParticleSystem::_updateParticles(DWORD deltaT) {
 		for (auto& particle : cp->particles) {
 			if (particle.life > 0.0f) {
 				particle.life -= deltaT / 1000.0f;
-				particle.position += particle.velocity * (cp->startSpeed * deltaT / 1000.0f);
+				cp->updateFunc(cp, particle, deltaT);
 			}
 		}
 
 		//增加新的粒子
 		//计算新增粒子数量
-		RInt addNums = static_cast<int>((cp->cumulativeTime + deltaT) / 1000.0f * cp->rateOverTime);
-		cp->cumulativeTime = cp->cumulativeTime + deltaT - addNums / cp->rateOverTime * 1000.0f;
-		for (int i = 0; i < addNums; i++) {
-			int j = _findUnusedParticle(cp);
-			if (j == -1) {
-				Particle par;
-				par.life = cp->lifeTime;
-				par.position = glm::vec3(0.0f, 0.0f, 0.0f);
-				par.velocity = glmp::randomVec3();
-				cp->particles.push_back(par);
+		if (cp->emissionType == ET_CONSECUTIVE) {
+			//连续发射
+			if (cp->loop || cp->latencyTime / 1000.0f < cp->duration) {
+				RInt addNums = static_cast<int>((cp->cumulativeTime + deltaT) / 1000.0f * cp->rateOverTime);
+				cp->cumulativeTime = cp->cumulativeTime + deltaT - addNums / cp->rateOverTime * 1000.0f;
+				_emissionParticles(cp, addNums);
+				if (cp->latencyTime == -1) {
+					cp->latencyTime = 0;
+				}
+				else {
+					cp->latencyTime += deltaT;
+				}
 			}
-			else {
-				cp->particles[j].life = cp->lifeTime;
-				cp->particles[j].position = glm::vec3(0.0f, 0.0f, 0.0f);
-				cp->particles[j].velocity = glmp::randomVec3();
+		}
+		else {
+			//脉冲发射
+			if (cp->latencyTime == -1) {
+				//初次发射
+				cp->latencyTime = 0;
+				RInt addNums = cp->rateOnce;
+				_emissionParticles(cp, addNums);
+			}
+			else if (cp->loop) {
+				if (cp->latencyTime / 1000.0f < cp->duration) {
+					cp->latencyTime += deltaT;
+				}
+				else {
+					cp->latencyTime = 0;
+					RInt addNums = cp->rateOnce;
+					_emissionParticles(cp, addNums);
+				}
 			}
 		}
 	}
 }
+
+//生成粒子
+void ParticleSystem::_emissionParticles(CParticle* cp, RInt addNums) {
+	for (int i = 0; i < addNums; i++) {
+		int j = _findUnusedParticle(cp);
+		if (j == -1) {
+			Particle par;
+			par.life = cp->lifeTime;
+			cp->emissionFunc(cp, par);
+			cp->particles.push_back(par);
+		}
+		else {
+			cp->particles[j].life = cp->lifeTime;
+			cp->emissionFunc(cp, cp->particles[j]);
+		}
+	}
+}
+
 //渲染粒子
 void ParticleSystem::_drawParticles() {
 	glEnable(GL_BLEND);
@@ -158,13 +192,15 @@ void ParticleSystem::_drawParticles() {
 			for (auto par : cp->particles) {
 				if (par.life > 0.0f) {
 					cp->shader->setVec3("uOffset", par.position);
+					cp->shader->setFloat("uSize", par.size);
+					cp->shader->setFloat("uBrightness", par.brightness);
 					glDrawArrays(GL_POINTS, 0, 1);
 				}
 			}
 		}
 	}
 	glBindVertexArray(0);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_BLEND);
 }
 
