@@ -12,6 +12,7 @@ rit3d采用类似Unity3D的组件实体系统架构。
 * post process：后处理
 * skybox：天空盒
 * collider：碰撞
+* particle：粒子
 
 ## 已实现的主要功能
 ### 光照和阴影
@@ -95,3 +96,7 @@ deferred rendering 适用于多光源渲染。左图采用forward rendering，�
 
 之后还会尝试BSP技术。
 
+### 粒子系统
+初步搭起了粒子系统的框架，粒子在渲染系统之后渲染。下图是一个烟花粒子效果的demo
+
+<img src="doc/demo_image/firework.gif"  height="300" width="400">
