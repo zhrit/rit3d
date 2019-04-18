@@ -183,6 +183,12 @@
     <ClInclude Include="ParticleSystem.h">
       <Filter>src\systems</Filter>
     </ClInclude>
+    <ClInclude Include="CHair.h">
+      <Filter>src\components\ordinary</Filter>
+    </ClInclude>
+    <ClInclude Include="HairSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -314,6 +320,12 @@
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>src\systems</Filter>
     </ClCompile>
+    <ClCompile Include="CHair.cpp">
+      <Filter>src\components\ordinary</Filter>
+    </ClCompile>
+    <ClCompile Include="HairSystem.cpp">
+      <Filter>src\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="simple.vert">
@@ -404,6 +416,12 @@
       <Filter>src\asset\shader</Filter>
     </None>
     <None Include="particle_simple.geom">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="hair.vert">
+      <Filter>src\asset\shader</Filter>
+    </None>
+    <None Include="hair.frag">
       <Filter>src\asset\shader</Filter>
     </None>
   </ItemGroup>

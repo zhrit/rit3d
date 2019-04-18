@@ -169,6 +169,7 @@
     <ClInclude Include="CBehavior.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCollider.h" />
+    <ClInclude Include="CHair.h" />
     <ClInclude Include="CLight.h" />
     <ClInclude Include="CollideSystem.h" />
     <ClInclude Include="CParticle.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="declare.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="GLProgram.h" />
+    <ClInclude Include="HairSystem.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="ISingletonComponent.h" />
     <ClInclude Include="ISystem.h" />
@@ -214,6 +216,7 @@
     <ClCompile Include="CBehavior.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCollider.cpp" />
+    <ClCompile Include="CHair.cpp" />
     <ClCompile Include="CLight.cpp" />
     <ClCompile Include="CollideSystem.cpp" />
     <ClCompile Include="CParticle.cpp" />
@@ -233,6 +236,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GLProgram.cpp" />
+    <ClCompile Include="HairSystem.cpp" />
     <ClCompile Include="IComponent.cpp" />
     <ClCompile Include="ISingletonComponent.cpp" />
     <ClCompile Include="ISystem.cpp" />
@@ -275,6 +279,8 @@
     <None Include="environment.vert" />
     <None Include="gaussianBlur.frag" />
     <None Include="grayscale.frag" />
+    <None Include="hair.frag" />
+    <None Include="hair.vert" />
     <None Include="inversion.frag" />
     <None Include="particle_simple.frag" />
     <None Include="particle_simple.geom" />

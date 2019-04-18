@@ -19,6 +19,8 @@ typedef enum {
 	BOXCOLLIDER,
 	//粒子组件
 	PARTICLE,
+	//毛发组件
+	HAIR,
 
 	//单例组件
 	LIGHTCAMERACOLLECTER,

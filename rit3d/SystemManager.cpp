@@ -10,11 +10,13 @@
 #include "CBehavior.h"
 #include "CCollider.h"
 #include "CParticle.h"
+#include "CHair.h"
 #include "SCLightCameraCollecter.h"
 #include "RenderSystem.h"
 #include "BehaviorSystem.h"
 #include "CollideSystem.h"
 #include "ParticleSystem.h"
+#include "HairSystem.h"
 #include "LightAndCameraSystem.h"
 #include "DebugSystem.h"
 
@@ -52,6 +54,7 @@ void SystemManager::registSystemCreateFunc() {
 	ISystem::systemMap[LIGHTANDCAMERA] = LightAndCameraSystem::CreateInstance;
 	ISystem::systemMap[DEBUGSYSTEM] = DebugSystem::CreateInstance;
 	ISystem::systemMap[PARTICLESYSTEM] = ParticleSystem::CreateInstance;
+	ISystem::systemMap[HAIRSYSTEM] = HairSystem::CreateInstance;
 }
 
 //注册各个组件的创建函数，组件只能通过创建函数创建，不能直接new
@@ -67,6 +70,7 @@ void SystemManager::registCompCreateFunc() {
 	IComponent::compMap[SPHERECOLLIDER] = CSphereCollider::CreateInstance;
 	IComponent::compMap[BOXCOLLIDER] = CBoxCollider::CreateInstance;
 	IComponent::compMap[PARTICLE] = CParticle::CreateInstance;
+	IComponent::compMap[HAIR] = CHair::CreateInstance;
 }
 
 //初始化必要的单例组件

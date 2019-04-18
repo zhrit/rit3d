@@ -18,5 +18,6 @@
 #include "CBehavior.h"
 #include "CCollider.h"
 #include "CParticle.h"
+#include "CHair.h"
 #include "BaseBehavior.h"
 #include "RMath.h"
