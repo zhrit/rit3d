@@ -8,7 +8,7 @@ CHair::CHair() {
 
 
 CHair::~CHair() {
-
+	SafeDeleteArray(m_drawData);
 }
 
 CHair* CHair::CreateInstance() {
@@ -54,6 +54,12 @@ void CHair::_init() {
 			indices_sphere[i++] = (y + 1) * X_SEGMENTS + ((x + 1) % X_SEGMENTS);
 		}
 	}
+	for (int i = 0; i < vc; i++) {
+		scalp_v.push_back(vertices_sphere[i]);
+	}
+	for (int i = 0; i < ic; i++) {
+		scalp_i.push_back(indices_sphere[i]);
+	}
 	//根据头皮数据生成顶点数据
 	for (RUInt i = 0; i < N; i++) {
 		float dl = 0.0f;
@@ -69,7 +75,6 @@ void CHair::_init() {
 			HairNode node;
 			node.p0 = node.p1 = pos + dl * nor;
 			node.maxLength = dl;
-			m_drawData.push_back(node.p1);
 			m_nodes.push_back(node);
 
 			if (dl < 1e-6f) {
@@ -91,14 +96,22 @@ void CHair::_init() {
 		m_strands.push_back(strand);
 	}
 
-	//创建attay buffer
+	//初始化drawData
+	int nodes = (nodeInStrand - 1) * (interN + 1) + 1;
+	m_dataSize = (m_strands.size() + scalp_i.size() / 3 * strandN)*(nodes * 3) * 2;
+	//(控制发束数+插入发束数)*(一条发束上节点总数*3)
+	m_drawData = new RFloat[m_dataSize];
+	//创建array buffer
 	glGenVertexArrays(1, &m_VAO);
 	glGenBuffers(1, &m_VBO);
 
 	glBindVertexArray(m_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, 3 * m_drawData.size() * sizeof(float), &m_drawData[0], GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_dataSize * sizeof(float), &m_drawData[0], GL_STREAM_DRAW);
 	//position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	//tangent
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 }

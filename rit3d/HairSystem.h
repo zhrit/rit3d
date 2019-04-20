@@ -60,4 +60,16 @@ private:
 
 	//节点数据从局部坐标系转换到世界坐标系
 	void _transform(CHair* ch);
+
+	//3次Bezier曲线拟合
+	void _bezierCurve(CHair* ch);
+
+	//插值所有的头发
+	void _interpolate(CHair* ch);
+
+	//创建重心坐标
+	void _barycentric(CHair* ch);
+
+	//求切线
+	void _calcTangent(CHair* ch);
 };

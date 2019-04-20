@@ -1071,11 +1071,12 @@ void example_hair_1() {
 	cam->setCameraType(CAMERATYPE::PERSPECTIVE);
 	cam->setPerspFrustum(45.0f, 8.0f / 6.0f, 0.1f, 100.0f);
 	cam->setViewport(0, 0, 1000, 800);
+	cam->backgroundColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
 	//Æ½ÐÐ¹â
 	RGameObject* LO = pSce->addGameObject();
 	LO->transform->setLocalPosition(3.0f, 1.5f, 0.0f);
-	LO->transform->setLocalFrontDir(-1.0f, -0.5f, 0.0f);
+	LO->transform->setLocalFrontDir(0.0f, -1.0f, -0.4f);
 	LO->transform->setLocalUpDir(0.0f, 1.0f, 0.0f);
 	CLight* light = (CLight*)LO->addComponent(COMPTYPE::LIGHT);
 	light->setColor(1.0f, 1.0f, 1.0f);
