@@ -13,6 +13,7 @@ rit3d采用类似Unity3D的组件实体系统架构。
 * skybox：天空盒
 * collider：碰撞
 * particle：粒子
+* hair：头发
 
 ## 已实现的主要功能
 ### 光照和阴影
@@ -100,3 +101,10 @@ deferred rendering 适用于多光源渲染。左图采用forward rendering，�
 初步搭起了粒子系统的框架，粒子在渲染系统之后渲染。下图是一个烟花粒子效果的demo
 
 <img src="doc/demo_image/firework.gif"  height="300" width="400">
+
+### 头发组件
+用线图元渲染头发。用弹簧质点系统模拟头发，结合verlet数值积分方程计算头发的运动。光照模型采用Kajiya-Kay模型。目前还没有自阴影效果和透明效果。
+
+下图的demo中，共80个控制发束，并利用80个控制发束插值出1200个中间发束，共1280个发束。每个发束上有7个控制点，并根据7个控制点利用bezier曲线拟合插值出另外24个中间点，共31个点。每个点包含3个float的位置数据和3个float的切线数据。
+
+<img src="doc/demo_image/hair.gif"  height="300" width="400">

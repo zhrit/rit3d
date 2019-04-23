@@ -43,12 +43,12 @@ void main () {
 	vec3 T = tangent;//切线
 	vec3 TH = normalize(cross(T, H));//平面TH的法向量
 	vec3 HN = normalize(cross(TH, T));//平面TH上与T垂直的向量
-	float r1 = rand(position.x, position.y) * 0.1f;
-	//float r1 = 0.1f;
+	//float r1 = rand(position.x, position.y) * 0.1f;
+	float r1 = 0.1f;
 	vec3 t1 = normalize(T - HN * r1);
 	vec3 t2 = normalize(T + HN * r1);
 	vec3 specular1 = uLight.speInt * calcSpecular(t1, H, 32.0f, 1.0f) * uLight.color * vec3(color);
-	vec3 specular2 = uLight.speInt * calcSpecular(t2, H, 32.0f, 0.5f) * uLight.color * vec3(0.8f,0.8f,0.8f);
+	vec3 specular2 = uLight.speInt * calcSpecular(t2, H, 128.0f, 0.5f) * uLight.color * vec3(0.8f,0.8f,0.8f);
 
 	vec3 result = (diffuse + specular1 +  specular2);
 	result = vec3(1.0f) - exp(-result * 1.0f);
